@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 | Tech Docs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-links a.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: var(--text-color);
+        }
+
+        .content h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="history.html">历史</a></li>
+                <li><a href="about.html" class="active">关于</a></li>
+                <li><a href="contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+
+        <div class="content">
+            <h1>关于我们</h1>
+
+            <h2>网站介绍</h2>
+
+            <p>技术文档网站是一个专注于技术内容分享的平台，每天自动更新最新的技术文章和教程。</p>
+
+            <h2>主要功能</h2>
+
+            <ul>
+                <li>📅 每天自动更新技术内容</li>
+                <li>📚 自动归档历史内容</li>
+                <li>🌙 支持深色模式</li>
+                <li>📱 响应式设计</li>
+            </ul>
+
+            <h2>技术栈</h2>
+
+            <ul>
+                <li>HTML5</li>
+                <li>CSS3</li>
+                <li>JavaScript</li>
+                <li>GitHub Pages</li>
+            </ul>
+
+            <h2>更新频率</h2>
+
+            <p>网站每天北京时间早上9点自动更新，10点自动归档到历史页面。</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>
