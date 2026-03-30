@@ -42,83 +42,6 @@ echo ""
 # 生成技术文档
 echo "🔄 正在生成技术文档..."
 
-# 使用NVIDIA AI生成技术文档
-python3 << PYTHON_EOF
-import requests
-import os
-import json
-import base64
-import uuid
-from pathlib import Path
-
-# 配置
-api_key = os.getenv("NVIDIA_API_KEY")
-if not api_key:
-    # 从.env文件读取
-    env_file = Path("/home/swg/.openclaw/workspace/skills/nvidia-genai/.env")
-    if env_file.exists():
-        with open(env_file) as f:
-            for line in f:
-                if line.startswith("NVIDIA_API_KEY="):
-                    api_key = line.split("=", 1)[1].strip()
-                    break
-
-if not api_key:
-    print("❌ 错误：无法找到NVIDIA_API_KEY")
-    exit(1)
-
-# 主题
-topic = "$TOPIC"
-
-# 生成提示词
-prompt = f"Technical documentation about {topic}, comprehensive guide, step by step instructions, best practices, code examples, professional writing"
-
-# 调用NVIDIA API
-invoke_url = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium"
-
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Accept": "application/json",
-    "Content-Type": "application/json"
-}
-
-payload = {
-    "prompt": prompt,
-    "cfg_scale": 7,
-    "steps": 50,
-    "seed": 0,
-    "aspect_ratio": "16:9"
-}
-
-try:
-    response = requests.post(invoke_url, headers=headers, json=payload, timeout=60)
-    response.raise_for_status()
-    
-    result = response.json()
-    
-    # 保存图片
-    if "images" in result and result["images"]:
-        img_data = base64.b64decode(result["images"][0]["image"])
-        output_path = Path(f"images/tech_{TODAY}.png")
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(output_path, "wb") as f:
-            f.write(img_data)
-        
-        print(f"✅ 图片已生成: {output_path}")
-    else:
-        print("❌ 错误：未找到图片数据")
-        exit(1)
-        
-except Exception as e:
-    print(f"❌ 错误：生成失败 - {e}")
-    exit(1)
-
-PYTHON_EOF
-
-# 生成HTML文档
-echo "🔄 正在生成HTML文档..."
-
 python3 << PYTHON_EOF
 import os
 from datetime import datetime
@@ -127,6 +50,8 @@ from datetime import datetime
 today = "$TODAY"
 today_str = "$TODAY_STR"
 topic = "$TOPIC"
+year = "$YEAR"
+month = "$MONTH"
 
 # 生成HTML内容
 html_content = f'''<!DOCTYPE html>
@@ -475,7 +400,7 @@ print(f"Result: {{result}}")</code></pre>
 </html>'''
 
 # 保存HTML文件
-output_path = f"history/{YEAR}/{MONTH}/{today}.html"
+output_path = f"history/{year}/{month}/{today}.html"
 with open(output_path, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
@@ -532,8 +457,7 @@ git commit -m "Auto: 技术文档自动更新 - $TODAY_STR
 
 - 主题: $TOPIC
 - 生成技术文档
-- 更新首页推荐
-- 生成配图" || echo "⚠️  没有新的更改需要提交"
+- 更新首页推荐" || echo "⚠️  没有新的更改需要提交"
 
 echo ""
 echo "✅ 技术文档自动更新完成！"
