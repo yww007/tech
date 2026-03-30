@@ -419,11 +419,10 @@ with open('index.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # 提取今日推荐部分
-today_section = f'''            <h2>今日推荐</h2>
+today_section = f'''            <h2>今日推荐-$TODAY_STR</h2>
 
             <div style="background: linear-gradient(145deg, #f6f8fa 0%, #ffffff 100%); padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #667eea;">
                 <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em;">$TOPIC</h3>
-                <p style="margin-bottom: 15px;">$TODAY_STR</p>
                 <p style="margin-bottom: 15px;">本文将详细介绍$TOPIC的相关知识，包括基本概念、实践技巧和最佳实践。</p>
                 <p style="margin-bottom: 15px;"><strong>主要内容：</strong></p>
                 <ul style="margin-left: 20px; margin-bottom: 15px;">
