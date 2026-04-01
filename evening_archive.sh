@@ -201,16 +201,36 @@ if today_file not in content:
             <p>{title}</p>
         </a>'''
 
-    # 找到最后一个 </a> 标签
-    last_a_pos = content.rfind('</a>')
-    if last_a_pos != -1:
-        # 在最后一个 </a> 后面插入新项
-        new_content = content[:last_a_pos + len('</a>')] + new_item + content[last_a_pos + len('</a>'):]
-        
-        # 写回
-        with open(index_path, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-        print(f"✅ 月份索引已更新：添加 {today_date_str} 链接")
+    # 找到days-grid里面的最后一个 </a> 标签
+    days_grid_start = content.find('<div class="days-grid">')
+    if days_grid_start != -1:
+        days_grid_end = content.find('</div>', days_grid_start + len('<div class="days-grid">'))
+        if days_grid_end != -1:
+            # 在days-grid里面找最后一个 </a> 标签
+            days_grid_content = content[days_grid_start:days_grid_end]
+            last_a_pos = days_grid_content.rfind('</a>')
+            if last_a_pos != -1:
+                # 在days-grid里面的最后一个 </a> 后面插入新项
+                insert_pos = days_grid_start + last_a_pos + len('</a>')
+                new_content = content[:insert_pos] + new_item + content[insert_pos:]
+                
+                # 写回
+                with open(index_path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                print(f"✅ 月份索引已更新：添加 {today_date_str} 链接")
+            else:
+                # days-grid里面没有</a>标签，直接插入
+                insert_pos = days_grid_start + len('<div class="days-grid">')
+                new_content = content[:insert_pos] + new_item + content[insert_pos:]
+                
+                # 写回
+                with open(index_path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                print(f"✅ 月份索引已更新：添加 {today_date_str} 链接")
+        else:
+            print(f"❌ 错误：无法找到days-grid的结束标签")
+    else:
+        print(f"❌ 错误：无法找到days-grid")
 else:
     print(f"⏭️  月份索引已包含 {today_date_str}，跳过更新")
 
