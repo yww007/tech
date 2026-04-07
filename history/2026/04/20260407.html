@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>云原生技术实践 - 2026年04月07日 | 技术文档</title>
-    <meta name="description" content="云原生技术实践 - 完整的技术指南和最佳实践">
+    <title>微服务架构设计 - 2026年04月07日 | 技术文档</title>
+    <meta name="description" content="微服务架构设计 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -217,111 +217,306 @@
         <div class="content">
             <a href="../index.html" class="back-link">← 返回月份列表</a>
 
-            <h1>云原生技术实践</h1>
+            <h1>微服务架构设计</h1>
             <div class="date">2026年04月07日 · 技术文档</div>
 
             <h2>前言</h2>
-
-            <p>本文将详细介绍云原生技术实践的相关知识，包括基本概念、实践技巧和最佳实践。</p>
+            <p>微服务架构将单体应用拆分为多个小型服务，每个服务独立开发、部署和扩展。这种架构提高了系统的灵活性和可维护性，但也带来了分布式系统的复杂性。本文将介绍微服务的设计原则、通信机制、服务治理和最佳实践。</p>
 
             <h2>一、基本概念</h2>
 
-            <p>了解云原生技术实践的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
+            <p>了解微服务架构设计的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
 
             <h3>1.1 核心概念</h3>
-
             <ul>
-                <li>概念一：云原生技术实践的核心思想</li>
-                <li>概念二：云原生技术实践的关键特性</li>
-                <li>概念三：云原生技术实践的应用场景</li>
+                <li>服务拆分 - 按业务领域拆分服务</li>
+                <li>服务发现 - 动态发现服务实例</li>
+                <li>API网关 - 统一入口，路由请求</li>
+                <li>配置中心 - 集中管理配置</li>
             </ul>
 
             <h3>1.2 关键术语</h3>
-
             <ul>
-                <li>术语一：云原生技术实践相关的重要术语</li>
-                <li>术语二：云原生技术实践常用的技术词汇</li>
-                <li>术语三：云原生技术实践领域的专业术语</li>
+                <li>RPC - 远程过程调用</li>
+                <li>REST - 表述性状态转移</li>
+                <li>gRPC - Google RPC框架</li>
+                <li>消息队列 - 异步通信</li>
             </ul>
 
             <h2>二、实践技巧</h2>
 
-            <p>掌握云原生技术实践的实践技巧可以帮助您更好地应用该技术。</p>
+            <p>掌握微服务架构设计的实践技巧可以帮助您更好地应用该技术。</p>
 
             <h3>2.1 基础技巧</h3>
-
             <ul>
-                <li>技巧一：云原生技术实践的基础操作方法</li>
-                <li>技巧二：云原生技术实践的常用工具</li>
-                <li>技巧三：云原生技术实践的最佳实践</li>
+                <li>按业务边界拆分服务，避免过度拆分</li>
+                <li>使用RESTful API或gRPC进行服务间通信</li>
+                <li>实现服务注册与发现（如Consul、Eureka）</li>
+                <li>配置API网关统一管理路由</li>
             </ul>
 
             <h3>2.2 高级技巧</h3>
-
             <ul>
-                <li>技巧一：云原生技术实践的高级应用</li>
-                <li>技巧二：云原生技术实践的性能优化</li>
-                <li>技巧三：云原生技术实践的故障排查</li>
+                <li>使用消息队列实现异步通信和解耦</li>
+                <li>实现分布式事务（Saga模式、TCC）</li>
+                <li>配置熔断器防止级联故障</li>
+                <li>实现链路追踪，快速定位问题</li>
             </ul>
 
             <h2>三、最佳实践</h2>
 
-            <p>遵循云原生技术实践的最佳实践可以确保项目的成功和可维护性。</p>
+            <p>遵循微服务架构设计的最佳实践可以确保项目的成功和可维护性。</p>
 
             <h3>3.1 开发规范</h3>
-
             <ul>
-                <li>规范一：云原生技术实践的代码规范</li>
-                <li>规范二：云原生技术实践的文档规范</li>
-                <li>规范三：云原生技术实践的测试规范</li>
+                <li>每个服务有独立的数据库（Database per Service）</li>
+                <li>服务间通信使用异步消息，避免同步调用</li>
+                <li>实现幂等性，支持重试</li>
+                <li>版本化API，保证向后兼容</li>
             </ul>
 
             <h3>3.2 部署策略</h3>
-
             <ul>
-                <li>策略一：云原生技术实践的部署方法</li>
-                <li>策略二：云原生技术实践的监控方案</li>
-                <li>策略三：云原生技术实践的备份策略</li>
+                <li>使用容器化部署（Docker+Kubernetes）</li>
+                <li>实现自动扩缩容，应对流量波动</li>
+                <li>配置蓝绿部署或金丝雀发布</li>
+                <li>集中收集日志和监控指标</li>
             </ul>
 
             <h2>四、代码示例</h2>
 
-            <p>以下是一些云原生技术实践的代码示例，帮助您更好地理解和应用。</p>
+            <p>以下是一些微服务架构设计的代码示例，帮助您更好地理解和应用。</p>
 
-            <pre><code># 示例代码
-def example_function():
-    # 云原生技术实践示例
-    print("Hello, 云原生技术实践!")
-    return True
+            <pre><code># 微服务架构示例
 
-# 调用函数
-result = example_function()
-print(f"Result: {result}")</code></pre>
+# 1. 服务拆分示例
+# 用户服务（user-service）
+# 负责用户管理、认证授权
+# 端口: 8001
+# 数据库: user_db
+
+# 订单服务（order-service）
+# 负责订单管理、支付处理
+# 端口: 8002
+# 数据库: order_db
+
+# 商品服务（product-service）
+# 负责商品管理、库存控制
+# 端口: 8003
+# 数据库: product_db
+
+# 2. API网关配置（Kong）
+# kong.yml
+_format_version: "3.0"
+
+services:
+  - name: user-service
+    url: http://user-service:8001
+    routes:
+      - name: user-routes
+        paths:
+          - /api/users
+
+  - name: order-service
+    url: http://order-service:8002
+    routes:
+      - name: order-routes
+        paths:
+          - /api/orders
+
+  - name: product-service
+    url: http://product-service:8003
+    routes:
+      - name: product-routes
+        paths:
+          - /api/products
+
+# 3. 服务发现（Consul）
+# consul配置
+{
+  "service": {
+    "name": "user-service",
+    "tags": ["api"],
+    "address": "192.168.1.100",
+    "port": 8001,
+    "check": {
+      "http": "http://192.168.1.100:8001/health",
+      "interval": "10s"
+    }
+  }
+}
+
+# 4. gRPC服务定义（user.proto）
+syntax = "proto3";
+
+package user;
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+}
+
+message GetUserRequest {
+  int32 user_id = 1;
+}
+
+message GetUserResponse {
+  int32 user_id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message CreateUserResponse {
+  int32 user_id = 1;
+  bool success = 2;
+}
+
+# 5. 消息队列（RabbitMQ）
+# 订单服务发送消息
+import pika
+
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+
+# 声明队列
+channel.queue_declare(queue='order_created')
+
+# 发送消息
+channel.basic_publish(
+    exchange='',
+    routing_key='order_created',
+    body=json.dumps({'order_id': 123, 'user_id': 456})
+)
+
+# 库存服务消费消息
+def callback(ch, method, properties, body):
+    order = json.loads(body)
+    # 扣减库存
+    print(f"处理订单: {order['order_id']}")
+
+channel.basic_consume(queue='order_created', on_message_callback=callback)
+channel.start_consuming()
+
+# 6. 熔断器（Hystrix）
+# Python示例
+from circuitbreaker import circuit
+
+@circuit(failure_threshold=5, recovery_timeout=60)
+def call_order_service(order_id):
+    # 调用订单服务
+    response = requests.get(f'http://order-service:8002/orders/{order_id}')
+    return response.json()
+
+# 7. 分布式事务（Saga模式）
+# 订单创建流程
+def create_order_saga(user_id, product_id, quantity):
+    try:
+        # 步骤1: 创建订单
+        order = create_order(user_id, product_id, quantity)
+
+        # 步骤2: 扣减库存
+        try:
+            deduct_inventory(product_id, quantity)
+        except Exception as e:
+            # 补偿：取消订单
+            cancel_order(order['order_id'])
+            raise e
+
+        # 步骤3: 扣减余额
+        try:
+            deduct_balance(user_id, order['amount'])
+        except Exception as e:
+            # 补偿：恢复库存、取消订单
+            restore_inventory(product_id, quantity)
+            cancel_order(order['order_id'])
+            raise e
+
+        return order
+    except Exception as e:
+        # 处理失败
+        raise e
+
+# 8. 链路追踪（Jaeger）
+# Python示例
+from jaeger_client import Config
+
+config = Config(
+    config={
+        'sampler': {
+            'type': 'const',
+            'param': 1,
+        },
+        'logging': True,
+    },
+    service_name='order-service',
+)
+
+tracer = config.initialize_tracer()
+
+with tracer.start_span('create-order') as span:
+    span.set_tag('user_id', user_id)
+    # 业务逻辑
+    order = create_order_logic(user_id, product_id, quantity)
+    span.set_tag('order_id', order['order_id'])
+
+# 9. 配置中心（Spring Cloud Config）
+# application.yml
+spring:
+  cloud:
+    config:
+      uri: http://config-server:8888
+      name: order-service
+      profile: prod
+
+# 10. 监控（Prometheus + Grafana）
+# Prometheus配置
+scrape_configs:
+  - job_name: 'order-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['order-service:8002']
+
+# 自定义指标
+from prometheus_client import Counter, start_http_server
+
+order_counter = Counter('orders_total', 'Total orders created')
+
+def create_order(user_id, product_id, quantity):
+    # 创建订单
+    order = create_order_logic(user_id, product_id, quantity)
+    # 增加计数
+    order_counter.inc()
+    return order</code></pre>
 
             <h2>五、常见问题</h2>
+            <h3>5.1 微服务和单体架构如何选择？</h3>
 
-            <h3>5.1 问题一</h3>
+            <p><strong>问题描述：</strong>微服务和单体架构如何选择？</p>
 
-            <p>问题描述：云原生技术实践常见问题一</p>
+            <p><strong>解决方案：</strong>微服务适合：大型团队、复杂业务、需要独立部署和扩展；单体适合：小型团队、简单业务、快速迭代。不要为了微服务而微服务，过度拆分会增加复杂度。</p>
 
-            <p>解决方案：提供详细的解决方案和步骤。</p>
+            <h3>5.2 如何保证微服务的数据一致性？</h3>
 
-            <h3>5.2 问题二</h3>
+            <p><strong>问题描述：</strong>如何保证微服务的数据一致性？</p>
 
-            <p>问题描述：云原生技术实践常见问题二</p>
-
-            <p>解决方案：提供详细的解决方案和步骤。</p>
+            <p><strong>解决方案：</strong>1. 使用Saga模式实现最终一致性；2. 使用TCC（Try-Confirm-Cancel）模式；3. 使用消息队列实现异步补偿；4. 关键操作使用分布式事务（如Seata）。</p>
 
             <h2>六、总结</h2>
 
-            <p>通过本文的学习，您应该对云原生技术实践有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用云原生技术实践。</p>
+            <p>通过本文的学习，您应该对微服务架构设计有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用微服务架构设计。</p>
 
             <h2>七、参考资料</h2>
 
             <ul>
-                <li>官方文档：https://docs.example.com</li>
-                <li>社区资源：https://community.example.com</li>
-                <li>学习教程：https://tutorial.example.com</li>
+                <li>微服务模式：https://microservices.io/</li>
+                <li>Spring Cloud：https://spring.io/projects/spring-cloud</li>
+                <li>Kubernetes文档：https://kubernetes.io/docs/</li>
             </ul>
         </div>
 
@@ -331,14 +526,14 @@ print(f"Result: {result}")</code></pre>
     </div>
 
     <script>
-        function toggleDarkMode() {
+        function toggleDarkMode() {{
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
+        }}
 
-        if (localStorage.getItem('darkMode') === 'true') {
+        if (localStorage.getItem('darkMode') === 'true') {{
             document.body.classList.add('dark-mode');
-        }
+        }}
     </script>
 </body>
 </html>
