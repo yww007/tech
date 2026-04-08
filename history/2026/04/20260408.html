@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云原生技术实践 - 2026年04月08日 | 技术文档</title>
+    <meta name="description" content="云原生技术实践 - 完整的技术指南和最佳实践">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-links a.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: var(--text-color);
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="../../index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">首页</a></li>
+                <li><a href="../../history.html">历史</a></li>
+                <li><a href="../../about.html">关于</a></li>
+                <li><a href="../../contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+
+        <div class="content">
+            <a href="../index.html" class="back-link">← 返回月份列表</a>
+
+            <h1>云原生技术实践</h1>
+            <div class="date">2026年04月08日 · 技术文档</div>
+
+            <h2>前言</h2>
+            <p>云原生是一种构建和运行应用程序的方法，充分利用云计算的优势。它包括容器化、服务网格、不可变基础设施、声明式API等概念。本文将介绍云原生的核心技术、架构设计、最佳实践以及如何构建可扩展、可观测的云原生应用。</p>
+
+            <h2>一、基本概念</h2>
+
+            <p>了解云原生技术实践的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
+
+            <h3>1.1 核心概念</h3>
+            <ul>
+                <li>容器 - 轻量级、可移植的运行环境</li>
+                <li>服务网格 - 微服务间通信的基础设施层</li>
+                <li>不可变基础设施 - 不可变的部署单元</li>
+                <li>声明式API - 描述期望状态而非执行步骤</li>
+            </ul>
+
+            <h3>1.2 关键术语</h3>
+            <ul>
+                <li>Kubernetes - 容器编排平台</li>
+                <li>Istio - 服务网格实现</li>
+                <li>Helm - Kubernetes包管理器</li>
+                <li>Prometheus - 监控系统</li>
+            </ul>
+
+            <h2>二、实践技巧</h2>
+
+            <p>掌握云原生技术实践的实践技巧可以帮助您更好地应用该技术。</p>
+
+            <h3>2.1 基础技巧</h3>
+            <ul>
+                <li>使用Docker容器化应用</li>
+                <li>使用Kubernetes编排容器</li>
+                <li>配置健康检查和自动重启</li>
+                <li>使用ConfigMap和Secret管理配置</li>
+            </ul>
+
+            <h3>2.2 高级技巧</h3>
+            <ul>
+                <li>使用服务网格（Istio）管理流量</li>
+                <li>实现自动扩缩容（HPA）</li>
+                <li>配置蓝绿部署和金丝雀发布</li>
+                <li>实现可观测性（日志、指标、链路追踪）</li>
+            </ul>
+
+            <h2>三、最佳实践</h2>
+
+            <p>遵循云原生技术实践的最佳实践可以确保项目的成功和可维护性。</p>
+
+            <h3>3.1 开发规范</h3>
+            <ul>
+                <li>应用无状态化，支持水平扩展</li>
+                <li>使用12-Factor App原则</li>
+                <li>实现优雅关闭，处理SIGTERM信号</li>
+                <li>配置资源限制，防止资源耗尽</li>
+            </ul>
+
+            <h3>3.2 部署策略</h3>
+            <ul>
+                <li>使用GitOps实现持续部署</li>
+                <li>配置多环境（dev、staging、prod）</li>
+                <li>实现自动化测试和部署流水线</li>
+                <li>配置灾备和故障转移</li>
+            </ul>
+
+            <h2>四、代码示例</h2>
+
+            <p>以下是一些云原生技术实践的代码示例，帮助您更好地理解和应用。</p>
+
+            <pre><code># 云原生技术实践示例
+
+# 1. Kubernetes部署文件
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  labels:
+    app: order-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+      - name: order-service
+        image: order-service:1.0.0
+        ports:
+        - containerPort: 8002
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: order-service-secret
+              key: database-url
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8002
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8002
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8002
+  type: ClusterIP
+
+---
+# hpa.yaml（自动扩缩容）
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: order-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: order-service
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+
+# 2. ConfigMap配置
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+data:
+  application.yml: |
+    server:
+      port: 8002
+    spring:
+      datasource:
+        url: ${DATABASE_URL}
+    logging:
+      level:
+        root: INFO
+
+# 3. Secret配置
+# secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: order-service-secret
+type: Opaque
+data:
+  database-url: cG9zdGdyZXNxbDovL3VzZXI6cGFzc0BkYjoxOTIzL29yZGVyZGI=
+
+# 4. Istio服务网格配置
+# virtualservice.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: order-service
+spec:
+  hosts:
+  - order-service
+  http:
+  - match:
+    - headers:
+        canary:
+          exact: "true"
+    route:
+    - destination:
+        host: order-service
+        subset: v2
+  - route:
+    - destination:
+        host: order-service
+        subset: v1
+      weight: 90
+    - destination:
+        host: order-service
+        subset: v2
+      weight: 10
+
+---
+# destinationrule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: order-service
+spec:
+  host: order-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+
+# 5. Helm Chart示例
+# Chart.yaml
+apiVersion: v2
+name: order-service
+description: Order Service Helm Chart
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+# values.yaml
+replicaCount: 3
+image:
+  repository: order-service
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+# 6. Prometheus监控配置
+# prometheus.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+
+    scrape_configs:
+    - job_name: 'kubernetes-pods'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+
+# 7. Grafana Dashboard
+# dashboard.json
+{
+  "dashboard": {
+    "title": "Order Service Metrics",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~"5.."}[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Response Time",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+# 8. 应用代码示例（优雅关闭）
+# Python示例
+import signal
+import sys
+
+class GracefulShutdown:
+    def __init__(self):
+        self.shutdown = False
+        signal.signal(signal.SIGTERM, self.handle_shutdown)
+        signal.signal(signal.SIGINT, self.handle_shutdown)
+
+    def handle_shutdown(self, signum, frame):
+        print(f"收到信号 {signum}, 准备关闭...")
+        self.shutdown = True
+
+# 使用
+shutdown = GracefulShutdown()
+
+while not shutdown.shutdown:
+    # 处理请求
+    process_request()
+
+# 清理资源
+cleanup()
+print("服务已优雅关闭")
+
+# 9. 健康检查端点
+# Python示例
+from flask import Flask, jsonify
+import psycopg2
+
+app = Flask(__name__)
+
+@app.route('/health')
+def health():
+    """存活探针"""
+    return jsonify({'status': 'healthy'})
+
+@app.route('/ready')
+def ready():
+    """就绪探针"""
+    try:
+        # 检查数据库连接
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.close()
+        return jsonify({'status': 'ready'})
+    except Exception as e:
+        return jsonify({'status': 'not ready', 'error': str(e)}), 503</code></pre>
+
+            <h2>五、常见问题</h2>
+            <h3>5.1 云原生和传统部署有什么区别？</h3>
+
+            <p><strong>问题描述：</strong>云原生和传统部署有什么区别？</p>
+
+            <p><strong>解决方案：</strong>云原生使用容器化、服务网格、声明式API等技术，实现自动化、可扩展、可观测的应用；传统部署使用虚拟机或物理机，手动配置和管理。云原生更适合云环境，能充分利用云计算的优势。</p>
+
+            <h3>5.2 如何实现云原生的可观测性？</h3>
+
+            <p><strong>问题描述：</strong>如何实现云原生的可观测性？</p>
+
+            <p><strong>解决方案：</strong>1. 使用Prometheus收集指标；2. 使用Grafana可视化监控；3. 使用ELK或Loki收集日志；4. 使用Jaeger或Zipkin实现链路追踪；5. 配置告警规则，及时发现异常。</p>
+
+            <h2>六、总结</h2>
+
+            <p>通过本文的学习，您应该对云原生技术实践有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用云原生技术实践。</p>
+
+            <h2>七、参考资料</h2>
+
+            <ul>
+                <li>CNCF云原生：https://www.cncf.io/</li>
+                <li>Kubernetes文档：https://kubernetes.io/docs/</li>
+                <li>12-Factor App：https://12factor.net/</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleDarkMode() {{
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }}
+
+        if (localStorage.getItem('darkMode') === 'true') {{
+            document.body.classList.add('dark-mode');
+        }}
+    </script>
+</body>
+</html>
