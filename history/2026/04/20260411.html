@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python编程技巧与最佳实践 - 2026年04月11日 | 技术文档</title>
+    <meta name="description" content="Python编程技巧与最佳实践 - 完整的技术指南和最佳实践">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: var(--text-color);
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="../../index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">首页</a></li>
+                <li><a href="../../history.html">历史</a></li>
+                <li><a href="../../about.html">关于</a></li>
+                <li><a href="../../contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+
+        <div class="content">
+            <a href="../index.html" class="back-link">← 返回月份列表</a>
+
+            <h1>Python编程技巧与最佳实践</h1>
+            <div class="date">2026年04月11日 · 技术文档</div>
+
+            <h2>概述</h2>
+            <p>Python以其简洁的语法和强大的生态系统，成为最受欢迎的编程语言之一。然而，很多开发者只掌握了基础语法，对Python的高级特性和最佳实践了解不足。本文将从基础到高级，全面介绍Python编程技巧，帮助你写出更高效、更优雅的Python代码。</p>
+
+            <h2>第一章 认识Python高级编程</h2>
+
+            <h3>1.1 Python高级编程的本质</h3>
+            <p>Python高级编程不仅仅是掌握语法，更是理解Python的设计哲学和最佳实践。核心认知：从'能写代码'到'写好代码'的转变。Python越强大，你越要注意代码的可读性、可维护性和性能。</p>
+
+            <h3>1.2 与其他语言的核心区别</h3>
+            <p>Python vs Java：Python更简洁，但性能较低；Java更严格，但性能更高。Python vs C++：Python开发效率高，C++执行效率高。Python vs JavaScript：Python适合后端，JavaScript适合前端。</p>
+
+            <h3>1.3 Python能力全景</h3>
+            <p>代码开发：函数式编程、面向对象编程、元编程。性能优化：算法优化、数据结构优化、并发编程。测试自动化：单元测试、集成测试、性能测试。Web开发：Flask、Django、FastAPI。数据分析：NumPy、Pandas、Matplotlib。</p>
+
+            <h2>第二章 核心概念与高级特性</h2>
+
+            <h3>2.1 列表推导式与生成器</h3>
+            <p>列表推导式：一行代码生成列表，简洁高效。生成器：惰性求值，节省内存。生成器表达式：类似列表推导式，但返回生成器。</p>
+
+            <h3>2.2 装饰器与上下文管理器</h3>
+            <p>装饰器：函数包装器，增强功能。@语法糖：简化装饰器使用。上下文管理器：自动资源管理，with语句。@contextmanager：快速创建上下文管理器。</p>
+
+            <h3>2.3 元类与属性</h3>
+            <p>元类：类的类，控制类的创建。type()：动态创建类。__metaclass__：指定元类。property：属性装饰器，控制属性访问。@property、@setter、@deleter。</p>
+
+            <h2>第三章 性能优化技巧</h2>
+
+            <h3>3.1 算法与数据结构优化</h3>
+            <p>选择合适的数据结构：列表、字典、集合、元组。使用内置函数：sum()、map()、filter()。避免不必要的循环：列表推导式、生成器表达式。</p>
+
+            <h3>3.2 缓存与记忆化</h3>
+            <p>@lru_cache：缓存函数结果，避免重复计算。functools.cache：Python 3.9+的简化版本。手动缓存：使用字典存储中间结果。</p>
+
+            <h3>3.3 并发与并行</h3>
+            <p>多线程：适合IO密集型任务。多进程：适合CPU密集型任务。asyncio：异步编程，提升IO性能。concurrent.futures：高级并发接口。</p>
+
+            <h2>第四章 代码规范与最佳实践</h2>
+
+            <h3>4.1 PEP 8代码风格</h3>
+            <p>命名规范：变量名小写下划线，类名大驼峰。缩进：4个空格，不要用Tab。行长度：不超过79字符。导入：标准库、第三方库、本地模块。</p>
+
+            <h3>4.2 类型注解</h3>
+            <p>类型提示：提高代码可读性和IDE支持。typing模块：List、Dict、Optional、Union。类型检查：mypy静态类型检查。</p>
+
+            <h3>4.3 文档字符串</h3>
+            <p>docstring：函数、类、模块的文档。Google风格：参数、返回值、异常。NumPy风格：更详细的参数说明。</p>
+
+            <h2>第五章 实战案例与SOP</h2>
+
+            <h3>5.1 实战案例：高性能数据处理</h3>
+            <p>场景：处理百万级数据。方案：使用生成器+多进程。步骤：1. 生成器读取数据；2. 多进程处理；3. 结果汇总。</p>
+
+            <h3>5.2 实战案例：Web API性能优化</h3>
+            <p>场景：API响应慢。方案：缓存+异步。步骤：1. 添加Redis缓存；2. 使用异步框架；3. 数据库查询优化。</p>
+
+            <h3>5.3 实战SOP：代码审查清单</h3>
+            <p>代码风格：符合PEP 8规范。类型注解：关键函数有类型提示。文档字符串：公共函数有docstring。测试覆盖：核心逻辑有单元测试。性能：无明显性能瓶颈。</p>
+
+
+            <h2>核心概念</h2>
+
+            <p>了解Python编程技巧与最佳实践的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
+
+            <h3>核心概念</h3>
+            <ul>
+                <li>列表推导式 - 一行代码生成列表，简洁高效</li>
+                <li>生成器 - 惰性求值，节省内存</li>
+                <li>装饰器 - 函数包装器，增强功能</li>
+                <li>上下文管理器 - 自动资源管理，with语句</li>
+                <li>元类 - 类的类，控制类的创建</li>
+                <li>属性 - 控制属性访问，property装饰器</li>
+            </ul>
+
+            <h3>关键术语</h3>
+            <ul>
+                <li>PEP 8 - Python官方代码风格指南</li>
+                <li>GIL - 全局解释器锁，影响多线程性能</li>
+                <li>鸭子类型 - 不关注类型，关注行为</li>
+                <li>魔法方法 - 以__开头和结尾的特殊方法</li>
+                <li>类型注解 - 类型提示，提高代码可读性</li>
+                <li>异步编程 - asyncio，提升IO性能</li>
+            </ul>
+
+            <h2>实践技巧</h2>
+
+            <p>掌握Python编程技巧与最佳实践的实践技巧可以帮助您更好地应用该技术。</p>
+
+            <h3>基础技巧</h3>
+            <ul>
+                <li>使用f-string格式化字符串，比%和.format()更快更易读</li>
+                <li>善用enumerate()同时获取索引和值</li>
+                <li>使用zip()并行遍历多个序列</li>
+                <li>用collections.Counter统计元素出现次数</li>
+                <li>使用with语句管理资源，自动关闭</li>
+                <li>使用列表推导式代替循环</li>
+                <li>使用生成器表达式节省内存</li>
+            </ul>
+
+            <h3>高级技巧</h3>
+            <ul>
+                <li>使用@lru_cache缓存函数结果，避免重复计算</li>
+                <li>用__slots__减少内存占用，适合大量实例</li>
+                <li>使用asyncio实现异步编程，提升IO密集型任务性能</li>
+                <li>用multiprocessing绕过GIL限制，实现真正的并行</li>
+                <li>使用装饰器增强函数功能</li>
+                <li>使用上下文管理器管理资源</li>
+                <li>使用元类动态创建类</li>
+            </ul>
+
+            <h2>最佳实践</h2>
+
+            <p>遵循Python编程技巧与最佳实践的最佳实践可以确保项目的成功和可维护性。</p>
+
+            <h3>开发规范</h3>
+            <ul>
+                <li>遵循PEP 8规范，使用black自动格式化</li>
+                <li>编写docstring文档，使用Google或NumPy风格</li>
+                <li>使用类型注解，提高代码可读性和IDE支持</li>
+                <li>编写单元测试，使用pytest框架</li>
+                <li>使用虚拟环境隔离依赖，推荐venv或conda</li>
+                <li>用requirements.txt或pyproject.toml管理依赖</li>
+            </ul>
+
+            <h3>部署策略</h3>
+            <ul>
+                <li>使用Docker容器化部署，保证环境一致性</li>
+                <li>配置CI/CD流水线，自动化测试和部署</li>
+                <li>使用日志记录，便于问题排查</li>
+                <li>配置监控告警，及时发现异常</li>
+                <li>定期更新依赖，修复安全漏洞</li>
+            </ul>
+            <h3>Python vs 其他语言对比</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">特性</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Python</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Java</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">C++</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">JavaScript</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">开发效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">执行效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">学习曲线</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">生态系统</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">⭐⭐⭐⭐⭐</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适用场景</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">数据分析、AI、Web</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">企业应用、Android</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">系统编程、游戏</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">前端、Node.js</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Python数据结构对比</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">数据结构</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">特点</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">适用场景</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">时间复杂度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">列表</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">有序、可变</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">存储序列数据</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">O(1)访问, O(n)查找</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">元组</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">有序、不可变</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">固定数据、字典键</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">O(1)访问, O(n)查找</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">字典</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">键值对、无序</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">快速查找</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">O(1)访问</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">集合</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">无序、唯一</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">去重、成员测试</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">O(1)访问</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>代码示例</h2>
+
+            <p>以下是一些Python编程技巧与最佳实践的代码示例，帮助您更好地理解和应用。</p>
+
+            <h3>代码示例 1: Python最佳实践示例</h3>
+            <pre><code># Python最佳实践示例
+
+from functools import lru_cache
+from typing import List, Optional, Dict
+from dataclasses import dataclass
+from contextlib import contextmanager
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
+
+# 1. 使用类型注解和dataclass
+@dataclass
+class User:
+    """用户数据类"""
+    id: int
+    name: str
+    email: Optional[str] = None
+
+# 2. 使用装饰器缓存结果
+@lru_cache(maxsize=128)
+def fibonacci(n: int) -> int:
+    """计算斐波那契数列（带缓存）"""
+    if n < 2:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# 3. 使用上下文管理器
+@contextmanager
+def timer(name: str):
+    """计时上下文管理器"""
+    import time
+    start = time.time()
+    yield
+    elapsed = time.time() - start
+    print(f"{name} 耗时: {elapsed:.3f}秒")
+
+# 4. 使用列表推导式和生成器
+def process_users(users: List[User]) -> List[str]:
+    """处理用户列表"""
+    # 列表推导式
+    active_users = [u for u in users if u.email]
+    # 生成器表达式
+    emails = (u.email for u in active_users if u.email)
+    return list(emails)
+
+# 5. 异步编程示例
+async def fetch_data(url: str) -> Dict:
+    """异步获取数据"""
+    import aiohttp
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.json()
+
+async def main():
+    """主函数"""
+    urls = ["https://api.example.com/data1",
+            "https://api.example.com/data2"]
+    tasks = [fetch_data(url) for url in urls]
+    results = await asyncio.gather(*tasks)
+    return results
+
+# 6. 多进程示例
+def process_item(item: int) -> int:
+    """处理单个项目"""
+    import time
+    time.sleep(0.1)  # 模拟耗时操作
+    return item * 2
+
+def parallel_process(items: List[int]) -> List[int]:
+    """并行处理"""
+    with ProcessPoolExecutor(max_workers=4) as executor:
+        results = list(executor.map(process_item, items))
+    return results
+
+# 使用示例
+if __name__ == "__main__":
+    # 计时示例
+    with timer("斐波那契计算"):
+        result = fibonacci(35)
+        print(f"fibonacci(35) = {result}")
+
+    # 用户处理示例
+    users = [
+        User(1, "Alice", "alice@example.com"),
+        User(2, "Bob", "bob@example.com"),
+        User(3, "Charlie", None)
+    ]
+
+    emails = process_users(users)
+    print(f"活跃用户邮箱: {emails}")
+
+    # 并行处理示例
+    items = list(range(10))
+    results = parallel_process(items)
+    print(f"并行处理结果: {results}")</code></pre>
+
+            <h3>代码示例 2: 装饰器高级用法</h3>
+            <pre><code># 装饰器高级用法
+
+from functools import wraps
+import time
+from typing import Callable, Any
+
+# 1. 带参数的装饰器
+def repeat(times: int):
+    """重复执行函数"""
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            results = []
+            for _ in range(times):
+                result = func(*args, **kwargs)
+                results.append(result)
+            return results
+        return wrapper
+    return decorator
+
+@repeat(times=3)
+def greet(name: str) -> str:
+    """打招呼"""
+    return f"Hello, {name}!"
+
+# 2. 计时装饰器
+def timer(func: Callable) -> Callable:
+    """计时装饰器"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f"{func.__name__} 耗时: {elapsed:.3f}秒")
+        return result
+    return wrapper
+
+@timer
+def slow_function():
+    """慢函数"""
+    time.sleep(1)
+    return "完成"
+
+# 3. 缓存装饰器
+def cache(func: Callable) -> Callable:
+    """缓存装饰器"""
+    cache_dict = {}
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = (args, frozenset(kwargs.items()))
+        if key not in cache_dict:
+            cache_dict[key] = func(*args, **kwargs)
+        return cache_dict[key]
+    return wrapper
+
+@cache
+def expensive_computation(x: int) -> int:
+    """昂贵计算"""
+    time.sleep(0.1)
+    return x * x
+
+# 4. 类装饰器
+class CountCalls:
+    """计数装饰器"""
+    def __init__(self, func: Callable):
+        self.func = func
+        self.count = 0
+
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+        print(f"调用次数: {self.count}")
+        return self.func(*args, **kwargs)
+
+@CountCalls
+def say_hello():
+    """打招呼"""
+    return "Hello!"
+
+# 使用示例
+if __name__ == "__main__":
+    # 重复执行
+    greetings = greet("Alice")
+    print(f"问候结果: {greetings}")
+
+    # 计时
+    result = slow_function()
+    print(f"结果: {result}")
+
+    # 缓存
+    start = time.time()
+    for i in range(5):
+        result = expensive_computation(i)
+    elapsed = time.time() - start
+    print(f"缓存计算耗时: {elapsed:.3f}秒")
+
+    # 计数
+    for _ in range(3):
+        say_hello()</code></pre>
+
+            <h2>常见问题</h2>
+
+            <h3>常见问题 1: 如何提升Python代码性能？</h3>
+            <p><strong>问题：</strong>如何提升Python代码性能？</p>
+            <p><strong>答案：</strong>1. 使用内置函数和库（如sum()、map()）比循环更快；2. 使用生成器代替列表，节省内存；3. 使用@lru_cache缓存重复计算；4. 对于CPU密集型任务，使用multiprocessing；5. 使用C扩展（如NumPy、Cython）加速数值计算；6. 选择合适的数据结构（字典查找O(1)，列表查找O(n)）；7. 避免不必要的全局变量查找；8. 使用局部变量代替全局变量。</p>
+
+            <h3>常见问题 2: Python多线程为什么不能提升性能？</h3>
+            <p><strong>问题：</strong>Python多线程为什么不能提升性能？</p>
+            <p><strong>答案：</strong>因为Python有GIL（全局解释器锁），同一时刻只能有一个线程执行Python字节码。多线程适合IO密集型任务（如网络请求、文件读写），对于CPU密集型任务，应该使用multiprocessing实现真正的并行。GIL的存在是为了简化CPython的实现，避免多线程访问Python对象时的竞争条件。</p>
+
+            <h3>常见问题 3: 什么时候应该使用生成器而不是列表？</h3>
+            <p><strong>问题：</strong>什么时候应该使用生成器而不是列表？</p>
+            <p><strong>答案：</strong>1. 处理大量数据时，生成器可以节省内存；2. 数据流式处理，不需要一次性加载所有数据；3. 实现迭代器协议，提供惰性求值；4. 管道式数据处理，逐个处理元素。注意：生成器只能遍历一次，如果需要多次遍历，应该转换为列表。</p>
+
+            <h3>常见问题 4: 如何选择合适的数据结构？</h3>
+            <p><strong>问题：</strong>如何选择合适的数据结构？</p>
+            <p><strong>答案：</strong>1. 列表：有序序列，需要频繁访问和修改；2. 元组：不可变序列，作为字典键或函数参数；3. 字典：键值对，需要快速查找；4. 集合：去重、成员测试；5. collections.deque：双端队列，频繁头尾操作；6. collections.defaultdict：带默认值的字典；7. collections.Counter：计数器。</p>
+
+            <h2>Python开发实战SOP</h2>
+
+            <h3>阶段 1: Phase 0: 环境准备</h3>
+            <ol>
+                <li>创建虚拟环境：python -m venv venv</li>
+                <li>激活虚拟环境：source venv/bin/activate</li>
+                <li>安装依赖：pip install -r requirements.txt</li>
+                <li>配置IDE：安装Python插件，配置解释器</li>
+            </ol>
+
+            <h3>阶段 2: Phase 1: 代码开发</h3>
+            <ol>
+                <li>编写代码，遵循PEP 8规范</li>
+                <li>添加类型注解，提高可读性</li>
+                <li>编写docstring，说明函数用途</li>
+                <li>使用单元测试，验证功能</li>
+            </ol>
+
+            <h3>阶段 3: Phase 2: 代码审查</h3>
+            <ol>
+                <li>运行black格式化代码</li>
+                <li>运行mypy类型检查</li>
+                <li>运行pytest单元测试</li>
+                <li>检查代码覆盖率</li>
+            </ol>
+
+            <h3>阶段 4: Phase 3: 性能优化</h3>
+            <ol>
+                <li>使用cProfile分析性能瓶颈</li>
+                <li>优化算法和数据结构</li>
+                <li>添加缓存，减少重复计算</li>
+                <li>使用并发，提升处理速度</li>
+            </ol>
+
+            <h3>阶段 5: Phase 4: 部署上线</h3>
+            <ol>
+                <li>编写Dockerfile，容器化应用</li>
+                <li>配置CI/CD流水线</li>
+                <li>配置日志和监控</li>
+                <li>部署到生产环境</li>
+            </ol>
+
+            <h2>总结</h2>
+
+            <p>通过本文的学习，您应该对Python编程技巧与最佳实践有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用Python编程技巧与最佳实践。</p>
+
+            <h2>参考资料</h2>
+
+            <ul>
+                <li>官方文档：https://docs.python.org/zh-cn/3/</li>
+                <li>PEP 8风格指南：https://peps.python.org/pep-0008/</li>
+                <li>Real Python教程：https://realpython.com/</li>
+                <li>Python Cookbook：https://docs.python.org/3/library/cookbook.html</li>
+                <li>Effective Python：https://effectivepython.com/</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleDarkMode() {{
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }}
+
+        if (localStorage.getItem('darkMode') === 'true') {{
+            document.body.classList.add('dark-mode');
+        }}
+    </script>
+</body>
+</html>
