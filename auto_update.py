@@ -38,6 +38,80 @@ class Logger:
         with open(self.log_file, 'a') as f:
             f.write(log_message + "\n")
 
+# 飞书通知函数
+def send_feishu_notification(message):
+    """发送飞书通知"""
+    try:
+        import json
+        import requests
+        
+        # 飞书配置
+        OPENCLAW_CONFIG = "/home/swg/.openclaw/openclaw.json"
+        USER_ID = "ou_9249627924cb237809a9e6c6c0aa7801"
+        
+        # 从 openclaw.json 加载飞书配置
+        with open(OPENCLAW_CONFIG, 'r') as f:
+            config = json.load(f)
+        
+        app_id = config['channels']['feishu'].get('appId')
+        app_secret = config['channels']['feishu'].get('appSecret')
+        
+        if app_id and app_secret:
+            # 获取 tenant_access_token
+            token_url = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
+            token_data = {
+                "app_id": app_id,
+                "app_secret": app_secret
+            }
+            token_response = requests.post(token_url, json=token_data)
+            token_result = token_response.json()
+            
+            if token_result.get('code') != 0:
+                logger.log(f"❌ 获取飞书token失败: {token_result.get('msg')}")
+                return False
+            
+            tenant_access_token = token_result['tenant_access_token']
+            
+            # 发送消息
+            send_url = "https://open.feishu.cn/open-apis/im/v1/messages"
+            headers = {
+                "Authorization": f"Bearer {tenant_access_token}",
+                "Content-Type": "application/json"
+            }
+            
+            content = json.dumps({"text": message})
+            data = {
+                "receive_id": USER_ID,
+                "msg_type": "text",
+                "content": content
+            }
+            
+            params = {"receive_id_type": "open_id"}
+            
+            send_response = requests.post(send_url, headers=headers, params=params, json=data)
+            send_result = send_response.json()
+            
+            if send_result.get('code') != 0:
+                logger.log(f"❌ 发送飞书消息失败: {send_result.get('msg')}")
+                return False
+            
+            logger.log(f"✅ 飞书通知已发送: {message}")
+            return True
+        else:
+            logger.log("⚠️ 飞书未配置，跳过通知")
+            return False
+            
+    except Exception as e:
+        logger.log(f"❌ 发送飞书通知失败: {e}")
+        return False
+
+    def log(self, message):
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        log_message = f"[{timestamp}] {message}"
+        print(log_message)
+        with open(self.log_file, 'a') as f:
+            f.write(log_message + "\n")
+
 logger = Logger()
 
 def get_beijing_time():
@@ -1412,6 +1486,10 @@ def main():
         logger.log(f"🎯 主题: {topic}")
         logger.log(f"🖼️  图片: {'✅ 已生成' if image_file else '❌ 生成失败'}")
         logger.log("=" * 60)
+        
+        # 发送飞书通知
+        today_str = datetime.now().strftime('%Y年%m月%d日')
+        send_feishu_notification(f"格式技术文档早上7点45更新任务完成。主题：{topic}")
 
         return 0
 

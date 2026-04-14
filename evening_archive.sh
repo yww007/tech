@@ -340,3 +340,82 @@ git push
 echo ""
 echo "✅ 技术文档自动归档完成！"
 echo "📅 日期: $TODAY_STR"
+
+# 发送飞书通知
+echo "📝 正在发送飞书通知..."
+python3 << PYTHON_EOF
+import json
+import requests
+
+# 飞书配置
+OPENCLAW_CONFIG = "/home/swg/.openclaw/openclaw.json"
+USER_ID = "ou_9249627924cb237809a9e6c6c0aa7801"
+TODAY_STR = "$TODAY_STR"
+
+def load_feishu_config():
+    """从 openclaw.json 加载飞书配置"""
+    with open(OPENCLAW_CONFIG, 'r') as f:
+        config = json.load(f)
+    return config['channels']['feishu']
+
+def get_tenant_access_token(app_id, app_secret):
+    """获取 tenant_access_token"""
+    url = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
+    data = {
+        "app_id": app_id,
+        "app_secret": app_secret
+    }
+    response = requests.post(url, json=data)
+    result = response.json()
+    if result.get('code') != 0:
+        raise Exception(f"获取 token 失败: {result.get('msg')}")
+    return result['tenant_access_token']
+
+def send_message(user_id, message, app_id, app_secret):
+    """发送文本消息到飞书用户"""
+    # 获取 token
+    token = get_tenant_access_token(app_id, app_secret)
+
+    # 发送消息
+    send_url = "https://open.feishu.cn/open-apis/im/v1/messages"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    content = json.dumps({"text": message})
+
+    data = {
+        "receive_id": user_id,
+        "msg_type": "text",
+        "content": content
+    }
+
+    # receive_id_type 需要作为查询参数传递
+    params = {
+        "receive_id_type": "open_id"
+    }
+
+    send_response = requests.post(send_url, headers=headers, params=params, json=data)
+    send_result = send_response.json()
+
+    if send_result.get('code') != 0:
+        raise Exception(f"发送消息失败: {send_result.get('msg')}")
+
+    print(f"✅ 飞书通知已发送给用户 {user_id}")
+
+try:
+    config = load_feishu_config()
+    app_id = config.get('appId')
+    app_secret = config.get('appSecret')
+
+    if app_id and app_secret:
+        send_message(USER_ID, f"格式技术文档晚上7点55存档任务完成。日期：{TODAY_STR}", app_id, app_secret)
+    else:
+        print("⚠️ 飞书未配置，跳过通知")
+except Exception as e:
+    print(f"❌ 发送飞书通知失败: {e}")
+
+PYTHON_EOF
+
+echo "✅ 飞书通知已发送"
