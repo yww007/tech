@@ -46,7 +46,7 @@ def send_feishu_notification(message):
         import requests
         
         # 飞书配置
-        OPENCLAW_CONFIG = "/home/swg/.openclaw/openclaw.json"
+        OPENCLAW_CONFIG = "/root/.openclaw/openclaw.json"
         USER_ID = "ou_9249627924cb237809a9e6c6c0aa7801"
         
         # 从 openclaw.json 加载飞书配置
