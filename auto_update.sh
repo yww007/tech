@@ -7,8 +7,8 @@ set -e
 
 # 配置
 REPO_DIR="/root/.openclaw/workspace/tech-blog"
-TODAY=20260424
-TODAY_STR=2026年04月24日
+TODAY=$(date +%Y%m%d)
+TODAY_STR=$(date +%Y年%m月%d日)
 YEAR=$(date +%Y)
 MONTH=$(date +%m)
 DAY=$(date +%d)
