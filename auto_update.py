@@ -14,7 +14,7 @@ import subprocess
 import time
 
 # 配置
-BLOG_PATH = "/root/.openclaw/workspace/tech-blog"
+BLOG_PATH = "/home/swg/.openclaw/workspace/tech"
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "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")
 IMAGES_DIR = Path(BLOG_PATH) / "images"
 LOGS_DIR = Path(BLOG_PATH) / "logs"
