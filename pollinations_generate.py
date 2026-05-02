@@ -36,8 +36,23 @@ def generate_image(prompt, output_path, width=1344, height=768, seed=None):
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, "wb") as f:
-            f.write(response.content)
+        # 检查是否是JPEG格式（Pollinations API有时返回JPEG但扩展名是PNG）
+        content_type = response.headers.get('content-type', '')
+        is_jpeg = 'jpeg' in content_type.lower() or 'jpg' in content_type.lower()
+
+        # 如果是JPEG，转换为PNG
+        if is_jpeg or b'JFIF' in response.content[:10] or b'Exif' in response.content[:10]:
+            from PIL import Image
+            import io
+
+            # 使用PIL打开JPEG并保存为PNG
+            img = Image.open(io.BytesIO(response.content))
+            img.save(output_path, 'PNG')
+            print(f"🔄 转换JPEG为PNG")
+        else:
+            # 直接保存
+            with open(output_path, "wb") as f:
+                f.write(response.content)
 
         size_kb = len(response.content) / 1024
         print(f"✅ 图片已保存: {output_path} ({size_kb:.0f} KB)")
