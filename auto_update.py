@@ -1237,16 +1237,16 @@ def step_1_generate_html(topic):
         return None
 
 def step_2_generate_image(topic, seed=101, max_retries=2):
-    """第2步：生成图片（参考环球新闻的图片生成逻辑）"""
+    """第2步：生成图片（使用Pollinations API）"""
     logger.log(f"🎨 步骤 2/3: 生成图片")
     logger.log(f"📊 质量标准: 文件200KB-800KB, 分辨率≥1280x720, 比例16:9")
 
     try:
         results = []
-        genai_script = Path("/home/swg/.openclaw/workspace/news-blog/nvidia_genai_generate.py")
+        genai_script = Path("/home/swg/.openclaw/workspace/tech/pollinations_generate.py")
 
-        # 生成提示词（参考环球新闻的提示词）
-        prompt = f"超高清真实技术文档封面，{topic}，8K分辨率，专业技术摄影，极致清晰，锐利细节，真实光线，自然色彩，电影级构图，科技感，现代感，专业镜头，景深效果，真实场景，无卡通，无插画，照片级质量，技术文档风格，专业摄影标准"
+        # 生成提示词（英文，避免编码问题）
+        prompt = f"Professional technical documentation cover about {topic}, 8K resolution, photorealistic, sharp details, natural lighting, cinematic composition, modern technology style, professional photography"
 
         # 图片文件名
         image_file = IMAGES_DIR / f"tech_{seed}.png"
@@ -1260,16 +1260,13 @@ def step_2_generate_image(topic, seed=101, max_retries=2):
 
                 result = subprocess.run(
                     ["python3", str(genai_script), prompt,
-                     "--model", "stabilityai/stable-diffusion-3-medium",
-                     "--ratio", "16:9",
-                     "--steps", "50",  # 提高到50步，增强细节
-                     "--cfg", "7.5",  # 提高CFG值，增强提示词遵循度
+                     "--width", "1344",
+                     "--height", "768",
                      "--seed", str(seed + retry_count * 100),
                      "--output", str(image_file)],
                     capture_output=True,
                     text=True,
-                    timeout=240,  # 增加超时时间
-                    env={**os.environ, "NVIDIA_API_KEY": NVIDIA_API_KEY}
+                    timeout=240
                 )
 
                 if result.returncode == 0 and image_file.exists():
