@@ -6,7 +6,7 @@
 set -e
 
 # 配置
-REPO_DIR="/root/.openclaw/workspace/tech-blog"
+REPO_DIR="/home/swg/.openclaw/workspace/tech"
 TODAY=$(date +%Y%m%d)
 TODAY_STR=$(date +%Y年%m月%d日)
 YEAR=$(date +%Y)

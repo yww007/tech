@@ -1243,7 +1243,7 @@ def step_2_generate_image(topic, seed=101, max_retries=2):
 
     try:
         results = []
-        genai_script = Path("/root/.openclaw/workspace/skills/nvidia-genai/generate.py")
+        genai_script = Path("/home/swg/.openclaw/workspace/news-blog/nvidia_genai_generate.py")
 
         # 生成提示词（参考环球新闻的提示词）
         prompt = f"超高清真实技术文档封面，{topic}，8K分辨率，专业技术摄影，极致清晰，锐利细节，真实光线，自然色彩，电影级构图，科技感，现代感，专业镜头，景深效果，真实场景，无卡通，无插画，照片级质量，技术文档风格，专业摄影标准"
