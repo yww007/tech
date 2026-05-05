@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web安全防护 - 2026年05月05日 | 技术文档</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+            --bg-image: url('../../images/website-background-8k.png');
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        .dark-mode body::before {
+            background: rgba(26, 26, 46, 0.85);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-links a.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: var(--text-color);
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .article-card {
+            background: linear-gradient(145deg, #f6f8fa 0%, #ffffff 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .article-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .dark-mode-toggle:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="../../index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">首页</a></li>
+                <li><a href="../../history.html" class="active">历史</a></li>
+                <li><a href="../../about.html">关于</a></li>
+                <li><a href="../../contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+
+        <div class="content">
+            <a href="../../history.html" class="back-link">← 返回历史存档</a>
+
+            <h1>Web安全防护 - 2026年05月05日</h1>
+
+            <p style="margin-bottom: 30px;">Web安全防护是保护Web应用和用户数据安全的关键技术。以下是今日精选的10篇技术文章，涵盖了Web安全领域的各个方面。</p>
+
+            <div class="article-card">
+                <h3>1. 2026年Web安全防护十大趋势</h3>
+                <p>随着网络攻击手段的不断演进，Web安全防护面临新的挑战。本文深入分析了2026年Web安全领域的十大趋势，包括AI驱动的安全检测、零信任架构的普及、API安全的重要性提升等。企业需要建立多层次的安全防护体系，结合机器学习技术实现威胁的实时检测和响应，同时加强员工安全意识培训，构建全方位的安全防线。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>2. XSS攻击防护最佳实践</h3>
+                <p>跨站脚本攻击（XSS）仍然是Web应用最常见的安全威胁之一。本文详细介绍了XSS攻击的原理、类型和危害，并提供了全面的防护策略。包括输入验证、输出编码、内容安全策略（CSP）配置、HTTP头安全设置等实用技巧。通过代码示例和实际案例分析，帮助开发者构建更安全的Web应用。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>3. SQL注入攻击深度解析与防御</h3>
+                <p>SQL注入攻击是数据库安全的主要威胁，可能导致敏感数据泄露和系统被完全控制。本文从攻击原理入手，详细讲解了各种SQL注入技术，并提供了系统的防御方案。重点介绍了参数化查询、ORM框架的安全使用、数据库权限最小化原则等关键措施，帮助开发者从根本上杜绝SQL注入漏洞。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>4. HTTPS配置与证书管理指南</h3>
+                <p>HTTPS是保护Web通信安全的基础，但配置不当可能导致安全漏洞。本文全面介绍了HTTPS的配置要点，包括证书选择、加密套件优化、HSTS策略设置等。详细讲解了Let's Encrypt自动化证书管理、OCSP装订、TLS 1.3部署等最新技术，帮助运维人员构建安全高效的HTTPS服务。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>5. Web应用防火墙（WAF）部署实战</h3>
+                <p>Web应用防火墙是保护Web应用的重要安全设备。本文介绍了主流WAF产品的特点、部署架构和配置要点。详细讲解了规则集优化、误报处理、性能调优等实战技巧。通过ModSecurity、Cloudflare WAF等具体案例，展示了如何构建高效的WAF防护体系，有效抵御各类Web攻击。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>6. API安全防护完整方案</h3>
+                <p>随着微服务架构的普及，API安全成为Web安全的重要组成部分。本文系统介绍了API安全威胁模型，包括认证授权、数据加密、速率限制、输入验证等关键环节。详细讲解了OAuth 2.0、JWT、API网关等技术的安全实现，提供了API安全测试和监控的实用方法，帮助开发者构建安全的API服务。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>7. CSRF攻击防护机制详解</h3>
+                <p>跨站请求伪造（CSRF）攻击利用用户的已登录状态执行未授权操作。本文深入分析了CSRF攻击的原理和危害，介绍了多种防护机制。包括CSRF Token、SameSite Cookie属性、Referer检查、双重提交Cookie等方法。通过实际代码示例，展示了如何在各种Web框架中实现CSRF防护。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>8. Web安全测试自动化实践</h3>
+                <p>自动化安全测试是提升Web应用安全性的重要手段。本文介绍了OWASP ZAP、Burp Suite等主流安全测试工具的使用方法，详细讲解了自动化扫描、漏洞验证、报告生成等流程。提供了CI/CD集成方案，将安全测试纳入开发流程，实现安全左移，在开发早期发现和修复安全漏洞。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>9. 容器化Web应用安全策略</h3>
+                <p>容器化部署为Web应用带来了新的安全挑战。本文分析了容器环境下的安全风险，包括镜像安全、运行时安全、网络隔离等方面。介绍了镜像扫描、最小化镜像、安全上下文配置、网络策略等防护措施。通过Kubernetes安全配置示例，展示了如何构建安全的容器化Web应用部署方案。</p>
+            </div>
+
+            <div class="article-card">
+                <h3>10. Web安全事件应急响应指南</h3>
+                <p>即使有完善的防护措施，安全事件仍可能发生。本文提供了Web安全事件的应急响应流程，包括事件检测、影响评估、遏制措施、根因分析、恢复重建等关键步骤。介绍了日志分析、取证调查、沟通协调等实用技巧，帮助企业建立完善的安全事件响应机制，最大程度减少安全事件造成的损失。</p>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>
