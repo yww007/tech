@@ -3,248 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>技术文档 | Tech Docs</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>技术文档 - Web安全防护</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        :root {
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --container-bg: white;
-            --text-color: #333;
-            --nav-bg: white;
-            --nav-text: #333;
-            --border-color: rgba(0,0,0,0.1);
-            --bg-image: url('images/website-background-8k.png');
-        }
-
-        .dark-mode {
-            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --container-bg: #1a1a2e;
-            --text-color: #e0e0e0;
-            --nav-bg: #1f1f38;
-            --nav-text: #e0e0e0;
-            --border-color: rgba(255,255,255,0.1);
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--text-color);
-            transition: color 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.85);
-            z-index: -1;
-        }
-
-        .dark-mode body::before {
-            background: rgba(26, 26, 46, 0.85);
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: var(--container-bg);
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            transition: background 0.3s, color 0.3s;
+            padding: 20px;
         }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .navbar-brand {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--nav-text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--nav-text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .nav-links a.active {
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .content {
-            padding: 40px 30px;
-        }
-
-        .content h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            color: var(--text-color);
-        }
-
-        .content h2 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-
-        .content p {
-            line-height: 1.8;
-            margin-bottom: 15px;
-            color: var(--text-color);
-        }
-
-        .content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .content li {
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-
-        .content code {
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .content pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-bottom: 15px;
-        }
-
-        .content pre code {
-            background: none;
-            padding: 0;
-        }
-
-        .dark-mode-toggle {
-            cursor: pointer;
-            padding: 10px 15px;
-            background: #e8f4f8;
-            border: none;
-            border-radius: 8px;
-            color: #1976d2;
-            font-size: 1em;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .dark-mode-toggle:hover {
-            background: #667eea;
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-        }
-
-        footer {
-            background: var(--nav-bg);
-            padding: 20px 30px;
+            padding: 60px 20px;
             text-align: center;
-            color: var(--nav-text);
-            border-top: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 40px;
         }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-            }
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .hero-date {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .articles {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .article-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+        .article-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .article-card p {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+        .article-card a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .article-card a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #999;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <a href="index.html" class="navbar-brand">📚 技术文档</a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="history.html">历史</a></li>
-                <li><a href="about.html">关于</a></li>
-                <li><a href="contact.html">联系</a></li>
-            </ul>
-            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
-        </nav>
-
-        <div class="content">
-            <h2>今日推荐-2026年05月05日</h2>
-
-            <div style="background: linear-gradient(145deg, #f6f8fa 0%, #ffffff 100%); padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #667eea;">
-                <img src="images/tech_505.png" alt="Web安全防护" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em;">Web安全防护</h3>
-                <p style="margin-bottom: 15px;">Web安全防护是保护Web应用和用户数据安全的关键技术。本文将介绍Web安全防护的核心内容，包括XSS攻击防护、SQL注入防御、HTTPS配置、WAF部署、API安全、CSRF防护、安全测试自动化、容器化安全策略以及安全事件应急响应等实用技术，帮助您构建全方位的Web安全防护体系。</p>
-                <p style="margin-bottom: 15px;"><strong>主要内容：</strong></p>
-                <ul style="margin-left: 20px; margin-bottom: 15px;">
-                    <li>XSS攻击防护：输入验证、输出编码、CSP配置</li>
-                    <li>SQL注入防御：参数化查询、ORM安全使用、权限最小化</li>
-                    <li>HTTPS配置：证书管理、加密套件优化、HSTS策略</li>
-                    <li>WAF部署实战：规则集优化、误报处理、性能调优</li>
-                    <li>API安全防护：OAuth 2.0、JWT、API网关安全实现</li>
-                    <li>CSRF防护机制：Token验证、SameSite Cookie、Referer检查</li>
-                    <li>安全测试自动化：OWASP ZAP、Burp Suite、CI/CD集成</li>
-                    <li>容器化安全策略：镜像扫描、运行时安全、网络隔离</li>
-                    <li>安全事件应急响应：事件检测、影响评估、根因分析</li>
-                </ul>
-                <a href="history/2026/05/20260505.html" style="color: #667eea; font-weight: bold;">阅读完整文章 →</a>
-            </div>
-
-            <h2>历史存档</h2>
-
-            <p>所有历史内容都保存在历史页面中，您可以随时查看。</p>
-
-            <p><a href="history.html" style="color: #667eea;">查看历史存档 →</a></p>
+        <div class="hero">
+            <h1>Web安全防护</h1>
+            <p>每日技术精选</p>
+            <div class="hero-date">2026年05月06日</div>
         </div>
 
-        <footer>
-            <p>&copy; 2026 技术文档 | GitHub Pages</p>
-        </footer>
+        <div class="articles">
+
+            <div class="article-card">
+                <h3>[PDF] WEB攻击与防护技术</h3>
+                <p>WEB攻击与防护技术 徐 震 信息安全国家重点实验室 提纲 一、背景概述 二、典型攻击 三、攻防原理 四、防护产品体系 1.1.技术背景 nWeb成为主流的网络和应用技术 qCNCERT/CC 网络安全监测系统对流量数据进行的抽样统计 显示，Web 应用流量占整个TCP 流量的81.1% qB...</p>
+                <a href="https://yangliang.github.io/ppt/php/10-security.pdf" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>Web应用防火墙_云WAF_最佳实践-华为云</h3>
+                <p>检测到您已登录华为云国际站账号，为了您更好的体验，建议您访问国际站服务网站 
+
+- 中国站
+
+   简体中文
+
+   English
+   Bahasa Indonesia
+   Español
+   Português
+   Türkçe
+   عربي
+   ไทย
+   简体中文
+   日本語...</p>
+                <a href="https://www.huaweicloud.com/special/pro-waf-bestpractices.html" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>Web 安全 | MDN</h3>
+                <p>任何有信誉的服务器端框架都会提供验证表单提交的功能。此外，常见的最佳做法是转义构成可执行语法一部分的任何特殊字符，从而使输入的任何代码不再具有可执行性，而被视为纯文本。
+
+### 防止点击劫持
+
+在点击劫持攻击中，用户受骗点击用户界面元素，执行与用户预期不同的操作，通常会导致用户的机密信息被传递给恶...</p>
+                <a href="https://developer.mozilla.org/zh-CN/docs/Web/Security" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>Web安全学习笔记 — Web安全学习笔记 1.0 文档</h3>
+                <p>1. 序章
+  + 1.1. Web技术演化
+  + 1.2. 网络攻防技术演化
+  + 1.3. 网络安全观
+  + 1.4. 法律与法规
+ 2. 计算机网络与协议
+  + 2.1. 网络基础
+  + 2.2. UDP协议
+  + 2.3. TCP协议
+  + 2.4. DHCP协议
+  + 2....</p>
+                <a href="https://websec.readthedocs.io/" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>GitHub爆赞的Web安全防护指南，网络安全零基础入门必备教程！-阿里云开发者社区</h3>
+                <p>### 探索云世界
+
+#### 热门
+
+#### 云计算
+
+#### 大数据
+
+#### 云原生
+
+#### 人工智能
+
+#### 数据库
+
+#### 开发与运维
+
+### 活动广场
+
+丰富的线上&线下活动，深入探索云世界
+
+#### 任务中心
+
+做任务，得社区积分和周边
+
+#### 训练营
+
+资深...</p>
+                <a href="https://developer.aliyun.com/article/1577845" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>[PDF] Web安全</h3>
+                <p>42 安全机制的选择 在具体服务器设置及编写CGI程序时应该注意： 禁止乱用从其他网站下载的一些工具软件，并在 没有详细了解之前尽量不要用root身份注册执行， 以防止某些程序员在程序中设下的陷阱 在选用Web服务器时，应考虑到不同服务器对安 全的要求不一样 在利用Web中的.htpass来管理和校...</p>
+                <a href="http://staff.ustc.edu.cn/~sycheng/sst/lectures/ch07a_Web_Security.pdf" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>什么是网络安全？| 威胁与最佳实践 | Cloudflare</h3>
+                <p>#### 个人应该采取什么措施来加强其个人安全？
+
+#### 企业可以使用哪些具体的策略来保护其基础设施？
+
+企业应维持对其整个网络的充分可见性（包括未经授权的影子 IT 工具），并部署防火墙和 Web 应用防火墙 (WAF)。此外，使用 DDoS 防护、加密数据以及采用具备第三方风险管理的 Zer...</p>
+                <a href="https://www.cloudflare.com/zh-cn/learning/security/what-is-cyber-security/" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>理解Web 应用安全：如何防御网络威胁</h3>
+                <p>加强Web 应用安全取决于可操作且经专家认可的实践：
+
+严格验证输入：通过对所有用户数据进行安全处理来阻止注入攻击。
+
+实施强有力的访问控制：使用MFA 并遵循最小权限原则 来限制访问权限。
+
+安全数据传输：强制使用支持TLS 1.3的HTTPS以确保加密强度。
+
+及时打补丁：更新系统以高效弥补漏洞...</p>
+                <a href="https://www.fortinet.com/cn/resources/cyberglossary/web-application-security" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>什么是 Web 安全？| IBM</h3>
+                <p>### 网络安全
+
+网络安全是一种专注于保护计算机网络和系统免受各种内部和外部安全威胁的安全类型。与身份验证和加密一样，网络安全依赖于防火墙、入侵检测系统 (IDS) 和虚拟专用网络 (VPN) 等实践和工具来检测和消除网络漏洞，以免其导致未经授权的访问。
+
+### 事件响应
+
+尽管严格遵循最佳实践...</p>
+                <a href="https://www.ibm.com/cn-zh/think/topics/web-security" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>GitHub - apachecn/sec-books-part1: :books: 网安类绝版图书 · GitHub</h3>
+                <p>| Web商务安全设计与开发宝典.pdf | | Web商务安全设计与开发宝典.pdf |  |  |
+| Web安全之强化学习与GAN.epub | | Web安全之强化学习与GAN.epub |  |  |
+| Web安全之机器学习入门.epub | | Web安全之机器学习入门.epub | ...</p>
+                <a href="https://github.com/apachecn/sec-books-part1" target="_blank">阅读更多 →</a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>© 2026 技术文档 | 每日自动更新</p>
+        </div>
     </div>
-
-    <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
-    </script>
 </body>
 </html>
