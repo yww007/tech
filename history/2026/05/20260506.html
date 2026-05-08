@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技术文档 - Web安全防护指南</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; border-radius: 10px; margin-bottom: 40px; }
+        .hero h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .hero p { font-size: 1.2em; opacity: 0.9; }
+        .hero-date { margin-top: 20px; font-size: 0.9em; opacity: 0.8; }
+        .articles { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .article-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .article-card:hover { transform: translateY(-5px); }
+        .article-card h3 { color: #667eea; margin-bottom: 10px; font-size: 1.2em; }
+        .article-card p { color: #666; font-size: 0.95em; margin-bottom: 15px; }
+        .article-card a { color: #667eea; text-decoration: none; font-weight: 500; }
+        .article-card a:hover { text-decoration: underline; }
+        .footer { text-align: center; margin-top: 40px; padding: 20px; color: #999; font-size: 0.9em; }
+        .nav-note { background: #f8f9fa; padding: 20px; margin: 30px 0; border-radius: 12px; text-align: center; border: 1px solid #dee2e6; }
+        .nav-note a { color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Web安全防护指南</h1>
+            <p>每日技术精选</p>
+            <div class="hero-date">2026年05月06日</div>
+        </div>
+
+        <div class="articles">
+
+            <div class="article-card">
+                <h3>Web应用安全入门完全指南 - OWASP</h3>
+                <p>Web应用安全是保护Web应用免受恶意攻击和数据泄露的关键领域。常见的Web安全威胁包括SQL注入、跨站脚本(XSS)、跨站请求伪造(CSRF)等。本文详细介绍OWASP Top 10安全风险及对应的防护措施。</p>
+                <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>CSRF攻击原理与防护策略 - Web安全</h3>
+                <p>CSRF（跨站请求伪造）是一种利用用户已认证的身份发起恶意请求的攻击方式。攻击者诱导用户访问恶意页面，该页面自动向目标网站发起请求。防护策略：CSRF Token、同源检测、SameSite Cookie等。</p>
+                <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>XSS跨站脚本攻击详解与防御方法 - 安全客</h3>
+                <p>XSS攻击通过在网页中注入恶意脚本代码，当其他用户浏览该网页时，恶意代码会在用户浏览器执行。类型：反射型、存储型、DOM型。防护：输入过滤、输出编码、CSP内容安全策略。</p>
+                <a href="https://www.anquanke.com/post/id/170000" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>SQL注入攻击原理、类型与防御措施 - 博客园</h3>
+                <p>SQL注入是一种将恶意SQL代码插入到应用输入参数中，最终被数据库解析执行的攻击方式。攻击者可以绕过认证、获取敏感数据、甚至删除整个数据库。防护：参数化查询、输入验证、最小权限原则。</p>
+                <a href="https://www.cnblogs.com/yingsong/p/5950146.html" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>HTTPS与SSL/TLS安全协议详解 - SSL证书</h3>
+                <p>HTTPS通过SSL/TLS协议对传输数据进行加密，保护数据在客户端和服务器之间的安全传输。TLS 1.3是目前最新版本，提供更快的连接建立和更强的安全性。配置HTTPS需要有效的SSL证书。</p>
+                <a href="https://www.cloudflare.com/learning/ssl/what-is-https/" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>网络安全：保护你的应用免受攻击 - 阿里云安全</h3>
+                <p>云原生安全策略包括：容器安全扫描、最小镜像原则、网络分段、服务网格安全。阿里云提供了完善的安全产品体系，包括云防火墙、DDoS防护、安全审计等。</p>
+                <a href="https://help.aliyun.com/document_detail/161377.html" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>API安全防护：最佳实践指南 - RapidAPI</h3>
+                <p>API安全涉及认证、授权、输入验证、速率限制等多个方面。使用OAuth 2.0和JWT进行认证，对输入进行严格验证，实施API网关进行统一安全管理。</p>
+                <a href="https://rapidapi.com/learn/api-security" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>零信任安全架构：企业安全新范式 - 腾讯安全</h3>
+                <p>零信任(Zero Trust)是一种"永不信任，始终验证"的安全理念。所有用户和设备在获得授权前都需要经过验证，不分内外网。实施零信任需要：身份认证、最小权限、微隔离、持续监控。</p>
+                <a href="https://cloud.tencent.com/developer/article/1837744" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>DDoS攻击原理与防护措施 - 绿盟科技</h3>
+                <p>DDoS（分布式拒绝服务）通过大量请求拥塞目标服务器，使其无法正常提供服务。防护措施包括：流量清洗、黑洞路由、弹性扩展、内容分发网络(CDN)。</p>
+                <a href="https://www.nsfocus.com.cn/html/2020/article_90/258.html" target="_blank">阅读更多 →</a>
+            </div>
+
+            <div class="article-card">
+                <h3>应用安全测试：渗透测试方法论 - FreeBuf</h3>
+                <p>渗透测试是通过模拟黑客攻击来发现系统安全漏洞的安全测试方法。标准流程：信息收集、漏洞扫描、漏洞利用、权限提升、报告编写。常用工具：Nmap、Burp Suite、Metasploit。</p>
+                <a href="https://www.freebuf.com/articles/rookie" target="_blank">阅读更多 →</a>
+            </div>
+
+        </div>
+
+        <div class="nav-note">
+            <p style="color: #666; margin-bottom: 10px;">📁 此页面为归档页面</p>
+            <p style="margin: 0;">
+                <a href="../index.html">← 返回首页</a>
+                <a href="index.html">📅 归档目录</a>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 技术文档 | 每日自动更新</p>
+        </div>
+    </div>
+</body>
+</html>
