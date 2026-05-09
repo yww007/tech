@@ -20,7 +20,12 @@ def get_image_prompts(topic="AI驱动的网络安全"):
     
     # 通用科技/安全主题背景图
     bg_prompts = {
-        "default": "Futuristic cybersecurity technology background, dark blue digital network, glowing circuit patterns, secure internet infrastructure, holographic security shields, abstract tech aesthetic, 8k high resolution",
+        "default": "Beautiful landscape scenery with mountains, crystal clear lake, green trees, colorful flowers, blue sky with white clouds, peaceful nature scene, high resolution, panoramic view",
+    }
+    
+    # 主题背景风景图
+    theme_prompts = {
+        "default": "Serene mountain landscape with flowing river, lush green forest, blooming flowers of many colors, blue sky with fluffy white clouds, golden sunlight, tranquil nature paradise, breathtaking scenery",
     }
     
     # 基于主题生成内容配图提示词
@@ -73,10 +78,18 @@ def get_image_prompts(topic="AI驱动的网络安全"):
         "bg": {
             "id": "bg",
             "filename": "website-background-8k.png",
-            "title": "背景图",
+            "title": "背景图（风景）",
             "prompt_en": bg_prompts["default"],
             "width": 1920,
             "height": 1080,
+        },
+        "theme": {
+            "id": "theme",
+            "filename": "tech_theme_main.png",
+            "title": "主题风景图",
+            "prompt_en": theme_prompts["default"],
+            "width": 1920,
+            "height": 600,
         },
         "content": content_prompts
     }
@@ -139,7 +152,7 @@ if __name__ == "__main__":
     
     # 获取图片列表
     prompts = get_image_prompts(topic)
-    images = [prompts["bg"]] + prompts["content"]
+    images = [prompts["bg"], prompts["theme"]] + prompts["content"]
     
     print(f"开始重新生成 {len(images)} 张技术文档配图...")
     print(f"主题: {topic}")

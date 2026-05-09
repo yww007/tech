@@ -305,6 +305,19 @@
             border-top: 1px solid var(--border-color);
         }
 
+        .theme-scenery {
+            width: 100%;
+            margin-top: 30px;
+            overflow: hidden;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .theme-scenery .theme-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -578,6 +591,10 @@ anomaly_score = model.predict(X_test)</code></pre>
                     <li><a href="https://owasp.org/" target="_blank">OWASP安全项目</a></li>
                     <li><a href="https://www.sans.org/" target="_blank">SANS安全培训</a></li>
                 </ul>
+            </div>
+
+            <div class="theme-scenery">
+                <img src="images/tech_theme_main.png" alt="风景背景" class="theme-image">
             </div>
         </div>
 
