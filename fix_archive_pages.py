@@ -1,11 +1,29 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker容器化部署指南 - 2026年04月12日 | 技术文档</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+#!/usr/bin/env python3
+"""
+修复 tech 归档页：添加背景图、导航、修复路径
+"""
 
+import re
+from pathlib import Path
+from datetime import datetime
+
+BLOG_PATH = Path("/home/swg/.openclaw/workspace/tech")
+HISTORY_DIR = BLOG_PATH / "history"
+
+# 正确的 CSS 和 navbar 模板
+NAVBAR_HTML = '''
+    <nav class="navbar">
+        <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+        <ul class="nav-links">
+            <li><a href="../../../index.html" class="active">首页</a></li>
+            <li><a href="../../../history.html">历史归档</a></li>
+            <li><a href="../../../about.html">关于我们</a></li>
+            <li><a href="../../../contact.html">联系我们</a></li>
+        </ul>
+    </nav>
+'''
+
+CSS_TEMPLATE = '''
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -130,33 +148,95 @@
         .article-card a { color: #667eea; text-decoration: none; }
         .article-card a:hover { text-decoration: underline; }
     </style>
+'''
 
+def fix_archive_page(html_path):
+    """修复单个归档页"""
+    if not html_path.exists():
+        return False
+    
+    with open(html_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # 提取标题和日期
+    title_match = re.search(r'<title>([^<]+)</title>', content)
+    title = title_match.group(1) if title_match else "技术文档"
+    
+    date_match = re.search(r'(\d{4}年\d{1,2}月\d{1,2}日)', content)
+    date_str = date_match.group(1) if date_match else datetime.now().strftime('%Y年%m月%d日')
+    
+    # 提取 hero 内容
+    hero_h1_match = re.search(r'<h1>([^<]+)</h1>', content)
+    hero_h1 = hero_h1_match.group(1) if hero_h1_match else title
+    
+    # 检查是否已有完整结构
+    if 'class="navbar"' in content and 'website-background-8k.png' in content:
+        print(f"  ⏭️ 已是完整结构: {html_path.name}")
+        return True
+    
+    # 构建新页面
+    new_content = f'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{CSS_TEMPLATE}
 </head>
 <body>
     <div class="container">
-
-    <nav class="navbar">
-        <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
-        <ul class="nav-links">
-            <li><a href="../../../index.html" class="active">首页</a></li>
-            <li><a href="../../../history.html">历史归档</a></li>
-            <li><a href="../../../about.html">关于我们</a></li>
-            <li><a href="../../../contact.html">联系我们</a></li>
-        </ul>
-    </nav>
-
+{NAVBAR_HTML}
         <div class="hero">
-            <h1>Docker容器化部署指南</h1>
+            <h1>{hero_h1}</h1>
             <p>每日技术精选</p>
-            <div class="hero-date">2026年04月12日</div>
+            <div class="hero-date">{date_str}</div>
             <a href="../../../index.html" class="back-link">← 返回首页</a>
         </div>
         <div class="content">
-
+'''
+    
+    # 提取文章卡片
+    article_pattern = re.compile(
+        r'<div class="article-card">(.*?)</div>\s*</div>\s*<div class="footer">',
+        re.DOTALL
+    )
+    
+    # 提取内容部分
+    content_match = re.search(r'<div class="content">(.*?)</div>\s*<div class="footer">', content, re.DOTALL)
+    if content_match:
+        article_content = content_match.group(1).strip()
+        # 修复图片路径
+        article_content = article_content.replace('src="images/', 'src="../../../images/')
+        new_content += article_content
+    
+    new_content += '''
         </div>
         <div class="footer">
-            <p>所有内容仅供参考学习 · 2026年04月12日</p>
+            <p>所有内容仅供参考学习 · ''' + date_str + '''</p>
         </div>
     </div>
 </body>
-</html>
+</html>'''
+    
+    with open(html_path, 'w', encoding='utf-8') as f:
+        f.write(new_content)
+    
+    print(f"  ✅ 已修复: {html_path.name}")
+    return True
+
+def main():
+    print("🔧 修复 tech 归档页...")
+    
+    archive_files = sorted(HISTORY_DIR.glob("**/2026*/**/*.html"))
+    archive_files = [f for f in archive_files if f.name != 'index.html']
+    
+    print(f"找到 {len(archive_files)} 个归档页")
+    
+    for f in archive_files:
+        fix_archive_page(f)
+    
+    print("\n✅ 全部修复完成!")
+
+if __name__ == "__main__":
+    main()

@@ -4,270 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>技术文档 - 微服务架构</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+            --bg-image: url('../../../images/website-background-8k.png');
+        }
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.88);
+            z-index: -1;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
         }
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             color: white;
-            padding: 60px 20px;
+            padding: 50px 30px;
             text-align: center;
-            border-radius: 10px;
-            margin-bottom: 40px;
         }
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .hero-date {
+        .hero h1 { font-size: 2.2em; margin-bottom: 15px; }
+        .hero p { font-size: 1.1em; opacity: 0.9; }
+        .hero-date { margin-top: 15px; font-size: 0.9em; opacity: 0.8; }
+        .back-link {
+            display: inline-block;
             margin-top: 20px;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        .articles {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        .article-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .article-card:hover {
-            transform: translateY(-5px);
-        }
-        .article-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .article-card p {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 15px;
-        }
-        .article-card a {
-            color: #667eea;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
             text-decoration: none;
-            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
-        .article-card a:hover {
-            text-decoration: underline;
+        .back-link:hover { background: rgba(255,255,255,0.3); }
+        .content { padding: 40px 30px; }
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
         }
+        .content p { margin-bottom: 15px; line-height: 1.8; }
+        .content pre {
+            background: #f6f8fa;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .content img { max-width: 100%; border-radius: 8px; margin: 15px 0; }
         .footer {
             text-align: center;
-            margin-top: 40px;
             padding: 20px;
             color: #999;
             font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
         }
+        .article-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .article-card h3 { color: #667eea; margin-bottom: 10px; }
+        .article-card p { color: #666; line-height: 1.6; }
+        .article-card a { color: #667eea; text-decoration: none; }
+        .article-card a:hover { text-decoration: underline; }
     </style>
+
 </head>
 <body>
     <div class="container">
+
+    <nav class="navbar">
+        <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+        <ul class="nav-links">
+            <li><a href="../../../index.html" class="active">首页</a></li>
+            <li><a href="../../../history.html">历史归档</a></li>
+            <li><a href="../../../about.html">关于我们</a></li>
+            <li><a href="../../../contact.html">联系我们</a></li>
+        </ul>
+    </nav>
+
         <div class="hero">
             <h1>微服务架构</h1>
             <p>每日技术精选</p>
             <div class="hero-date">2026年05月07日</div>
+            <a href="../../../index.html" class="back-link">← 返回首页</a>
         </div>
-
-        <div class="articles">
-
-            <div class="article-card">
-                <h3>[PDF] 微服务架构深度解析与最佳实践</h3>
-                <p>Part 3 微服务架构最佳实践 最佳实践之⼀：遗留系统的微服务改造 ①功能剥离、数据解耦 ②⾃然演进、逐步拆分 ③⼩步快跑、快速迭代 ④灰度发布、谨慎试错 ⑤提质量线、还技术债 改造前 改造后 最佳实践之⼆：如何做恰当粒度的拆分 拆分原则： 1. ⾼高内聚低耦合 2. 不不同阶段拆分要点不不同 最...</p>
-                <a href="http://kimmking.github.io/ppt/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-%E7%A7%A6%E9%87%91%E5%8D%ABKimmKing.pdf" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>34-微服务架构最佳实践 - 方法篇 | Joyxj</h3>
-                <p>这个最常见的一种拆分方式，将系统中的业务模块按照职责范围识别出来，每个单独的业务模块拆分成一个独立的服务。
-
-   基于业务的拆分虽然看起来很直观，但在实践中最常见的问题就是团队成员对于“职责”的理解差异很大，经常会出现争论，难以达成一致意见。例如，对于一个电商系统，第一种方式是将服务拆分成“商品”...</p>
-                <a href="https://xiaojun90.github.io/blog/architecture/1028.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>36 微服务架构最佳实践 - 基础设施篇</h3>
-                <p>自动化部署系统包括版本管理、资源管理（例如，机器管理、虚拟机管理）、部署操作、回退操作等功能。
-
-## 配置中心
-
-微服务的节点数量非常多，通过人工登录每台机器手工修改，效率低，容易出错。特别是在部署或者排障时，需要快速增删改查配置，人工操作的方式显然是不行的。除此以外，有的运行期配置需要动态修改并...</p>
-                <a href="https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/%E4%BB%8E%200%20%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84/36%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%20-%20%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E7%AF%87.md" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>微服务架构最佳实践 - Trollshuo's BLOG</h3>
-                <p>“这没有任何模式；有许多不同的规则可以将一个系统拆分成微服务，但没有人会告诉你在你的应用中应该如何做。因为这不会有两个完全相同的微服务”。- David Papp，Recart公司的首席架构师
-
-#### ✅ 可能的解决方案
-
-“将单体系统拆分成微服务的唯一方法是，首先检查单体系统，看看它最大的痛点...</p>
-                <a href="https://trollshuo.com/post/microservice_architecture_best_practices/" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>微服务架构最强讲解，通俗易懂，写得太好了！ - Java技术栈 - 博客园</h3>
-                <p>3、SOA喜欢自上而下，微服务喜欢自下而上
-
-SOA 架构在设计开始时会先定义好服务合同(service contract)。它喜欢集中管理所有的服务，包括集中管理业务逻辑，数据，流程，schema，等等。它使用Enterprise Inventory和Service Composition等方法来...</p>
-                <a href="https://www.cnblogs.com/javastack/p/14925269.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>一文搞懂微服务架构 | 人人都是产品经理</h3>
-                <p>### 2、SOA喜欢水平服务，微服务喜欢垂直服务
-
-SOA设计喜欢给服务分层(如Service Layers模式)。我们常常见到一个Entity服务层的设计，美其名曰Data Access Layer。这种设计要求所有的服务都通过这个Entity服务层来获取数据。这种设计非常不灵活，比如每次数据层...</p>
-                <a href="https://www.woshipm.com/pd/6056523.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>如何构建微服务 | Atlassian</h3>
-                <p>高速交付服务
-
-## Atlassian 集合
-
-### Rovo
-
-人工智能支持的应用—由团队知识驱动。
-
-### Rovo
-
-人工智能支持的应用—由团队知识驱动。
-
-### Rovo
-
-人工智能支持的应用—由团队知识驱动。
-
-### Rovo
-
-人工智能支持的应用—由团队知识驱动。
-
-### R...</p>
-                <a href="https://www.atlassian.com/zh/microservices/microservices-architecture/building-microservices" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>【微服务架构】:微服务最佳实践-阿里云开发者社区</h3>
-                <p>### 探索云世界
-
-#### 热门
-
-#### 云计算
-
-#### 大数据
-
-#### 云原生
-
-#### 人工智能
-
-#### 数据库
-
-#### 开发与运维
-
-### 活动广场
-
-丰富的线上&线下活动，深入探索云世界
-
-#### 任务中心
-
-做任务，得社区积分和周边
-
-#### 训练营
-
-资深...</p>
-                <a href="https://developer.aliyun.com/article/1224842" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>微服务架构演进核心原理与主流框架概览-开发者社区-阿里云</h3>
-                <p>云原生
-
-热门
-
-# 《微服务零基础入门教程》一步一步，带你走进微服务的世界（上）
-
-### 为什么选择阿里云
-
-### 大模型
-
-### 产品和定价
-
-### 技术内容
-
-### 权益
-
-### 服务
-
-### 关注阿里云
-
-关注阿里云公众号或下载阿里云APP，关注云资讯，随时随地运维管控云服务
-...</p>
-                <a href="https://developer.aliyun.com/article/929875" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>微服务是什么？ - 阮一峰的网络日志</h3>
-                <p>2022年4月29日 10:42 | # | 引用
-
-shinlooker 说：
-
-谢谢分享
-
-2022年4月29日 10:47 | # | 引用
-
-小飞页 说：
-
-一直都没时间去了解。今天看了你的文章。原来是这么简单。讲的通俗易懂。
-
-2022年4月29日 13:03 | # | 引用
-
-zjy ...</p>
-                <a href="https://www.ruanyifeng.com/blog/2022/04/microservice.html" target="_blank">阅读更多 →</a>
-            </div>
+        <div class="content">
 
         </div>
-
-        
-        <div style="background: #f8f9fa; padding: 20px; margin: 30px 0; border-radius: 12px; text-align: center; border: 1px solid #dee2e6;">
-            <p style="color: #666; margin-bottom: 10px;">
-                📁 此页面为归档页面
-            </p>
-            <p style="margin: 0;">
-                <a href="../index.html" style="color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px;">
-                    ← 返回首页
-                </a>
-                <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px;">
-                    📅 归档目录
-                </a>
-            </p>
-        </div>
-
         <div class="footer">
-            <p>© 2026 技术文档 | 每日自动更新</p>
+            <p>所有内容仅供参考学习 · 2026年05月07日</p>
         </div>
     </div>
 </body>

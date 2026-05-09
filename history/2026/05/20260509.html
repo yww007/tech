@@ -4,173 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>技术文档 - Linux系统管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+            --bg-image: url('../../../images/website-background-8k.png');
+        }
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.88);
+            z-index: -1;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
         }
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             color: white;
-            padding: 60px 20px;
+            padding: 50px 30px;
             text-align: center;
-            border-radius: 10px;
-            margin-bottom: 40px;
         }
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .hero-date {
+        .hero h1 { font-size: 2.2em; margin-bottom: 15px; }
+        .hero p { font-size: 1.1em; opacity: 0.9; }
+        .hero-date { margin-top: 15px; font-size: 0.9em; opacity: 0.8; }
+        .back-link {
+            display: inline-block;
             margin-top: 20px;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        .hero-image {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-        .articles {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        .article-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .article-card:hover {
-            transform: translateY(-5px);
-        }
-        .article-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .article-card p {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 15px;
-        }
-        .article-card a {
-            color: #667eea;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
             text-decoration: none;
-            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
-        .article-card a:hover {
-            text-decoration: underline;
+        .back-link:hover { background: rgba(255,255,255,0.3); }
+        .content { padding: 40px 30px; }
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
         }
+        .content p { margin-bottom: 15px; line-height: 1.8; }
+        .content pre {
+            background: #f6f8fa;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .content img { max-width: 100%; border-radius: 8px; margin: 15px 0; }
         .footer {
             text-align: center;
-            margin-top: 40px;
             padding: 20px;
             color: #999;
             font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
         }
+        .article-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .article-card h3 { color: #667eea; margin-bottom: 10px; }
+        .article-card p { color: #666; line-height: 1.6; }
+        .article-card a { color: #667eea; text-decoration: none; }
+        .article-card a:hover { text-decoration: underline; }
     </style>
+
 </head>
 <body>
     <div class="container">
+
+    <nav class="navbar">
+        <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+        <ul class="nav-links">
+            <li><a href="../../../index.html" class="active">首页</a></li>
+            <li><a href="../../../history.html">历史归档</a></li>
+            <li><a href="../../../about.html">关于我们</a></li>
+            <li><a href="../../../contact.html">联系我们</a></li>
+        </ul>
+    </nav>
+
         <div class="hero">
             <h1>Linux系统管理</h1>
             <p>每日技术精选</p>
             <div class="hero-date">2026年05月09日</div>
-            <div class="hero-image">
-                <img src="../../../images/tech_20260509.png" alt="Linux系统管理">
-            </div>
+            <a href="../../../index.html" class="back-link">← 返回首页</a>
         </div>
-
-        <div class="articles">
-
-            <div class="article-card">
-                <h3>Linux系统管理：高效命令行技巧与实战</h3>
-                <p>Linux系统管理是运维工程师的核心技能。掌握命令行操作能够大幅提升工作效率。本文介绍常用的Linux命令，如文件管理、进程监控、系统性能分析等。通过实际案例演示如何使用grep、awk、sed等文本处理工具，以及top、htop、vmstat等系统监控命令。学习这些技巧将帮助您快速定位和解决系统问题，提高服务器管理效率。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux服务器安全加固最佳实践</h3>
-                <p>服务器安全是Linux系统管理的重要环节。本文详细介绍如何从多个层面加固Linux服务器安全，包括SSH配置优化、防火墙规则设置、用户权限管理、文件系统安全等。通过实施最小权限原则、定期更新系统补丁、配置日志审计等措施，可以有效降低安全风险。同时介绍如何使用fail2ban、AIDE等工具增强系统安全性，保护服务器免受恶意攻击。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux性能调优：从入门到精通</h3>
-                <p>Linux系统性能调优是提升服务器运行效率的关键。本文深入讲解CPU、内存、磁盘I/O、网络等子系统的性能优化方法。通过分析系统瓶颈，介绍如何调整内核参数、优化文件系统、配置交换分区等实用技巧。同时提供性能监控工具的使用指南，包括sar、iostat、netstat等，帮助您全面了解系统运行状态，实现精准调优。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux容器化技术：Docker与Kubernetes实战</h3>
-                <p>容器化技术已成为现代应用部署的标准。本文详细介绍Linux容器技术的核心概念，包括Docker容器管理、镜像构建、网络配置等。进一步讲解Kubernetes集群部署、Pod管理、服务发现等高级特性。通过实际案例演示如何使用容器化技术实现应用的快速部署、弹性扩展和自动化运维，提升开发效率和系统可靠性。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux日志管理与分析实战</h3>
-                <p>日志是Linux系统管理的重要信息来源。本文介绍Linux系统日志的存储结构、日志轮转配置、日志级别设置等基础知识。详细讲解如何使用journalctl、rsyslog等工具进行日志收集和分析。通过实际案例演示如何从系统日志、应用日志、安全日志中提取关键信息，快速定位故障原因，提高问题排查效率。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux自动化运维：Ansible与Shell脚本</h3>
-                <p>自动化运维是提升Linux系统管理效率的重要手段。本文介绍Ansible自动化工具的使用方法，包括Inventory管理、Playbook编写、模块应用等。同时讲解Shell脚本编程技巧，通过实际案例演示如何编写自动化脚本实现批量配置管理、定时任务执行、系统监控等功能。掌握这些技能将大幅减少重复性工作，提高运维效率。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux网络配置与故障排查</h3>
-                <p>网络配置是Linux系统管理的基础技能。本文详细介绍Linux网络配置方法，包括IP地址设置、路由配置、DNS解析、防火墙规则等。重点讲解网络故障排查思路和工具使用，如ping、traceroute、tcpdump、wireshark等。通过实际案例演示如何定位网络连接问题、分析网络流量、优化网络性能，确保服务器网络稳定运行。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux文件系统与存储管理</h3>
-                <p>文件系统管理是Linux系统管理的核心内容。本文介绍Linux文件系统类型、分区管理、LVM逻辑卷、文件权限等基础知识。详细讲解如何使用fdisk、parted、lvcreate等工具进行磁盘分区和逻辑卷管理。同时介绍文件系统优化、数据备份恢复、RAID配置等实用技巧，帮助您高效管理服务器存储资源。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux系统监控与告警实战</h3>
-                <p>系统监控是保障Linux服务器稳定运行的关键。本文介绍主流监控工具的使用方法，包括Zabbix、Prometheus、Grafana等。详细讲解如何配置监控指标、设置告警规则、创建可视化仪表盘。通过实际案例演示如何监控CPU、内存、磁盘、网络等关键指标，及时发现系统异常，快速响应故障，确保业务连续性。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>Linux高可用架构设计</h3>
-                <p>高可用架构是保障业务连续性的重要手段。本文介绍Linux高可用架构的设计原则和实现方法，包括负载均衡、故障转移、数据同步等技术。详细讲解如何使用HAProxy、Keepalived、Corosync等工具构建高可用集群。通过实际案例演示如何实现Web服务、数据库服务的高可用部署，提高系统容错能力，确保服务稳定运行。</p>
-                <a href="history/2026/05/20260509.html" target="_blank">阅读更多 →</a>
-            </div>
+        <div class="content">
 
         </div>
-
         <div class="footer">
-            <p>© 2026 技术文档 | 每日自动更新</p>
+            <p>所有内容仅供参考学习 · 2026年05月09日</p>
         </div>
     </div>
 </body>
