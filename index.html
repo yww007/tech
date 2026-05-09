@@ -106,7 +106,8 @@
         }
 
         .hero {
-            background: var(--bg-gradient);
+            background: url('images/hero-background.png') no-repeat center center;
+            background-size: cover;
             color: white;
             padding: 60px 30px;
             text-align: center;
@@ -114,11 +115,23 @@
             overflow: hidden;
         }
 
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
         .hero h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
             position: relative;
             z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .hero p {
@@ -126,12 +139,13 @@
             opacity: 0.9;
             position: relative;
             z-index: 1;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
 
         .hero-date {
             margin-top: 20px;
             font-size: 0.9em;
-            opacity: 0.8;
+            opacity: 0.9;
             position: relative;
             z-index: 1;
         }
