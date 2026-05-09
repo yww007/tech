@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 技术文档配图重新生成 - 基于当前文章内容
+支持动态主题：python3 regenerate_tech_images.py "AI主题描述"
 """
 
 import subprocess
 import time
+import sys
 from pathlib import Path
 from PIL import Image
 
@@ -13,77 +15,71 @@ POLLINATIONS_SCRIPT = Path("/home/swg/.openclaw/workspace/news-blog/pollinations
 OUTPUT_DIR = Path("/home/swg/.openclaw/workspace/tech/images")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# 当前文章是 "AI驱动的网络安全防护体系"
-# 需要生成 7 张配图 + 1 张背景图
-
-IMAGES = [
-    # 背景图
-    {
-        "id": "bg",
-        "filename": "website-background-8k.png",
-        "title": "背景图",
-        "prompt_en": "Futuristic cybersecurity technology background, dark blue digital network, glowing circuit patterns, secure internet infrastructure, holographic security shields, abstract tech aesthetic, 8k high resolution",
-        "width": 1920,
-        "height": 1080,
-    },
-    # 内容配图
-    {
-        "id": "101",
-        "filename": "tech_101.png",
-        "title": "AI网络安全架构图",
-        "prompt_en": "AI network security architecture diagram, central AI brain processing data streams, firewalls and security layers visualized, interconnected nodes, modern tech infographic style, blue and cyan color scheme",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "102",
-        "filename": "tech_102.png",
-        "title": "AI安全应用场景",
-        "prompt_en": "AI cybersecurity application scenarios, multiple screens showing threat detection, automated response systems, machine learning models, data analytics dashboards, professional tech environment",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "202",
-        "filename": "tech_202.png",
-        "title": "机器学习威胁检测流程",
-        "prompt_en": "Machine learning threat detection workflow diagram, data input flowing through neural network layers, threat patterns being identified, flow chart with icons, clean professional design",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "430",
-        "filename": "tech_430.png",
-        "title": "深度学习架构",
-        "prompt_en": "Deep learning security analysis architecture, neural network visualization with security shield, multi-layer processing, data streams, futuristic tech illustration, dark theme with glowing elements",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "504",
-        "filename": "tech_504.png",
-        "title": "自动化响应流程",
-        "prompt_en": "Automated security response workflow, AI system detecting threats and automatically deploying countermeasures, flowchart with robotic process automation, incident response diagram",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "505",
-        "filename": "tech_505.png",
-        "title": "AI安全实施框架",
-        "prompt_en": "AI security implementation framework, layered security model with AI at center, implementation stages diagram, strategic planning visualization, enterprise security architecture",
-        "width": 800,
-        "height": 450,
-    },
-    {
-        "id": "501",
-        "filename": "tech_501.png",
-        "title": "未来发展趋势",
-        "prompt_en": "Future AI cybersecurity trends, holographic displays showing quantum computing and AI convergence, next generation security technology, forward-looking tech concept illustration",
-        "width": 800,
-        "height": 450,
-    },
-]
+def get_image_prompts(topic="AI驱动的网络安全"):
+    """根据主题获取图片提示词"""
+    
+    # 通用科技/安全主题背景图
+    bg_prompts = {
+        "default": "Futuristic cybersecurity technology background, dark blue digital network, glowing circuit patterns, secure internet infrastructure, holographic security shields, abstract tech aesthetic, 8k high resolution",
+    }
+    
+    # 基于主题生成内容配图提示词
+    content_prompts = [
+        {
+            "id": "101",
+            "filename": "tech_101.png",
+            "title": "技术架构图",
+            "prompt_en": "Professional technical architecture diagram, system components connected with lines, cloud infrastructure, servers and databases, modern tech infographic, clean design with blue accents",
+        },
+        {
+            "id": "102", 
+            "filename": "tech_102.png",
+            "title": "技术应用场景",
+            "prompt_en": "Technology application scenarios, multiple use cases displayed, practical implementations in real world, professional tech environment, detailed illustrations",
+        },
+        {
+            "id": "202",
+            "filename": "tech_202.png", 
+            "title": "工作流程图",
+            "prompt_en": "Technical workflow diagram, step by step process with arrows, data flowing through system, professional flowchart style, clean and organized layout",
+        },
+        {
+            "id": "430",
+            "filename": "tech_430.png",
+            "title": "深度学习架构",
+            "prompt_en": "Deep learning neural network architecture visualization, multi-layer processing units, data transformation stages, AI model structure, futuristic tech illustration",
+        },
+        {
+            "id": "504",
+            "filename": "tech_504.png",
+            "title": "自动化流程",
+            "prompt_en": "Automated process workflow, robotic process automation RPA, AI handling tasks automatically, efficiency optimization, modern automation concept",
+        },
+        {
+            "id": "505",
+            "filename": "tech_505.png",
+            "title": "实施框架",
+            "prompt_en": "Implementation framework diagram, structured approach with phases, strategic planning, enterprise deployment model, professional methodology visualization",
+        },
+        {
+            "id": "501",
+            "filename": "tech_501.png",
+            "title": "未来趋势",
+            "prompt_en": "Future technology trends concept, next generation innovation, emerging technologies converging, forward-looking tech vision, cutting-edge development illustration",
+        },
+    ]
+    
+    return {
+        "bg": {
+            "id": "bg",
+            "filename": "website-background-8k.png",
+            "title": "背景图",
+            "prompt_en": bg_prompts["default"],
+            "width": 1920,
+            "height": 1080,
+        },
+        "content": content_prompts
+    }
 
 def generate_with_pollinations(image_info):
     """使用 Pollinations 生成图片"""
@@ -97,8 +93,8 @@ def generate_with_pollinations(image_info):
         str(POLLINATIONS_SCRIPT),
         image_info["prompt_en"],
         "--output", str(output_file),
-        "--width", str(image_info["width"]),
-        "--height", str(image_info["height"]),
+        "--width", str(image_info.get("width", 800)),
+        "--height", str(image_info.get("height", 450)),
         "--model", "turbo",
         "--nologo",
     ]
@@ -138,24 +134,32 @@ def generate_with_pollinations(image_info):
         return False
 
 if __name__ == "__main__":
-    print(f"开始重新生成 {len(IMAGES)} 张技术文档配图...")
-    print(f"每张间隔 60 秒避免限流，总耗时约 {len(IMAGES)} 分钟\n")
+    # 获取主题（可选命令行参数）
+    topic = sys.argv[1] if len(sys.argv) > 1 else "AI驱动的网络安全"
+    
+    # 获取图片列表
+    prompts = get_image_prompts(topic)
+    images = [prompts["bg"]] + prompts["content"]
+    
+    print(f"开始重新生成 {len(images)} 张技术文档配图...")
+    print(f"主题: {topic}")
+    print(f"每张间隔 60 秒避免限流，总耗时约 {len(images)} 分钟\n")
     
     success = 0
     failed = []
     
-    for i, img in enumerate(IMAGES):
-        print(f"[{i+1}/{len(IMAGES)}]")
+    for i, img in enumerate(images):
+        print(f"[{i+1}/{len(images)}]")
         if generate_with_pollinations(img):
             success += 1
         else:
             failed.append(img["id"])
         
         # 每张间隔60秒避免限流
-        if i < len(IMAGES) - 1:
+        if i < len(images) - 1:
             print(f"  等待 60 秒...")
             time.sleep(60)
     
-    print(f"\n完成！成功 {success}/{len(IMAGES)}")
+    print(f"\n完成！成功 {success}/{len(images)}")
     if failed:
         print(f"失败: {failed}")
