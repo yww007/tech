@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux系统管理 - 2026年05月04日 | 技术文档</title>
+    <meta name="description" content="Linux系统管理 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --container-bg: white;
@@ -15,8 +20,8 @@
             --nav-bg: white;
             --nav-text: #333;
             --border-color: rgba(0,0,0,0.1);
-            --bg-image: url('../../../images/website-background-8k.png');
         }
+
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             --container-bg: #1a1a2e;
@@ -25,21 +30,16 @@
             --nav-text: #e0e0e0;
             --border-color: rgba(255,255,255,0.1);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
+            background: var(--bg-gradient);
             min-height: 100vh;
             padding: 20px;
             color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.88);
-            z-index: -1;
-        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -47,7 +47,9 @@
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            transition: background 0.3s, color 0.3s;
         }
+
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -55,108 +57,282 @@
             padding: 20px 30px;
             background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
         }
+
         .navbar-brand {
             font-size: 1.5em;
             font-weight: bold;
             color: var(--nav-text);
             text-decoration: none;
+            transition: color 0.3s;
         }
+
         .nav-links {
             display: flex;
             gap: 20px;
             list-style: none;
         }
+
         .nav-links a {
             color: var(--nav-text);
             text-decoration: none;
+            transition: color 0.3s;
         }
-        .nav-links a:hover, .nav-links a.active {
+
+        .nav-links a:hover {
             color: #667eea;
         }
-        .hero {
-            background: var(--bg-gradient);
-            color: white;
-            padding: 50px 30px;
-            text-align: center;
+
+        .content {
+            padding: 40px 30px;
         }
-        .hero h1 { font-size: 2.2em; margin-bottom: 15px; }
-        .hero p { font-size: 1.1em; opacity: 0.9; }
-        .hero-date { margin-top: 15px; font-size: 0.9em; opacity: 0.8; }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.3s;
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
         }
-        .back-link:hover { background: rgba(255,255,255,0.3); }
-        .content { padding: 40px 30px; }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
         .content h2 {
             font-size: 1.8em;
             margin: 30px 0 15px 0;
-            color: #667eea;
+            color: var(--text-color);
             border-bottom: 2px solid #667eea;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
         }
-        .content p { margin-bottom: 15px; line-height: 1.8; }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
         .content pre {
-            background: #f6f8fa;
-            border-radius: 8px;
+            background: #f4f4f4;
             padding: 15px;
+            border-radius: 8px;
             overflow-x: auto;
-            margin: 15px 0;
+            margin-bottom: 15px;
         }
-        .content img { max-width: 100%; border-radius: 8px; margin: 15px 0; }
-        .footer {
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
             text-align: center;
-            padding: 20px;
-            color: #999;
-            font-size: 0.9em;
+            color: var(--nav-text);
             border-top: 1px solid var(--border-color);
         }
-        .article-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-        .article-card h3 { color: #667eea; margin-bottom: 10px; }
-        .article-card p { color: #666; line-height: 1.6; }
-        .article-card a { color: #667eea; text-decoration: none; }
-        .article-card a:hover { text-decoration: underline; }
-    </style>
 
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <nav class="navbar">
+            <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="../../../index.html">首页</a></li>
+                <li><a href="../../../history.html">历史</a></li>
+                <li><a href="../../../about.html">关于</a></li>
+                <li><a href="../../../contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
 
-    <nav class="navbar">
-        <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
-        <ul class="nav-links">
-            <li><a href="../../../index.html" class="active">首页</a></li>
-            <li><a href="../../../history.html">历史归档</a></li>
-            <li><a href="../../../about.html">关于我们</a></li>
-            <li><a href="../../../contact.html">联系我们</a></li>
-        </ul>
-    </nav>
-
-        <div class="hero">
-            <h1>Linux系统管理</h1>
-            <p>每日技术精选</p>
-            <div class="hero-date">2026年05月04日</div>
-            <a href="../../../index.html" class="back-link">← 返回首页</a>
-        </div>
         <div class="content">
+            <a href="../../index.html" class="back-link">← 返回月份列表</a>
 
+            <h1>Linux系统管理</h1>
+            <div class="date">2026年05月04日 · 技术文档</div>
+
+            <h2>概述</h2>
+            <p>Linux系统管理是运维工程师的核心技能。本文将介绍Linux系统管理的关键技术，包括性能调优、命令行技巧、服务管理、安全配置、磁盘管理、网络排查、进程监控和日志分析等实用内容，帮助您提升系统管理能力。</p>
+
+            <h2>1. Linux系统性能调优实战指南</h2>
+            <p>本文深入探讨了Linux系统性能调优的关键参数。通过调整`/etc/sysctl.conf`中的内核参数，如TCP连接数和文件句柄限制，可以显著提升服务器在高并发场景下的响应速度。文章还介绍了使用`ulimit`命令管理用户资源限制，以及利用`top`和`vmstat`工具监控系统资源使用情况，为系统管理员提供了一套完整的性能优化方案。</p>
+
+            <h2>2. 高效Bash命令行技巧与自动化</h2>
+            <p>掌握Bash命令行技巧能极大提高Linux管理效率。文章详细讲解了历史命令扩展、别名设置以及管道与重定向的高级用法。通过结合`grep`、`sed`和`awk`等文本处理工具，管理员可以快速分析日志文件。此外，文中还分享了实用的Shell脚本片段，帮助自动化日常繁琐任务，让运维工作事半功倍。</p>
+
+            <h2>3. 精通Systemd服务管理与日志分析</h2>
+            <p>Systemd已成为现代Linux发行版的标准初始化系统。本文全面解析了systemd的核心概念，包括单元文件（Unit Files）的编写与配置。读者将学习如何使用`systemctl`命令管理服务状态，以及通过`journalctl`查看和分析系统日志。文章还涵盖了定时器的配置，替代传统的cron任务，实现更精准的任务调度。</p>
+
+            <h2>4. Linux服务器安全配置与防御策略</h2>
+            <p>服务器安全是Linux管理的重中之重。文章从SSH安全配置入手，介绍了禁用密码登录、仅允许密钥认证及更改默认端口的方法。同时，详细讲解了防火墙工具`ufw`和`iptables`的规则设置，以及如何利用SELinux或AppArmor强制访问控制系统来限制进程权限，构建多层防御体系，有效抵御外部攻击。</p>
+
+            <h2>5. 磁盘管理与LVM逻辑卷配置详解</h2>
+            <p>本文详细阐述了Linux下的磁盘管理与逻辑卷（LVM）技术。内容涵盖磁盘分区、格式化及挂载的基础操作，重点介绍了LVM的创建、扩展与缩减流程。通过实际案例演示了如何在不停机的情况下动态调整存储空间，以及配置`/etc/fstab`实现开机自动挂载，帮助管理员灵活应对数据存储需求的变化。</p>
+
+            <h2>6. Linux网络故障排查与工具使用</h2>
+            <p>网络故障排查是Linux系统管理员必备技能。文章对比了`ifconfig`与新一代`ip`命令的使用差异，并介绍了`ss`和`netstat`在查看网络连接状态时的应用。通过`tcpdump`抓包工具分析网络流量，管理员可以快速定位网络延迟或中断原因。文中还提供了常见网络配置错误的修复方案，确保网络通信的稳定性。</p>
+
+            <h2>7. 进程监控、控制与优先级调整</h2>
+            <p>高效的进程管理对于维持系统稳定至关重要。本文介绍了`ps`、`top`、`htop`等监控工具的使用技巧，重点讲解了如何识别僵尸进程和高耗资源进程。文章详细说明了不同终止信号（如SIGTERM, SIGKILL）的应用场景，以及使用`nice`和`renice`调整进程优先级的方法，确保关键任务获得足够的CPU时间资源。</p>
+
+            <h2>8. Linux日志系统管理与深度分析</h2>
+            <p>系统日志是诊断问题的核心依据。文章探讨了Linux日志系统的架构，包括传统的syslog和systemd的journald。读者将学习如何配置`rsyslog`实现远程日志转发，以及设置`logrotate`自动轮转和压缩旧日志，防止磁盘占满。此外，还介绍了如何编写正则表达式从海量日志中提取关键错误信息，加速故障定位。</p>
+
+            <h2>代码示例</h2>
+
+            <h3>示例 1: 系统性能监控脚本</h3>
+            <pre><code>#!/bin/bash
+# 系统性能监控脚本
+
+echo "=== 系统性能监控 ==="
+echo "CPU使用率:"
+top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}'
+
+echo "内存使用情况:"
+free -h
+
+echo "磁盘使用情况:"
+df -h
+
+echo "网络连接数:"
+ss -s</code></pre>
+
+            <h3>示例 2: Systemd服务管理</h3>
+            <pre><code># 查看服务状态
+systemctl status nginx
+
+# 启动服务
+systemctl start nginx
+
+# 停止服务
+systemctl stop nginx
+
+# 重启服务
+systemctl restart nginx
+
+# 开机自启
+systemctl enable nginx
+
+# 查看服务日志
+journalctl -u nginx -f</code></pre>
+
+            <h2>常见问题</h2>
+
+            <h3>常见问题 1: 如何查看系统资源使用情况？</h3>
+            <p><strong>问题：</strong>如何查看系统资源使用情况？</p>
+            <p><strong>答案：</strong>可以使用`top`、`htop`、`vmstat`等命令查看CPU、内存、磁盘等资源使用情况。`top`命令提供实时监控，`htop`提供更友好的界面，`vmstat`提供系统统计信息。</p>
+
+            <h3>常见问题 2: 如何管理系统服务？</h3>
+            <p><strong>问题：</strong>如何管理系统服务？</p>
+            <p><strong>答案：</strong>使用`systemctl`命令管理系统服务。常用命令包括`systemctl start`启动服务、`systemctl stop`停止服务、`systemctl restart`重启服务、`systemctl enable`设置开机自启等。</p>
+
+            <h2>Linux系统管理实战SOP</h2>
+
+            <h3>阶段 1: 环境准备</h3>
+            <ol>
+                <li>安装必要的系统工具和监控软件</li>
+                <li>配置系统基础参数</li>
+                <li>设置用户权限和访问控制</li>
+                <li>配置网络和防火墙规则</li>
+            </ol>
+
+            <h3>阶段 2: 系统优化</h3>
+            <ol>
+                <li>调整内核参数优化性能</li>
+                <li>配置资源限制</li>
+                <li>优化磁盘I/O性能</li>
+                <li>配置日志轮转策略</li>
+            </ol>
+
+            <h3>阶段 3: 监控维护</h3>
+            <ol>
+                <li>设置系统监控告警</li>
+                <li>定期检查系统日志</li>
+                <li>执行系统备份</li>
+                <li>进行安全审计</li>
+            </ol>
+
+            <h2>总结</h2>
+            <p>通过本文的学习，您应该对Linux系统管理有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地管理和维护Linux系统，提升运维效率和系统稳定性。</p>
+
+            <h2>参考资料</h2>
+            <ul>
+                <li>Linux系统管理官方文档</li>
+                <li>Systemd服务管理指南</li>
+                <li>Bash命令行技巧教程</li>
+                <li>Linux性能优化最佳实践</li>
+            </ul>
         </div>
-        <div class="footer">
-            <p>所有内容仅供参考学习 · 2026年05月04日</p>
-        </div>
+
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
     </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>
