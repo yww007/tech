@@ -15,6 +15,7 @@
             --nav-bg: white;
             --nav-text: #333;
             --border-color: rgba(0,0,0,0.1);
+            --bg-image: url('../../../images/website-background-8k.png');
         }
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -30,7 +31,8 @@
             padding: 20px;
             color: var(--text-color);
             transition: color 0.3s;
-            background: var(--bg-gradient);
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
         }
         .container {
             max-width: 1000px;
