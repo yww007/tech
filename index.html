@@ -3,207 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>技术文档 - AI/ML工程</title>
+    <title>Python编程技巧 - 2026年05月01日 | 技术文档</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --nav-bg: white;
+            --nav-text: #333;
+            --border-color: rgba(0,0,0,0.1);
+            --bg-image: url('images/website-background-8k.png');
         }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --container-bg: #1a1a2e;
+            --text-color: #e0e0e0;
+            --nav-bg: #1f1f38;
+            --nav-text: #e0e0e0;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        .dark-mode body::before {
+            background: rgba(26, 26, 46, 0.85);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
         }
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            border-radius: 10px;
-            margin-bottom: 40px;
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
         }
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
         }
-        .hero p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .hero-date {
-            margin-top: 20px;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        .articles {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+
+        .nav-links {
+            display: flex;
             gap: 20px;
+            list-style: none;
         }
-        .article-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
         }
-        .article-card:hover {
-            transform: translateY(-5px);
-        }
-        .article-card h3 {
+
+        .nav-links a:hover {
             color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.2em;
         }
-        .article-card p {
-            color: #666;
-            font-size: 0.95em;
+
+        .nav-links a.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: var(--text-color);
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
             margin-bottom: 15px;
         }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .article-card {
+            background: linear-gradient(145deg, #f6f8fa 0%, #ffffff 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
         .article-card a {
             color: #667eea;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: bold;
         }
+
         .article-card a:hover {
             text-decoration: underline;
         }
-        .footer {
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .dark-mode-toggle:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #999;
-            font-size: 0.9em;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="hero">
-            <h1>AI/ML工程</h1>
-            <p>每日技术精选</p>
-            <div class="hero-date">2026年05月10日</div>
+        <nav class="navbar">
+            <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+            <ul class="nav-links">
+                <li><a href="../../../index.html">首页</a></li>
+                <li><a href="../../../history.html" class="active">历史</a></li>
+                <li><a href="../../../about.html">关于</a></li>
+                <li><a href="../../../contact.html">联系</a></li>
+            </ul>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+
+        <div class="content">
+            <a href="../../../index.html" class="back-link">← 返回月份列表</a>
+
+            <h1>Python编程技巧</h1>
+            <p style="color: #666; font-size: 0.9em;">发布日期：2026年05月01日</p>
+
+            <div class="article-card">
+                <h3>1. Python装饰器的高级应用技巧</h3>
+                <p>装饰器是Python中最强大的特性之一。本文深入探讨了装饰器的高级应用，包括带参数的装饰器、类装饰器、装饰器堆叠以及使用functools.wraps保留元数据。通过实际案例展示了如何用装饰器实现日志记录、性能监控、权限验证等功能，帮助开发者写出更优雅、更可维护的代码。</p>
+                <p><a href="https://realpython.com/primer-on-python-decorators/" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>2. Python上下文管理器与with语句的最佳实践</h3>
+                <p>上下文管理器是Python资源管理的核心机制。文章详细讲解了如何使用contextlib模块创建上下文管理器，包括@contextmanager装饰器和ContextDecorator基类的使用。通过文件操作、数据库连接、锁管理等实际场景，展示了上下文管理器如何确保资源的正确释放，避免资源泄漏问题。</p>
+                <p><a href="https://docs.python.org/3/reference/datamodel.html#context-managers" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>3. Python生成器与迭代器的性能优化技巧</h3>
+                <p>生成器和迭代器是Python处理大数据集的关键工具。本文介绍了生成器表达式、yield from语法、send()和throw()方法的高级用法。通过对比列表推导式和生成器表达式的内存占用，展示了生成器在处理流式数据时的优势。还讲解了如何使用itertools模块创建高效的迭代器链。</p>
+                <p><a href="https://wiki.python.org/moin/Generators" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>4. Python异步编程async/await实战指南</h3>
+                <p>异步编程是Python高并发应用的核心。文章从基础概念开始，逐步深入到asyncio库的高级用法，包括事件循环、协程、任务、Future对象的使用。通过实际案例展示了如何构建异步Web服务器、数据库连接池和爬虫程序。还讲解了异步上下文管理器和异步迭代器的实现方法。</p>
+                <p><a href="https://docs.python.org/3/library/asyncio.html" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>5. Python元类编程的深度解析</h3>
+                <p>元类是Python中最强大的特性之一，也是最难掌握的概念。本文通过实例讲解了元类的工作原理、__metaclass__属性的使用、type()函数的动态类创建。展示了如何用元类实现单例模式、ORM框架、接口检查等高级功能。文章还讨论了元类的适用场景和注意事项，帮助开发者合理使用这一强大工具。</p>
+                <p><a href="https://docs.python.org/3/reference/datamodel.html#metaclasses" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>6. Python性能优化的10个关键技巧</h3>
+                <p>性能优化是Python开发中的重要话题。文章总结了10个实用的性能优化技巧，包括使用内置函数、避免全局变量、合理使用数据结构、使用生成器、利用C扩展、使用多进程等。通过基准测试对比了不同实现方式的性能差异，并提供了具体的优化建议和工具推荐，如cProfile、timeit等。</p>
+                <p><a href="https://wiki.python.org/moin/PythonSpeed/PerformanceTips" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>7. Python类型注解与mypy静态类型检查</h3>
+                <p>类型注解是Python 3.5引入的重要特性，配合mypy可以实现静态类型检查。文章详细介绍了typing模块的各种类型注解，包括基本类型、泛型、Optional、Union、Callable等。通过实际案例展示了如何在项目中使用类型注解提高代码可读性和可维护性，以及如何配置mypy进行自动化类型检查。</p>
+                <p><a href="https://docs.python.org/3/library/typing.html" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>8. Python描述符协议与属性访问控制</h3>
+                <p>描述符是Python属性访问控制的底层机制，也是@property、@classmethod等装饰器的基础。文章深入讲解了描述符协议的__get__、__set__、__delete__方法，以及数据描述符和非数据描述符的区别。通过实现验证器、缓存属性、延迟计算等案例，展示了描述符在实际项目中的应用价值。</p>
+                <p><a href="https://docs.python.org/3/howto/descriptor.html" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>9. Python多线程与多进程并发编程指南</h3>
+                <p>并发编程是提高Python程序性能的重要手段。文章对比了多线程和多进程的适用场景，讲解了threading和multiprocessing模块的使用方法。通过实际案例展示了如何使用线程池、进程池、队列、锁等同步原语构建高效的并发程序。还介绍了concurrent.futures模块提供的简化接口，以及GIL对多线程性能的影响。</p>
+                <p><a href="https://docs.python.org/3/library/concurrency.html" target="_blank">阅读原文 →</a></p>
+            </div>
+
+            <div class="article-card">
+                <h3>10. Python函数式编程范式实践</h3>
+                <p>函数式编程是Python的重要编程范式之一。文章介绍了Python中的函数式编程特性，包括lambda表达式、map、filter、reduce、zip等高阶函数，以及functools模块中的partial、wraps、lru_cache等工具。通过实际案例展示了如何用函数式风格编写更简洁、更可测试的代码，以及函数式编程与面向对象编程的结合使用。</p>
+                <p><a href="https://docs.python.org/3/howto/functional.html" target="_blank">阅读原文 →</a></p>
+            </div>
         </div>
 
-        <div class="articles">
-
-            <div class="article-card">
-                <h3>人工智能工程化/MLOps专栏文章汇总- 知乎</h3>
-                <p>模型监控：定义、重要性和最佳实践（AI Multiple）. 什么是模型监控、为什么模型监控很重要、ML 模型随时间退化的原因（不断变化的环境、更改业务数据）、模型监控变量</p>
-                <a href="https://zhuanlan.zhihu.com/p/573844149" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>2025年AI智能体开发完全指南：10个GitHub顶级教程资源助你从入门 ...</h3>
-                <p>GitHub上顶级ML代码仓库之一，致力于教授如何设计、开发、部署和迭代生产级ML应用程序。40K+开发者参与学习，结合机器学习与软件工程最佳实践的综合平台。</p>
-                <a href="https://zhuanlan.zhihu.com/p/1932119139343905681" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>机器学习系统教程：AI 工程原理与实践 | Jimmy Song</h3>
-                <p>#### 技术专栏
-
-#### 技术专栏
-
-人工智能工程、大模型、智能体应用与实践。
-
-Kubernetes、Service Mesh、Envoy、Gateway 等。
-
-工程文化与实践、研发流程、开发工具。
-
-开源生态、社区贡献与行业动态。
-
-#### 更多内容
-
-#### 更多内容
-
-书评、影评...</p>
-                <a href="https://jimmysong.io/zh/book/ml-systems/" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>[PDF] 人工智能之机器学习Artificial Intelligence Report of Machine Learning</h3>
-                <p>值。常见的例子是包括市场价格预测、降水量预测等。人们主要通过线性回归、多项式回归 以及核方法等来构建回归模型 。 监督式学习有两种形态的模型：一种是全域模型， 会将输入物件对应到预期输出；另一 种是将这种对应实作在一个区域模型 （如案例推论及最近邻居法）。 为了解决一个给定的监 督式学习的问题（手写...</p>
-                <a href="https://static.aminer.cn/misc/pdf/MachineLearningAll.pdf" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>实践中的机器学习： ML 工作流 - NVIDIA 技术博客</h3>
-                <p>无服务器计算提供程序的示例包括：
-
-要使用 Google Cloud Functions 部署机器学习模型，请参阅本系列的第 3 部分“实践中的机器学习：在 Google Cloud Provider 上部署 ML 模型[LINK]”。
-
-### 托管 AI 云
-
-一个管理的人工智能云正是它在锡上所...</p>
-                <a href="https://developer.nvidia.cn/blog/machine-learning-in-practice-ml-workflows/" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>AI 和机器学习教程 - Azure Databricks | Microsoft Learn</h3>
-                <p>## 本文内容
-
-请从以下教程之一开始尝试。 可以将 这些笔记本导入 Databricks 工作区。
-
-| Tutorial | Description |
- --- |
-| 经典机器学习 | 在 Databricks 中训练经典 ML 模型的端到端示例。 |
-| scikit-learn | 使用...</p>
-                <a href="https://learn.microsoft.com/zh-cn/azure/databricks/machine-learning/ai-ml-tutorials" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>机器学习实战 | Python机器学习算法应用实践-阿里云开发者社区</h3>
-                <p>特征工程是将原始输入数据转换成一个更好描述潜在问题的特征表示的过程。大家可以查看ShowMeAI的 机器学习专题文章 系统了解特征工程的常见方法。
-
-### 3.3 多模型应用
-
-下一步可以选择各种候选机器学习算法，并应用在数据集上。我们安装的工具包内，包含很多机器学习算法，比如下述模型都可以用作分...</p>
-                <a href="https://developer.aliyun.com/article/891351" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>可信机器学习实践指南-全- - 绝不原创的飞龙 - 博客园</h3>
-                <p>⁷ 参\ Stability.ai 关于他们的 Deep Fake 检测倡议的推特公告，使用了新的 OpenCLIP 模型等技术。
-
-⁸ 除了类似 StableDiffusion 的文本到图像模型外，其他组织也在采用类似的方法发布大型模型。Meta AI 发布了与 GPT-3 规模相当的 1750 ...</p>
-                <a href="https://www.cnblogs.com/apachecn/p/19250656" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>一文看懂机器学习「3种学习方法+7个实操步骤+15种常见算法」 | 管好 AI 这帮小兔崽子</h3>
-                <p>## 补充资料2：优质扩展阅读
-
-## 拓展视野类文章（11） 统计学和机器学习到底有什么区别？（2019-4） 可解释的机器学习（2019-4） 机器学习不是统计学！这篇文章终于把真正区别讲清楚了（2019-4） 小样本学习（Few-shot Learning）综述（2019-4） Quora上的...</p>
-                <a href="https://easyai.tech/ai-definition/machine-learning/" target="_blank">阅读更多 →</a>
-            </div>
-
-            <div class="article-card">
-                <h3>AI 学习中心 - 启动 AI 学习之旅，并构建可立即使用的实用 AI 技能。 | Microsoft Learn</h3>
-                <p>增强Microsoft结构分析工程技能：准备考试 DP-600
-
-在数据分析、高级数据处理、管理和 Real-Time 智能中发现 Microsoft Fabric 及其应用程序。
-
-### 数据科学家
-
-使用 Microsoft Foundry 查找生成 AI 解决方案的最佳模型
-
-了解如何在 F...</p>
-                <a href="https://learn.microsoft.com/zh-cn/ai/" target="_blank">阅读更多 →</a>
-            </div>
-
-        </div>
-
-        <div class="footer">
-            <p>© 2026 技术文档 | 每日自动更新</p>
-        </div>
+        <footer>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+        </footer>
     </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>
