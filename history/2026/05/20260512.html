@@ -292,61 +292,61 @@
             <h2 id="section1">1. 引言：微服务架构的崛起</h2>
             <p>微服务架构是一种将大型应用拆分为多个独立服务的软件开发方法。每个服务运行在独立进程中，通过轻量级协议通信。相比传统单体架构，微服务提供更高的灵活性、可扩展性和容错性，已成为现代云原生应用的主流架构选择。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_01.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图1：微服务架构示意图</p>
 
             <h2 id="section2">2. 服务拆分策略与领域建模</h2>
             <p>合理的服务拆分是微服务架构成功的关键。常用方法包括按业务能力拆分、按领域驱动设计（DDD）的限界上下文拆分、以及按用户需求拆分。拆分粒度应遵循高内聚低耦合原则，避免服务间过度依赖，确保每个服务能够独立开发、部署和扩展。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_02.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图2：服务拆分策略示意图</p>
 
             <h2 id="section3">3. API网关与统一入口设计</h2>
             <p>API网关作为微服务的统一入口，负责请求路由、负载均衡、认证授权、限流熔断等功能。主流方案包括Kong、Nginx、Spring Cloud Gateway等。设计良好的API网关能简化客户端调用、提升安全性和性能，是微服务架构不可或缺的基础组件。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_03.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图3：API网关架构</p>
 
             <h2 id="section4">4. 服务注册与发现机制</h2>
             <p>服务发现让服务能够动态定位其他服务实例，无需硬编码地址。常用方案有客户端发现（如Eureka）和服务端发现（如Consul+Fabio）。健康检查机制确保只将请求路由到正常实例，配置中心（如Nacos）可同时实现注册中心和配置管理功能。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_04.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图4：服务注册与发现</p>
 
             <h2 id="section5">5. 分布式配置管理与热更新</h2>
             <p>微服务架构中配置分散在多个服务实例，手动更新效率低下且易出错。Apollo、Consul Config、Nacos等配置中心支持配置的集中管理、环境隔离、版本控制和热更新。配置变更实时推送到各个服务，确保无需重启即可生效，大幅提升运维效率。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_05.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图5：分布式配置管理</p>
 
             <h2 id="section6">6. 服务间通信：同步与异步</h2>
             <p>微服务间通信分为同步（如REST、gRPC）和异步（消息队列）两种模式。REST适合请求-响应场景，gRPC性能更高适合低延迟需求，消息队列（Kafka、RabbitMQ）实现服务解耦和流量削峰。根据业务场景选择合适的通信方式，构建灵活高效的微服务通信体系。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_06.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图6：服务间通信</p>
 
             <h2 id="section7">7. 容错与熔断机制实现</h2>
             <p>分布式系统中服务故障不可避免，容错机制保证系统整体可用。Hystrix、Sentinel等库提供熔断器模式，当服务故障时快速失败防止级联扩散。舱壁隔离、限流降级、重试机制等手段协同工作，确保微服务架构在故障时仍能维持核心功能正常运行。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_07.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图7：容错与熔断机制</p>
 
             <h2 id="section8">8. 分布式链路追踪技术</h2>
             <p>微服务调用链路复杂，问题定位困难。Jaeger、Zipkin、SkyWalking等工具通过生成追踪ID记录完整调用链，从前端网关到后端服务全覆盖。追踪数据帮助分析性能瓶颈、定位异常节点，是微服务可观测性建设的重要组成部分。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_08.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图8：链路追踪技术</p>
 
             <h2 id="section9">9. Kubernetes微服务编排实践</h2>
             <p>Kubernetes已成为微服务部署的标准平台。Pod、Service、Deployment等资源抽象简化了服务管理，HPA自动扩缩容应对流量波动，ConfigMap和Secret集中管理配置。通过Helm Charts和Operators实现应用的标准化部署和生命周期管理，提升交付效率。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_09.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图9：Kubernetes编排</p>
 
             <h2 id="section10">10. 服务网格Istio架构与应用</h2>
             <p>Istio作为服务网格，透明地处理服务通信、安全和可观测性。Sidecar代理拦截所有网络流量，实现细粒度的流量管理、可观测性收集和零信任网络安全。通过DestinationRule、VirtualService等CRD定义路由规则，无需修改应用代码即可实现金丝雀发布和蓝绿部署。</p>
 
-            <img src="../../../images/tech_20260512.png" alt="微服务架构配图" class="tech-image">
+            <img src="../../../images/tech_10.png" alt="微服务架构配图" class="tech-image">
             <p class="image-caption">图10：Istio服务网格</p>
 
         </div>
