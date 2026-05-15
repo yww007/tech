@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python编程技巧 - 2026年05月15日 | 技术文档</title>
-    <meta name="description" content="Python编程技巧 - 深入讲解Python高级特性、性能优化、代码设计模式与工程实践">
+    <title>数据库优化策略 - 2026年05月15日 | 技术文档</title>
+    <meta name="description" content="数据库优化策略 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --container-bg: white;
@@ -15,8 +20,9 @@
             --nav-bg: white;
             --nav-text: #333;
             --border-color: rgba(0,0,0,0.1);
-            --bg-image: url('../../../images/website-background-8k.png');
+            --bg-image: url('images/website-background-8k.png');
         }
+
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             --container-bg: #1a1a2e;
@@ -25,33 +31,42 @@
             --nav-text: #e0e0e0;
             --border-color: rgba(255,255,255,0.1);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             padding: 20px;
             color: var(--text-color);
-            transition: color 0.3s;
-            background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
+            transition: background 0.3s, color 0.3s;
         }
+
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.85);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
             z-index: -1;
         }
+
         .dark-mode body::before {
-            background: rgba(26,26,46,0.85);
+            background: rgba(26, 26, 46, 0.85);
         }
+
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: var(--container-bg);
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            transition: background 0.3s, color 0.3s;
         }
+
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -59,28 +74,134 @@
             padding: 20px 30px;
             background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
         }
-        .navbar-brand { font-size: 1.5em; font-weight: bold; color: var(--nav-text); text-decoration: none; }
-        .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links a { color: var(--nav-text); text-decoration: none; transition: color 0.3s; }
-        .nav-links a:hover { color: #667eea; }
-        .nav-links a.active { color: #667eea; font-weight: bold; }
-        .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
-        .dark-mode-toggle:hover { background: #667eea; color: white; }
-        .hero { position: relative; height: 400px; overflow: hidden; }
-        .hero img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 30px 30px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; }
-        .hero-overlay h1 { font-size: 2.2em; margin-bottom: 10px; }
-        .hero-overlay .date { opacity: 0.8; font-size: 0.95em; }
-        .content { padding: 40px 30px; }
-        .intro { font-size: 1.1em; line-height: 1.8; color: var(--text-color); margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea; }
-        .content h2 { font-size: 1.6em; color: #667eea; margin: 35px 0 15px 0; padding-bottom: 8px; border-bottom: 2px solid #667eea; }
-        .content p { line-height: 1.9; margin-bottom: 20px; text-align: justify; color: var(--text-color); }
-        .content figure { margin: 25px 0; text-align: center; }
-        .content figure img { max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .content figcaption { margin-top: 10px; color: #666; font-size: 0.9em; font-style: italic; }
-        footer { background: var(--nav-bg); padding: 20px 30px; text-align: center; color: var(--nav-text); border-top: 1px solid var(--border-color); }
-        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .hero { height: 250px; } .hero-overlay h1 { font-size: 1.6em; } .content { padding: 20px; } }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: var(--text-color);
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -88,85 +209,246 @@
         <nav class="navbar">
             <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
             <ul class="nav-links">
-                <li><a href="../../../index.html" class="active">首页</a></li>
-                <li><a href="../../../history/history.html">历史</a></li>
+                <li><a href="../../../index.html">首页</a></li>
+                <li><a href="../../../history.html">历史</a></li>
                 <li><a href="../../../about.html">关于</a></li>
                 <li><a href="../../../contact.html">联系</a></li>
             </ul>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </nav>
 
-        <div class="hero">
-            <img src="../../../images/tech_hero.png" alt="Python编程技巧">
-            <div class="hero-overlay">
-                <h1>Python编程技巧</h1>
-                <div class="date">2026年05月15日</div>
-            </div>
-        </div>
-
         <div class="content">
-            <p class="intro">Python是一门诞生于1991年的高级编程语言，凭借其简洁优雅的语法、丰富强大的生态和广泛的应用场景，已成为全球最受欢迎的编程语言之一。从Web开发到数据分析，从机器学习到自动化运维，Python几乎涵盖了软件工程的各个领域。本文系统整理Python高级编程技巧与工程实践，涵盖装饰器、生成器、上下文管理器、类型注解、性能优化、代码设计模式等核心主题，通过10个实战案例深入讲解如何编写高质量、易维护的Python代码，是中高级开发者提升功力的实用指南。无论是初学者还是有一定经验的开发者，都能从中获得实质性的技术提升。</p>
+            <a href="../../index.html" class="back-link">← 返回月份列表</a>
 
-            <h2>一、装饰器与函数式编程</h2>
-            <p>装饰器是Python最强大且最独特的语言特性之一，它允许在不修改原函数源代码的前提下，为函数添加额外的功能。这种编程范式体现了开放封闭原则——对扩展开放，对修改封闭。装饰器本质上是一个接受函数作为参数并返回新函数的高阶函数。在实际项目中，装饰器被广泛应用于日志记录、性能测试、权限校验、缓存管理、请求重试等横切关注点。</p>
-            <p>Python内置的functools模块提供了两个重要的装饰器工具：@functools.wraps和@functools.lru_cache。@wraps的作用是保留被装饰函数的元信息，包括函数名、文档字符串、参数列表等，避免因装饰器包装而丢失函数签名，这在构建API文档和调试时至关重要。@lru_cache则实现了记忆化功能，将函数调用结果缓存起来，对于相同参数的后续调用直接返回缓存结果，避免重复计算，在递归Fibonacci数列、复杂数学计算等场景中效果显著。</p>
-            <p>函数式编程范式在Python中同样得到良好支持，map、filter、reduce等内置函数配合lambda表达式，可以写出简洁高效的数据处理逻辑。列表推导式和生成器表达式是Python最优雅的数据转换方式，相比传统的for循环在处理大规模数据时能显著提升性能并降低内存占用。生成器表达式使用圆括号而非方括号，创建一个惰性迭代器，只在真正需要时才计算下一个值，非常适合处理GB级别的数据文件。</p>
-            <figure>
-                <img src="../../../images/tech_01.png" alt="Python装饰器原理">
-                <figcaption>图1：Python装饰器执行原理示意图，展示函数包装与调用流程</figcaption>
-            </figure>
+            <h1>数据库优化策略</h1>
+            <div class="date">2026年05月15日 · 技术文档</div>
 
-            <h2>二、生成器与协程深度实践</h2>
-            <p>生成器是Python中用于创建迭代器的简洁方式，通过yield关键字可以在函数执行过程中暂停和恢复上下文。相较于一次性返回完整列表，生成器每次只产生一个值，极大地节约了内存空间。当处理大规模数据或无限序列时，生成器相比普通列表具有本质优势——无论数据量多大，内存占用始终保持恒定，不会像列表那样线性增长。</p>
-            <p>生成器最经典的用法是实现协程（Coroutine）。在处理I/O密集型任务时，协程能够避免传统多线程的上下文切换开销，提高并发性能。在网络编程中，使用asyncio和协程可以单线程处理成千上万个并发连接。Web框架FastAPI、异步HTTP客户端aiohttp、Redis异步客户端aioredis等都大量使用协程实现高性能。通过async def定义协程函数，使用await关键字等待异步操作完成，代码风格简洁优雅，同时保持了高性能。</p>
-            <p>深度学习框架PyTorch的计算图机制也借鉴了生成器的思想。在前向传播过程中，PyTorch使用生成器记录每一步运算构建计算图，在反向传播时再逐层回溯计算梯度。这种动态计算图的设计使得模型的构建和调试变得非常灵活，深受研究人员和工程师的喜爱。掌握生成器和协程，是成为Python高级开发者的必经之路。</p>
-            <figure>
-                <img src="../../../images/tech_02.png" alt="生成器与迭代器">
-                <figcaption>图2：生成器工作原理与迭代器协议实现机制</figcaption>
-            </figure>
+            <h2>概述</h2>
+            <p>掌握数据库优化策略对于现代开发者来说至关重要。本文将从基础概念开始，逐步深入到实践应用，为您提供全面的技术指导。</p>
 
-            <h2>三、上下文管理器与资源安全</h2>
-            <p>上下文管理器是Python中断言资源安全的最佳实践，它通过with语句确保资源在使用后被正确释放。常见的应用场景包括文件操作、数据库连接、线程锁、临时环境变量设置等。传统的资源管理需要开发者手动调用close方法或try-finally块，不仅代码繁琐，而且容易遗漏。with语句将资源获取和释放封装在一起，无论代码正常执行还是发生异常，资源都能被正确清理。</p>
-            <p>Python提供了两种创建上下文管理器的方式：自定义类实现__enter__和__exit__方法，或者使用contextlib模块的@contextmanager装饰器简化流程。@contextmanager允许开发者将try-finally逻辑转换为yield语句，使得代码更加简洁。标准库中的tempfile、pathlib、logging.config等模块都大量使用上下文管理器。在实际项目中，合理封装数据库连接、网络请求、文件处理等资源操作，能够有效避免内存泄漏和文件描述符耗尽问题。</p>
-            <p>深度学习框架中的计算图管理也借鉴了上下文管理器的设计思想。PyTorch的with torch.no_grad()临时禁用梯度计算，with torch.cuda.amp.autocast()启用混合精度训练，这些都是上下文管理器的典型应用。通过with语句创建临时的计算环境，作用域内的所有操作自动应用对应配置，作用域结束后自动恢复原始状态，代码清晰且安全。</p>
-            <figure>
-                <img src="../../../images/tech_03.png" alt="上下文管理器">
-                <figcaption>图3：上下文管理器资源管理与异常处理流程</figcaption>
-            </figure>
+            <h2>第一章 认识数据库优化策略</h2>
 
-            <h2>四、类型注解与静态分析</h2>
-            <p>Python 3.5引入的类型注解（Type Hints）为这个动态类型语言提供了可选的静态类型检查能力。通过在变量、函数参数和返回值上声明类型，IDE能够提供更准确的代码补全和错误提示。在团队协作的大型项目中，类型注解能够显著提升代码的可维护性——新成员可以通过类型签名快速理解函数接口，无需逐行阅读实现细节，这比阅读英文文档更加直观高效。</p>
-            <p>mypy、pyright、pyre等静态分析工具能够基于类型注解提前发现潜在的类型不匹配问题。例如，将字符串传给期望整数的函数参数，静态分析工具会立即报告错误，而不必等到运行时才发现。虽然Python解释器不会强制类型检查，但类型注解本身就是最规范的代码文档。Python 3.10引入的match-case结构虽然与类型注解无直接关系，但与类型模式匹配的结合使用，能够写出比传统if-elif-else更加优雅的控制流。</p>
-            <p>Dataclasses模块（Python 3.7+）使用@dataclass装饰器自动生成__init__、__repr__、__eq__等方法，大幅简化了数据类定义。结合类型注解和dataclass，开发者可以专注于业务逻辑而非样板代码。Protocol（Python 3.8+）提供了结构化子类型检查（Static Duck Typing），定义接口而不需要显式的继承关系，提高了代码的灵活性和可测试性。NamedTuple则结合了元组的轻量级和类的可读性，适用于表示固定结构的数据。</p>
-            <figure>
-                <img src="../../../images/tech_04.png" alt="类型注解示例">
-                <figcaption>图4：Python类型注解标准写法与IDE智能提示</figcaption>
-            </figure>
+            <h3>1.1 数据库优化策略的本质</h3>
+            <p>数据库优化策略是现代软件开发中的重要技术，掌握它可以显著提升开发效率和应用质量。</p>
 
-            <h2>五、性能优化与工程实践</h2>
-            <p>Python性能优化需要从算法复杂度、内存使用、C扩展调用三个层面综合考量。在进行任何优化之前，首先需要通过profiling确定性能瓶颈——盲目优化是常见的编程误区，浪费时间优化非关键路径是得不偿失的行为。使用timeit模块进行基准测试是性能调优的第一步，它能够精确测量小段代码的执行时间。cProfile模块则提供了完整的函数调用统计，帮助定位最耗时的代码路径。</p>
-            <p>对于计算密集型任务，Cython和Numba是两个主流的加速方案。Cython将Python代码编译为C扩展，在保持Python语法的同时获得接近C语言的性能，提升幅度通常在10-100倍。Numba则使用LLVM即时编译技术，对数值计算代码尤其有效。科学计算场景中，NumPy和Pandas的向量化操作远比Python原生循环高效，因为底层由C和Fortran实现，充分利用了CPU的SIMD指令集。避免在循环中频繁创建对象、使用内置函数替代手写循环，都是简单有效的优化手段。</p>
-            <p>内存优化同样重要。使用生成器替代列表可以大幅降低内存占用。使用__slots__可以减少对象内存开销，尤其是在创建大量对象时效果显著。weakref模块提供了弱引用实现，适用于缓存场景——当对象只被缓存引用时，可以被垃圾回收器销毁，释放内存。分析内存使用时，tracemalloc和memory_profiler是最常用的诊断工具。性能优化是一个持续迭代的过程，需要在可读性、可维护性和性能之间找到平衡。</p>
+            <h3>1.2 核心价值</h3>
+            <p>数据库优化策略的核心价值在于提高开发效率、保证代码质量、简化部署流程。</p>
 
-            <h2>六、代码设计模式与架构设计</h2>
-            <p>设计模式是解决常见编程问题的最佳实践总结，是前辈工程师们沉淀下来的智慧结晶。创建型模式如单例模式、工厂模式、建造者模式帮助管理对象的创建过程；结构型模式如适配器模式、装饰器模式、代理模式关注对象的组合方式；行为型模式如观察者模式、策略模式、命令模式定义对象间的交互方式。在Python中，由于语言特性的支持，某些模式的实现比Java等语言更加简洁。</p>
-            <p>单例模式确保类只有一个实例，广泛应用于配置管理、日志记录、数据库连接池等场景。在Python中，除了传统的类实现，还可以通过模块级别的全局变量实现单例——Python模块天然就是单例的，因为导入一次后被缓存。工厂模式封装对象创建过程，通过参数决定创建哪种类型的实例，提高了代码的灵活性和可扩展性。观察者模式是事件驱动架构的基础，当对象状态变化时自动通知依赖它的其他对象。</p>
-            <p>在复杂项目中，领域驱动设计（DDD）和分层架构能够帮助团队有效组织代码。Repository模式隔离数据访问逻辑，Service层承载业务规则，API层处理请求响应。良好的架构设计使代码易于测试和扩展，是软件工程化开发的必备能力。Python的抽象基类（ABC）和Protocol为领域建模提供了强有力的工具支持。依赖注入（DI）是一种实现解耦的有效手段，通过将依赖作为参数传入而非在类内部直接创建，提高了代码的可测试性和可替换性。</p>
+            <h3>1.3 应用场景</h3>
+            <p>数据库优化策略广泛应用于Web开发、数据分析、系统管理等多个领域。</p>
+
+            <h2>第二章 核心概念</h2>
+
+            <h3>2.1 基础概念</h3>
+            <p>了解数据库优化策略的基础概念是掌握该技术的第一步。</p>
+
+            <h3>2.2 关键特性</h3>
+            <p>数据库优化策略具有多个关键特性，这些特性使其在特定场景下具有优势。</p>
+
+            <h3>2.3 技术原理</h3>
+            <p>理解数据库优化策略的技术原理有助于更好地应用该技术。</p>
+
+            <h2>第三章 实践技巧</h2>
+
+            <h3>3.1 基础实践</h3>
+            <p>掌握数据库优化策略的基础实践技巧是应用该技术的基础。</p>
+
+            <h3>3.2 高级技巧</h3>
+            <p>数据库优化策略的高级技巧可以帮助您解决复杂问题。</p>
+
+            <h3>3.3 最佳实践</h3>
+            <p>遵循数据库优化策略的最佳实践可以确保项目的成功。</p>
+
+            <h2>第四章 实战案例</h2>
+
+            <h3>4.1 实战案例一</h3>
+            <p>通过实际案例了解数据库优化策略的应用。</p>
+
+            <h3>4.2 实战案例二</h3>
+            <p>更多数据库优化策略的实际应用案例。</p>
+
+            <h3>4.3 实战SOP</h3>
+            <p>数据库优化策略的实战操作流程。</p>
+
+
+            <h2>核心概念</h2>
+
+            <p>了解数据库优化策略的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
+
+            <h3>核心概念</h3>
+            <ul>
+                <li>数据库优化策略 - 现代软件开发的重要技术</li>
+                <li>核心概念 - 理解该技术的基础</li>
+                <li>关键特性 - 该技术的优势所在</li>
+                <li>应用场景 - 该技术的实际应用</li>
+            </ul>
+
+            <h3>关键术语</h3>
+            <ul>
+                <li>基础概念 - 该技术的基本术语</li>
+                <li>关键特性 - 该技术的重要特性</li>
+                <li>技术原理 - 该技术的工作原理</li>
+                <li>最佳实践 - 该技术的应用规范</li>
+            </ul>
+
+            <h2>实践技巧</h2>
+
+            <p>掌握数据库优化策略的实践技巧可以帮助您更好地应用该技术。</p>
+
+            <h3>基础技巧</h3>
+            <ul>
+                <li>掌握数据库优化策略的基础概念</li>
+                <li>理解数据库优化策略的关键特性</li>
+                <li>学习数据库优化策略的基本用法</li>
+                <li>实践数据库优化策略的基础应用</li>
+            </ul>
+
+            <h3>高级技巧</h3>
+            <ul>
+                <li>深入理解数据库优化策略的技术原理</li>
+                <li>掌握数据库优化策略的高级特性</li>
+                <li>优化数据库优化策略的应用性能</li>
+                <li>解决数据库优化策略的复杂问题</li>
+            </ul>
+
+            <h2>最佳实践</h2>
+
+            <p>遵循数据库优化策略的最佳实践可以确保项目的成功和可维护性。</p>
+
+            <h3>开发规范</h3>
+            <ul>
+                <li>遵循数据库优化策略的开发规范</li>
+                <li>编写清晰的代码和文档</li>
+                <li>进行充分的测试</li>
+                <li>保持代码的可维护性</li>
+            </ul>
+
+            <h3>部署策略</h3>
+            <ul>
+                <li>使用数据库优化策略的最佳部署方式</li>
+                <li>配置适当的监控和日志</li>
+                <li>制定备份和恢复策略</li>
+                <li>定期更新和维护</li>
+            </ul>
+            <h3>数据库优化策略 vs 其他技术对比</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">特性</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">数据库优化策略</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">其他技术</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">学习曲线</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">开发效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">高</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">执行效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适用场景</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">广泛</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">特定</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>代码示例</h2>
+
+            <p>以下是一些数据库优化策略的代码示例，帮助您更好地理解和应用。</p>
+
+            <h3>代码示例 1: 数据库优化策略基础示例</h3>
+            <pre><code># 数据库优化策略基础示例
+
+# 示例1：基础用法
+def basic_example():
+    """基础示例"""
+    print("这是数据库优化策略的基础示例")
+
+# 示例2：高级用法
+def advanced_example():
+    """高级示例"""
+    print("这是数据库优化策略的高级示例")
+
+# 使用示例
+if __name__ == "__main__":
+    basic_example()
+    advanced_example()</code></pre>
+
+            <h2>常见问题</h2>
+
+            <h3>常见问题 1: 如何开始学习数据库优化策略？</h3>
+            <p><strong>问题：</strong>如何开始学习数据库优化策略？</p>
+            <p><strong>答案：</strong>建议从基础概念开始，逐步深入到实践应用。可以通过官方文档、教程和实际项目来学习数据库优化策略。</p>
+
+            <h3>常见问题 2: 数据库优化策略适合什么场景？</h3>
+            <p><strong>问题：</strong>数据库优化策略适合什么场景？</p>
+            <p><strong>答案：</strong>数据库优化策略适合多种场景，具体取决于您的需求。建议根据项目特点选择合适的技术方案。</p>
+
+            <h2>数据库优化策略实战SOP</h2>
+
+            <h3>阶段 1: Phase 0: 环境准备</h3>
+            <ol>
+                <li>准备数据库优化策略的开发环境</li>
+                <li>安装必要的依赖</li>
+                <li>配置开发工具</li>
+                <li>了解基础概念</li>
+            </ol>
+
+            <h3>阶段 2: Phase 1: 开发实践</h3>
+            <ol>
+                <li>编写数据库优化策略的代码</li>
+                <li>进行测试和调试</li>
+                <li>优化代码性能</li>
+                <li>编写文档</li>
+            </ol>
+
+            <h3>阶段 3: Phase 2: 部署上线</h3>
+            <ol>
+                <li>准备数据库优化策略的部署环境</li>
+                <li>配置生产环境</li>
+                <li>进行部署</li>
+                <li>监控和维护</li>
+            </ol>
+
+            <h2>总结</h2>
+
+            <p>通过本文的学习，您应该对数据库优化策略有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用数据库优化策略。</p>
+
+            <h2>参考资料</h2>
+
+            <ul>
+                <li>数据库优化策略官方文档</li>
+                <li>相关技术教程</li>
+                <li>最佳实践指南</li>
+                <li>社区资源</li>
+            </ul>
         </div>
 
         <footer>
-            <p>&copy; 2026 技术文档 | 每日自动更新 | Python编程技巧</p>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
         </footer>
     </div>
 
     <script>
-        function toggleDarkMode(){
+        function toggleDarkMode() {{
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-        if(localStorage.getItem('darkMode')==='true'){
+        }}
+
+        if (localStorage.getItem('darkMode') === 'true') {{
             document.body.classList.add('dark-mode');
-        }
+        }}
     </script>
 </body>
 </html>
