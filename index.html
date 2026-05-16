@@ -128,7 +128,7 @@
             <p>注入攻击是指攻击者通过将恶意代码或命令插入应用程序的输入中，从而执行未授权操作的攻击方式。最常见的注入类型包括SQL注入、命令注入、LDAP注入、XPath注入等。SQL注入是最经典和危害最大的注入攻击，攻击者通过在用户输入中插入SQL语句片段，绕过认证机制或获取未授权数据。2017年的Equifax数据泄露事件就是由Apache Struts的SQL注入漏洞引起，导致1.47亿用户信息泄露。</p>
 
             <figure>
-                <img src="images/tech_01.png" alt="OWASP漏洞类型">
+                <img src="images/tech_20260516_01.png" alt="OWASP漏洞类型">
                 <figcaption>图2：OWASP Top 10漏洞类型详解，涵盖注入、XSS、认证失效等主要安全威胁</figcaption>
             </figure>
 
@@ -160,8 +160,8 @@
             <p>跨站请求伪造（Cross-Site Request Forgery，CSRF）利用用户已登录的身份，诱导用户访问恶意页面，恶意页面中包含自动提交的表单或AJAX请求，利用用户的Cookie自动完成转账、密码修改等敏感操作。CSRF之所以危险，是因为它利用了浏览器的Cookie机制和用户对已登录网站的信任。浏览器在发送请求时会自动带上目标网站的Cookie，服务器无法区分请求是用户主动发起的还是被诱导发起的。</p>
 
             <figure>
-                <img src="images/tech_02.png" alt="网络安全拓扑">
-                <figcaption>图4：网络安全拓扑图，展示了防火墙、DMZ区、入侵检测系统等安全基础设施的部署方式</figcaption>
+                <img src="images/tech_20260516_06.png" alt="网络安全拓扑">
+                <figcaption>图4：网络安全拓扑图，展示了云安全架构与网络基础设施的部署方式</figcaption>
             </figure>
 
             <p>CSRF攻击的典型场景是银行转账。用户已登录银行网站，此时攻击者通过邮件发送一个链接，或者在某个被攻陷的网站上植入恶意代码。当用户点击链接或访问被攻陷的网站时，浏览器会自动发送请求到银行网站，由于Cookie仍然有效，银行服务器会认为是用户本人的操作，从而完成转账。攻击过程的隐蔽性在于用户可能完全不知情，请求是由浏览器在后台自动发送的。</p>
@@ -172,7 +172,7 @@
             <p>身份认证和会话管理是Web应用安全的核心。身份认证验证用户声明的身份是否属实，会话管理则在认证后维护用户的登录状态。常见的认证方式包括用户名密码认证、多因素认证（MFA）、单点登录（SSO）、OAuth/OpenID Connect等。弱密码是身份认证失效的主要原因之一，据统计，超过80%的数据泄露与弱密码有关。强制要求密码强度、使用密码管理器、启用多因素认证是保护账户安全的重要措施。</p>
 
             <figure>
-                <img src="images/tech_03.png" alt="认证授权流程">
+                <img src="images/tech_20260516_03.png" alt="认证授权流程">
                 <figcaption>图5：OAuth 2.0认证授权流程与JWT令牌安全机制</figcaption>
             </figure>
 
@@ -186,7 +186,7 @@
             <p>HTTPS（HTTP over TLS/SSL）是Web通信安全的基础，它在HTTP和TCP之间添加了TLS加密层，对传输数据进行加密，防止中间人攻击、数据窃听和篡改。HTTPS不仅是保护用户隐私的需要，也是SEO排名因素和现代浏览器的强制要求。Google Chrome从2018年开始将所有HTTP站点标记为不安全，Apple要求所有AppStore应用必须使用HTTPS，搜索引擎也明确表示HTTPS是排名因素之一。</p>
 
             <figure>
-                <img src="images/tech_04.png" alt="加密货币安全">
+                <img src="images/tech_20260516_05.png" alt="加密货币安全">
                 <figcaption>图6：数字资产安全存储方案，展示了冷钱包、多签机制、硬件密钥等高级安全技术</figcaption>
             </figure>
 
@@ -198,7 +198,7 @@
             <p>内容安全策略（Content Security Policy，CSP）是一种浏览器安全机制，通过HTTP响应头指示浏览器限制页面可以加载的资源来源，有效防止XSS、数据注入等攻击。CSP通过白名单机制，告诉浏览器只允许从特定的源加载脚本、样式、图片等资源，任何不在白名单中的资源都会被浏览器阻止执行。这是最重要的Web安全头部之一，被认为是防御XSS的“核武器”。</p>
 
             <figure>
-                <img src="images/tech_430.png" alt="云安全模型">
+                <img src="images/tech_20260516_06.png" alt="云安全模型">
                 <figcaption>图7：云环境安全架构，展示了AWS、Azure、GCP等主流云平台的安全模型与责任划分</figcaption>
             </figure>
 
@@ -227,7 +227,7 @@
             <p>零信任（Zero Trust）是新一代安全架构理念，其核心原则是“永不信任，始终验证”。与传统边界安全模型不同，零信任不再依赖于网络边界的安全，而是对每一次访问请求都进行严格的身份验证和授权检查。在零信任架构下，无论用户是在内网还是外网、设备是公司配发还是个人自带，都需要提供充分的身份凭证和设备安全状态证明。零信任不是某个具体产品，而是一种设计理念，贯穿于身份认证、网络架构、应用设计、数据保护的各个环节。</p>
 
             <figure>
-                <img src="images/tech_501.png" alt="零信任模型">
+                <img src="images/tech_20260516_07.png" alt="零信任模型">
                 <figcaption>图8：零信任安全模型架构，持续验证、最小权限、微隔离是三大核心原则</figcaption>
             </figure>
 
