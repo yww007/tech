@@ -116,7 +116,8 @@ logger = Logger()
 
 def get_beijing_time():
     """获取北京时间（UTC+8）"""
-    return datetime.now() + timedelta(hours=8)
+    from datetime import timezone
+    return datetime.now(timezone.utc) + timedelta(hours=8)
 
 def get_tech_topic():
     """获取技术主题（按日期轮换，避免重复）"""
@@ -134,7 +135,8 @@ def get_tech_topic():
     ]
 
     # 按日期轮换，避免重复
-    day_of_year = datetime.now().timetuple().tm_yday
+    bj_time = get_beijing_time()
+    day_of_year = bj_time.timetuple().tm_yday
     topic_index = (day_of_year - 1) % len(TECH_TOPICS)
     return TECH_TOPICS[topic_index]
 
@@ -852,10 +854,11 @@ def step_1_generate_html(topic):
     logger.log(f"📝 步骤 1/3: 生成HTML文档")
 
     try:
-        today = datetime.now().strftime("%Y%m%d")
-        today_str = datetime.now().strftime("%Y年%m月%d日")
-        year = datetime.now().strftime("%Y")
-        month = datetime.now().strftime("%m")
+        bj_time = get_beijing_time()
+        today = bj_time.strftime("%Y%m%d")
+        today_str = bj_time.strftime("%Y年%m月%d日")
+        year = bj_time.strftime("%Y")
+        month = bj_time.strftime("%m")
 
         # 获取主题内容
         content = get_topic_content(topic)
@@ -1370,10 +1373,11 @@ def step_3_update_index(topic, image_file):
     logger.log(f"🔄 步骤 3/3: 更新首页")
 
     try:
-        today_str = datetime.now().strftime("%Y年%m月%d日")
-        year = datetime.now().strftime("%Y")
-        month = datetime.now().strftime("%m")
-        today = datetime.now().strftime("%Y%m%d")
+        bj_time = get_beijing_time()
+        today_str = bj_time.strftime("%Y年%m月%d日")
+        year = bj_time.strftime("%Y")
+        month = bj_time.strftime("%m")
+        today = bj_time.strftime("%Y%m%d")
 
         # 获取主题内容
         content = get_topic_content(topic)
