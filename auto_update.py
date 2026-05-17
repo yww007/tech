@@ -849,9 +849,19 @@ def generate_sop_html(sop):
         html += '            </ol>\n\n'
     return html
 
-def step_1_generate_html(topic):
-    """第1步：生成HTML文档（优化版）"""
-    logger.log(f"📝 步骤 1/3: 生成HTML文档")
+def step_1_generate_html(topic, for_archive=True):
+    """第1步：生成HTML文档
+    - for_archive=True: 生成为归档页（带返回链接）
+    - for_archive=False: 生成为首页（不带返回链接）
+    """
+    logger.log(f"📝 步骤 1/3: 生成HTML文档 ({'归档页' if for_archive else '首页'})")
+
+    try:
+        bj_time = get_beijing_time()
+        today = bj_time.strftime("%Y%m%d")
+        today_str = bj_time.strftime("%Y年%m月%d日")
+        year = bj_time.strftime("%Y")
+        month = bj_time.strftime("%m")
 
     try:
         bj_time = get_beijing_time()
