@@ -7,12 +7,7 @@
     <meta name="description" content="微服务架构设计 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --container-bg: white;
@@ -22,7 +17,6 @@
             --border-color: rgba(0,0,0,0.1);
             --bg-image: url('images/website-background-8k.png');
         }
-
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             --container-bg: #1a1a2e;
@@ -31,466 +25,248 @@
             --nav-text: #e0e0e0;
             --border-color: rgba(255,255,255,0.1);
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
             min-height: 100vh;
             padding: 20px;
             color: var(--text-color);
-            transition: background 0.3s, color 0.3s;
+            transition: color 0.3s;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
         }
-
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.85);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.88);
             z-index: -1;
         }
-
-        .dark-mode body::before {
-            background: rgba(26, 26, 46, 0.85);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--container-bg);
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .navbar-brand {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--nav-text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--nav-text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .content {
-            padding: 40px 30px;
-        }
-
-        .content h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-
-        .date {
-            font-size: 1.2em;
-            color: #667eea;
-            margin-bottom: 30px;
-        }
-
-        .content h2 {
-            font-size: 1.8em;
-            margin: 30px 0 15px 0;
-            color: var(--text-color);
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .content h3 {
-            font-size: 1.4em;
-            margin: 20px 0 10px 0;
-            color: var(--text-color);
-        }
-
-        .content p {
-            line-height: 1.8;
-            margin-bottom: 15px;
-            color: var(--text-color);
-        }
-
-        .content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .content li {
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-
-        .content ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .content pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-bottom: 15px;
-        }
-
-        .content pre code {
-            background: none;
-            padding: 0;
-        }
-
-        .dark-mode-toggle {
-            cursor: pointer;
-            padding: 10px 15px;
-            background: #e8f4f8;
-            border: none;
-            border-radius: 8px;
-            color: #1976d2;
-            font-size: 1em;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        footer {
-            background: var(--nav-bg);
-            padding: 20px 30px;
-            text-align: center;
-            color: var(--nav-text);
-            border-top: 1px solid var(--border-color);
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-
-        .tech-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-            margin: 20px 0 30px 0;
-        }
-
-        .tech-gallery img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .tech-gallery img:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-        }
-
-        @media (max-width: 768px) {
-            .tech-gallery {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            .tech-gallery img {
-                height: 120px;
-            }
-        }
+        .dark-mode body::before { background: rgba(26,26,46,0.88); }
+        .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: var(--nav-bg); border-bottom: 1px solid var(--border-color); }
+        .navbar-brand { font-size: 1.5em; font-weight: bold; color: var(--nav-text); text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { color: var(--nav-text); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #667eea; }
+        .nav-links a.active { color: #667eea; font-weight: bold; }
+        .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
+        .dark-mode-toggle:hover { background: #667eea; color: white; }
+        .hero { position: relative; height: 420px; overflow: hidden; }
+        .hero img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 50px 30px 30px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: white; }
+        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; }
+        .hero-overlay .date { opacity: 0.85; font-size: 1em; }
+        .content { padding: 40px 30px; }
+        .intro { font-size: 1.1em; line-height: 2; color: var(--text-color); margin-bottom: 35px; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 12px; border-left: 5px solid #667eea; border-right: 1px solid #e0e0e0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; }
+        .dark-mode .intro { background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%); border-color: #667eea; }
+        .content h2 { font-size: 1.7em; color: #667eea; margin: 50px 0 20px 0; padding-bottom: 12px; border-bottom: 3px solid #667eea; }
+        .content h3 { font-size: 1.3em; color: #5a67d8; margin: 30px 0 15px 0; padding-left: 15px; border-left: 4px solid #48bb78; }
+        .content p { line-height: 2.1; margin-bottom: 22px; text-align: justify; color: var(--text-color); font-size: 1.05em; }
+        .content ul, .content ol { margin: 20px 0 25px 30px; }
+        .content li { line-height: 2; margin-bottom: 10px; color: var(--text-color); }
+        .content pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 25px 0; font-size: 0.95em; line-height: 1.6; }
+        .content code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9em; }
+        .dark-mode .content code { background: #2d2d2d; color: #e0e0e0; }
+        .content figure { margin: 35px 0; text-align: center; }
+        .content figure img { max-width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .content figcaption { margin-top: 12px; color: #666; font-size: 0.95em; font-style: italic; }
+        .highlight-box { background: linear-gradient(135deg, #fff3cd 0%, #fff 100%); border: 1px solid #ffc107; border-radius: 10px; padding: 20px; margin: 25px 0; }
+        .dark-mode .highlight-box { background: linear-gradient(135deg, #3d3d00 0%, #2d2d2d 100%); border-color: #ffc107; }
+        .danger-box { background: linear-gradient(135deg, #f8d7da 0%, #fff 100%); border: 1px solid #dc3545; border-radius: 10px; padding: 20px; margin: 25px 0; }
+        .dark-mode .danger-box { background: linear-gradient(135deg, #3d1a1d 0%, #2d2d2d 100%); border-color: #dc3545; }
+        .success-box { background: linear-gradient(135deg, #d4edda 0%, #fff 100%); border: 1px solid #28a745; border-radius: 10px; padding: 20px; margin: 25px 0; }
+        .dark-mode .success-box { background: linear-gradient(135deg, #1a3d1a 0%, #2d2d2d 100%); border-color: #28a745; }
+        .info-box { background: linear-gradient(135deg, #d1ecf1 0%, #fff 100%); border: 1px solid #17a2b8; border-radius: 10px; padding: 20px; margin: 25px 0; }
+        .dark-mode .info-box { background: linear-gradient(135deg, #1a3d42 0%, #2d2d2d 100%); border-color: #17a2b8; }
+        .table-container { overflow-x: auto; margin: 30px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border: 1px solid #dee2e6; }
+        th { background: #667eea; color: white; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        .dark-mode tr:nth-child(even) { background: #2d2d2d; }
+        footer { background: var(--nav-bg); padding: 25px 30px; text-align: center; color: var(--nav-text); border-top: 1px solid var(--border-color); }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; background: #667eea; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5em; box-shadow: 0 4px 15px rgba(102,126,234,0.4); transition: all 0.3s; }
+        .back-to-top:hover { background: #5a67d8; transform: translateY(-3px); }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .hero { height: 250px; } .hero-overlay h1 { font-size: 1.8em; } .content { padding: 25px 15px; } .content h2 { font-size: 1.4em; } }
     </style>
 </head>
 <body>
     <div class="container">
         <nav class="navbar">
-            <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
+            <a href="index.html" class="navbar-brand">📚 技术文档</a>
             <ul class="nav-links">
-                <li><a href="../../../index.html">首页</a></li>
-                <li><a href="../../../history.html">历史</a></li>
-                <li><a href="../../../about.html">关于</a></li>
-                <li><a href="../../../contact.html">联系</a></li>
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="history.html">历史</a></li>
+                <li><a href="about.html">关于</a></li>
+                <li><a href="contact.html">联系</a></li>
             </ul>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </nav>
 
+        <div class="hero">
+            <img src="images/tech_home_1.png" alt="微服务架构">
+            <div class="hero-overlay">
+                <h1>微服务架构设计</h1>
+                <div class="date">2026年05月17日 · 技术文档</div>
+            </div>
+        </div>
+
         <div class="content">
-            <a href="../../index.html" class="back-link">← 返回月份列表</a>
+            <p class="intro">微服务架构（Microservices Architecture）已成为现代云原生应用的主流架构风格。它将大型单体应用拆分为多个小型、自治的服务，每个服务负责特定的业务功能，可以独立开发、部署和扩展。本文系统讲解微服务架构的设计原则、核心组件、技术选型和实战最佳实践，涵盖服务拆分策略、服务间通信、API网关、服务注册发现、分布式事务、容器化部署等关键主题，帮助开发者构建高可用、可扩展的分布式系统。</p>
 
-            <h1>微服务架构设计</h1>
-            <div class="date">2026年05月17日 · 技术文档</div>
+            <h2>一、微服务架构概述</h2>
+            <p>微服务架构是一种将单一应用程序拆分为一组小服务的架构方法，每个服务运行在独立进程中，服务之间通过轻量级协议（如HTTP REST、gRPC）进行通信。这种架构风格的核心思想是单一职责（Single Responsibility），每个服务专注于完成一个特定的业务功能。与传统单体架构相比，微服务架构具有独立部署、技术异构、弹性扩展、团队自治等显著优势，但也带来了分布式系统的复杂性挑战。</p>
 
-            <div class="tech-gallery">
-                <img src="images/tech_home_1.png" alt="技术配图1">
-                <img src="images/tech_home_2.png" alt="技术配图2">
-                <img src="images/tech_home_3.png" alt="技术配图3">
-                <img src="images/tech_home_4.png" alt="技术配图4">
-                <img src="images/tech_home_5.png" alt="技术配图5">
-                <img src="images/tech_home_6.png" alt="技术配图6">
-                <img src="images/tech_home_7.png" alt="技术配图7">
-                <img src="images/tech_home_8.png" alt="技术配图8">
+            <figure>
+                <img src="images/tech_home_2.png" alt="微服务架构图">
+                <figcaption>图1：微服务架构示意图，展示了多个独立服务通过API网关和消息总线进行协作</figcaption>
+            </figure>
+
+            <p>微服务架构的起源可以追溯到2011年威尼斯软件架构研讨会，随后Netflix、Amazon、Uber等公司在生产环境中的成功实践使其逐渐成为行业标准。Netflix从2009年开始将单体架构迁移到微服务，到2015年已拥有数百个独立服务，日均处理万亿级请求，充分证明了微服务架构的大规模处理能力。Amazon在2002年就提出了"服务化"理念，要求所有团队通过服务接口进行交互，这被视为微服务思想的早期实践。</p>
+
+            <div class="info-box">
+                <strong>💡 架构演进路线：</strong>从单体架构到微服务并非一蹴而就，通常需要经历模块化单体 → 前后端分离 → API网关引入 → 服务逐步拆分的渐进式演进。建议在业务规模达到一定复杂度后再进行微服务改造，过早拆分只会增加不必要的运维负担。
             </div>
 
-            <h2>概述</h2>
-            <p>掌握微服务架构设计对于现代开发者来说至关重要。本文将从基础概念开始，逐步深入到实践应用，为您提供全面的技术指导。</p>
+            <h2>二、服务拆分策略</h2>
+            <p>服务拆分是微服务架构设计的第一步，也是最关键的决策之一。拆分粒度太粗会导致服务依然庞大难以维护，拆分太细则带来服务数量爆炸和分布式系统复杂度飙升。业界常用的拆分方法包括基于业务能力拆分（Business Capability）、基于领域驱动设计（DDD）的边界上下文（Bounded Context）、基于用户需求或团队组织结构等。正确的拆分应该让每个服务具有高内聚低耦合的特性，服务间依赖最小化。</p>
 
-            <h2>第一章 认识微服务架构设计</h2>
+            <figure>
+                <img src="images/tech_home_3.png" alt="容器编排">
+                <figcaption>图2：Kubernetes容器编排平台，支撑微服务的自动化部署、扩缩容和故障恢复</figcaption>
+            </figure>
 
-            <h3>1.1 微服务架构设计的本质</h3>
-            <p>微服务架构设计是现代软件开发中的重要技术，掌握它可以显著提升开发效率和应用质量。</p>
+            <p>基于DDD的拆分方法强调业务边界的清晰划分，通过识别领域（Domain）、子领域（Subdomain）、边界上下文和聚合根（Aggregate Root）来定义服务的边界。这种方法的优势在于服务划分与业务语义高度一致，服务内部的变化不会影响其他服务。在实际操作中，可以先画出完整的业务用例图和领域模型，然后识别核心域（Core Domain）、支撑域（Supporting Domain）和通用域（Generic Domain），核心域应该优先拆分并投入最多的设计精力。</p>
 
-            <h3>1.2 核心价值</h3>
-            <p>微服务架构设计的核心价值在于提高开发效率、保证代码质量、简化部署流程。</p>
+            <div class="success-box">
+                <strong>✅ 拆分原则：</strong>一个好的微服务应该能够被团队独立理解、开发、测试和部署，不需要与其他团队进行太多协调就可以完成功能迭代。服务大小以"两周内能够重写完成"为参考基准，避免服务过大导致敏捷性丧失。
+            </div>
 
-            <h3>1.3 应用场景</h3>
-            <p>微服务架构设计广泛应用于Web开发、数据分析、系统管理等多个领域。</p>
+            <h2>三、服务间通信机制</h2>
+            <p>微服务之间需要进行数据交换和功能调用，通信方式主要分为同步通信（REST、gRPC）和异步通信（消息队列、事件驱动）两大类。同步通信适合实时性要求高的场景，客户端发起请求后需要立即获得响应；异步通信则通过消息队列解耦服务，提高系统的弹性和容错能力。技术选型时应根据业务场景的实时性要求、一致性需求和团队技术储备综合考量。</p>
 
-            <h2>第二章 核心概念</h2>
+            <figure>
+                <img src="images/tech_home_4.png" alt="API网关">
+                <figcaption>图3：API网关作为系统的统一入口，处理路由、认证、限流、监控等横切关注点</figcaption>
+            </figure>
 
-            <h3>2.1 基础概念</h3>
-            <p>了解微服务架构设计的基础概念是掌握该技术的第一步。</p>
+            <p>RESTful API是最常用的同步通信协议，基于HTTP/JSON，优点是简单易用、浏览器友好、工具链成熟，缺点是性能开销较大、不适合高性能场景。gRPC是Google主导的高性能RPC框架，基于HTTP/2和Protocol Buffers序列化协议，支持双向流式调用，适合高性能和低延迟场景，特别适用于微服务之间的内部通信。Apache Dubbo是国内广泛使用的RPC框架，提供了丰富的服务治理功能。异步通信方面，RabbitMQ、Apache Kafka、RocketMQ是主流的消息中间件选择。</p>
 
-            <h3>2.2 关键特性</h3>
-            <p>微服务架构设计具有多个关键特性，这些特性使其在特定场景下具有优势。</p>
+            <h2>四、服务注册与发现</h2>
+            <p>在微服务架构中，服务实例数量动态变化（扩缩容、故障恢复、滚动更新），客户端需要一种机制来动态发现可用的服务实例。服务发现（Service Discovery）机制解决了这个问题，核心组件包括服务注册中心（Service Registry）、服务提供者、服务消费者。常见的服务发现模式包括客户端发现（Client-Side Discovery）和服务端发现（Server-Side Discovery）。</p>
 
-            <h3>2.3 技术原理</h3>
-            <p>理解微服务架构设计的技术原理有助于更好地应用该技术。</p>
+            <figure>
+                <img src="images/tech_home_5.png" alt="服务注册发现">
+                <figcaption>图4：服务注册与发现机制，服务实例启动时向注册中心注册，消费者通过注册中心获取可用实例列表</figcaption>
+            </figure>
 
-            <h2>第三章 实践技巧</h2>
+            <p>Eureka、Consul、Nacos是常见的服务注册中心实现。Eureka是Netflix开源的服务注册组件，与Spring Cloud深度集成；Consul提供了服务注册、健康检查、KV存储、多数据中心支持等特性，同时支持DNS和HTTP接口；Nacos是阿里巴巴开源的平台，提供了服务发现、配置管理、服务元数据管理等一站式解决方案。健康检查机制确保注册中心只保留健康的服务实例，防止请求被路由到已故障的实例。</p>
 
-            <h3>3.1 基础实践</h3>
-            <p>掌握微服务架构设计的基础实践技巧是应用该技术的基础。</p>
+            <div class="danger-box">
+                <strong>⚠️ 高可用要求：</strong>服务注册中心本身必须是高可用的，因为它是整个服务发现机制的核心。建议部署至少三个注册中心节点，使用分布式共识算法（如Raft）保证一致性。在云原生环境中，Kubernetes的Service和CoreDNS也提供了服务发现能力，适合无状态应用的简单场景。
+            </div>
 
-            <h3>3.2 高级技巧</h3>
-            <p>微服务架构设计的高级技巧可以帮助您解决复杂问题。</p>
+            <h2>五、API网关设计</h2>
+            <p>API网关（API Gateway）是微服务架构中的统一入口层，所有外部请求都经过网关转发到内部服务。网关的核心职责包括路由转发、协议转换、认证授权、限流熔断、日志监控、安全防护等。使用网关可以将这些横切关注点（Cross-Cutting Concerns）从业务服务中分离出来，让服务专注于业务逻辑实现，同时提供集中化的管理能力。</p>
 
-            <h3>3.3 最佳实践</h3>
-            <p>遵循微服务架构设计的最佳实践可以确保项目的成功。</p>
+            <figure>
+                <img src="images/tech_home_6.png" alt="云原生架构">
+                <figcaption>图5：云原生微服务架构，展示了容器化部署、服务网格和 observability 基础设施</figcaption>
+            </figure>
 
-            <h2>第四章 实战案例</h2>
+            <p>主流的API网关技术包括Kong、Apache APISIX、Spring Cloud Gateway、Nginx Ingress Controller等。Kong基于OpenResty构建，提供了丰富的插件生态；Apache APISIX使用高性能的Apache APISIX规则引擎，支持热配置更新；Spring Cloud Gateway是Spring生态的网关解决方案，与Spring Boot应用无缝集成。在选择网关时，需要考虑性能（QPS、延迟）、功能扩展性、运维复杂度和团队技术储备。</p>
 
-            <h3>4.1 实战案例一</h3>
-            <p>通过实际案例了解微服务架构设计的应用。</p>
+            <div class="highlight-box">
+                <strong>🔐 认证授权策略：</strong>在网关上集中处理认证（如JWT验证、OAuth2 Token验证）比在每个服务中单独实现更高效。对于多语言异构系统，建议使用标准化的认证协议（如OAuth2/OIDC），各服务只需验证Token有效性即可，无需关心Token的颁发和刷新逻辑。
+            </div>
 
-            <h3>4.2 实战案例二</h3>
-            <p>更多微服务架构设计的实际应用案例。</p>
+            <h2>六、分布式数据管理</h2>
+            <p>微服务架构的一个核心挑战是如何在多个服务之间维护数据一致性和完整性。在单体架构中，数据库事务可以轻松保证ACID特性，但在分布式环境中，跨服务的数据库事务难以实现。微服务通常采用领域驱动设计的思路，每个服务拥有自己的数据库（Database per Service），服务之间通过事件溯源（Event Sourcing）或最终一致性（Eventual Consistency）来实现数据同步。</p>
 
-            <h3>4.3 实战SOP</h3>
-            <p>微服务架构设计的实战操作流程。</p>
+            <figure>
+                <img src="images/tech_home_7.png" alt="数据存储">
+                <figcaption>图6：分布式数据存储架构，展示了主从复制、分片和跨区域数据同步策略</figcaption>
+            </figure>
 
+            <p>对于需要强一致性的场景（如金融交易），可以使用分布式事务解决方案，如Seata的AT模式、TCC模式、Saga模式等。Saga模式通过将大事务拆分为多个本地事务，每个本地事务有对应的补偿操作（Compensating Transaction），当某个步骤失败时执行补偿操作回滚。CQRS（Command Query Responsibility Segregation）模式将读操作和写操作分离，写入使用命令模型，读取使用查询模型，适合读多写多的场景。</p>
 
-            <h2>核心概念</h2>
+            <h2>七、容器化与编排</h2>
+            <p>容器化是微服务部署的标准方式，Docker将应用及其依赖打包成镜像，确保应用在任何环境中都能一致运行。Kubernetes（K8s）已成为容器编排的行业标准，提供了自动化部署、扩缩容、负载均衡、自愈机制、滚动更新等能力。对于刚开始微服务改造的团队，可以选择Minikube或Docker Desktop内置的K8s进行本地开发测试；生产环境建议使用托管K8s服务（如Amazon EKS、Google GKE、阿里云ACK）以降低运维复杂度。</p>
 
-            <p>了解微服务架构设计的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
+            <figure>
+                <img src="images/tech_home_8.png" alt="数据中心">
+                <figcaption>图7：现代化数据中心，支撑大规模微服务集群的弹性扩展和高可用部署</figcaption>
+            </figure>
 
-            <h3>核心概念</h3>
+            <p>Helm是Kubernetes的包管理工具，将Kubernetes资源打包成Chart，方便分发和部署复杂的微服务应用。Argo CD和Flux则是GitOps实践的工具，通过Git仓库作为声明式基础设施的单一真相来源，自动将代码部署到Kubernetes集群。服务网格（Service Mesh）技术如Istio、Linkerd提供了微服务间通信的治理能力，包括流量管理、可观测性、安全策略等，将这些能力从应用层剥离到基础设施层。</p>
+
+            <h2>八、微服务安全实践</h2>
+            <p>微服务架构的安全挑战包括服务间认证（Service-to-Service Authentication）、API安全、数据保护、合规性等方面。零信任架构（Zero Trust）理念适用于微服务安全，即"永不信任，始终验证"，每个服务都需要验证调用者的身份，而不是依赖网络层的信任。mTLS（ mutual TLS）提供了强制的双向身份认证，所有服务间通信都加密，Istio、Linkerd等服务网格内置了mTLS支持。</p>
+
+            <div class="info-box">
+                <strong>🔒 安全配置清单：</strong>启用API网关的认证和授权；使用mTLS加密所有服务间通信；敏感配置（如数据库密码、API密钥）使用密文存储（如HashiCorp Vault、AWS Secrets Manager）；实施最小权限原则，服务只拥有完成功能所必需的权限；启用请求限流防止DDoS攻击；记录审计日志用于安全分析。
+            </div>
+
+            <h2>九、可观测性建设</h2>
+            <p>微服务架构的可观测性（Observability）包括日志（Logging）、指标（Metrics）和链路追踪（Tracing）三个支柱。由于请求跨越多个服务，传统的日志分析已无法满足问题排查需求，需要分布式链路追踪技术将一次请求在各服务间的调用路径串联起来。Prometheus+Grafana是指标监控的主流组合；Jaeger、Zipkin是常用的链路追踪工具；ELK（Elasticsearch、Logstash、Kibana）栈是日志分析的行业标准。</p>
+
+            <div class="success-box">
+                <strong>✅ 可观测性建设优先级：</strong>对于刚开始建设的团队，建议按以下顺序投入：第一，建立基础的指标监控（CPU、内存、请求率、错误率），使用Prometheus+Grafana；第二，引入分布式链路追踪（如SkyWalking），快速定位跨服务调用问题；第三，建设日志聚合和分析平台，实现问题根因分析。
+            </div>
+
+            <h2>十、微服务开发实战 Checklist</h2>
             <ul>
-                <li>微服务架构设计 - 现代软件开发的重要技术</li>
-                <li>核心概念 - 理解该技术的基础</li>
-                <li>关键特性 - 该技术的优势所在</li>
-                <li>应用场景 - 该技术的实际应用</li>
+                <li>服务拆分遵循DDD思路，确保服务边界清晰、独立可部署</li>
+                <li>服务间通信优先使用轻量级协议，异步消息优先于同步调用</li>
+                <li>在API网关统一处理认证、限流、日志等横切关注点</li>
+                <li>服务注册中心高可用部署，配置健康检查</li>
+                <li>每个服务使用独立数据库，优先通过事件驱动实现数据同步</li>
+                <li>使用容器化部署，Kubernetes实现自动化编排和扩缩容</li>
+                <li>服务间通信启用mTLS，敏感配置使用密文存储</li>
+                <li>建立完整的可观测性体系：指标、链路追踪、日志聚合</li>
+                <li>实施自动化测试：单元测试、集成测试、契约测试</li>
+                <li>配置蓝绿部署或金丝雀发布，实现零 downtime 部署</li>
             </ul>
 
-            <h3>关键术语</h3>
-            <ul>
-                <li>基础概念 - 该技术的基本术语</li>
-                <li>关键特性 - 该技术的重要特性</li>
-                <li>技术原理 - 该技术的工作原理</li>
-                <li>最佳实践 - 该技术的应用规范</li>
-            </ul>
+            <h2>常见问题 FAQ</h2>
 
-            <h2>实践技巧</h2>
+            <h3>Q: 微服务与SOA（面向服务架构）有何区别？</h3>
+            <p>微服务可以视为SOA的轻量化实现。SOA通常使用ESB（Enterprise Service Bus）作为服务集成中间件，导致单点故障和性能瓶颈；微服务主张使用轻量级协议（HTTP、gRPC）和智能端点（Smart Endpoints），避免中央化的消息总线。微服务还强调服务独立部署、技术栈多样性，以及DevOps文化，这与传统SOA的集中式管理有所不同。</p>
 
-            <p>掌握微服务架构设计的实践技巧可以帮助您更好地应用该技术。</p>
+            <h3>Q: 如何判断服务拆分是否合理？</h3>
+            <p>一个健康的微服务架构应该能让团队独立完成功能迭代，不需要跨团队协调。如果每次发布都需要与其他团队沟通，说明服务边界可能存在问题。另一个指标是修改一个服务时，是否会影响其他服务——如果影响范围小，说明耦合度合理。还有一种"两星期重写"启发法：如果一个服务两星期内无法重写，说明可能拆分过粗。</p>
 
-            <h3>基础技巧</h3>
-            <ul>
-                <li>掌握微服务架构设计的基础概念</li>
-                <li>理解微服务架构设计的关键特性</li>
-                <li>学习微服务架构设计的基本用法</li>
-                <li>实践微服务架构设计的基础应用</li>
-            </ul>
+            <h3>Q: 服务间同步通信和异步通信如何选择？</h3>
+            <p>核心判断依据是业务对实时性的要求和系统对一致性的要求。同步通信（如REST、gRPC）适合需要即时响应的场景，但会形成调用链，任何一个服务故障都会影响上游服务。异步通信（如消息队列）适合可以接受延迟的场景，通过最终一致性替代强一致性，提高系统的弹性和容错能力。可以使用"事件驱动+补偿事务"处理跨服务的业务逻辑。</p>
 
-            <h3>高级技巧</h3>
-            <ul>
-                <li>深入理解微服务架构设计的技术原理</li>
-                <li>掌握微服务架构设计的高级特性</li>
-                <li>优化微服务架构设计的应用性能</li>
-                <li>解决微服务架构设计的复杂问题</li>
-            </ul>
-
-            <h2>最佳实践</h2>
-
-            <p>遵循微服务架构设计的最佳实践可以确保项目的成功和可维护性。</p>
-
-            <h3>开发规范</h3>
-            <ul>
-                <li>遵循微服务架构设计的开发规范</li>
-                <li>编写清晰的代码和文档</li>
-                <li>进行充分的测试</li>
-                <li>保持代码的可维护性</li>
-            </ul>
-
-            <h3>部署策略</h3>
-            <ul>
-                <li>使用微服务架构设计的最佳部署方式</li>
-                <li>配置适当的监控和日志</li>
-                <li>制定备份和恢复策略</li>
-                <li>定期更新和维护</li>
-            </ul>
-            <h3>微服务架构设计 vs 其他技术对比</h3>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                <thead>
-                    <tr style="background: #667eea; color: white;">
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">特性</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">微服务架构设计</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">其他技术</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">学习曲线</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">开发效率</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">高</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">执行效率</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #ddd;">适用场景</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">广泛</td>
-                        <td style="padding: 12px; border: 1px solid #ddd;">特定</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>代码示例</h2>
-
-            <p>以下是一些微服务架构设计的代码示例，帮助您更好地理解和应用。</p>
-
-            <h3>代码示例 1: 微服务架构设计基础示例</h3>
-            <pre><code># 微服务架构设计基础示例
-
-# 示例1：基础用法
-def basic_example():
-    """基础示例"""
-    print("这是微服务架构设计的基础示例")
-
-# 示例2：高级用法
-def advanced_example():
-    """高级示例"""
-    print("这是微服务架构设计的高级示例")
-
-# 使用示例
-if __name__ == "__main__":
-    basic_example()
-    advanced_example()</code></pre>
-
-            <h2>常见问题</h2>
-
-            <h3>常见问题 1: 如何开始学习微服务架构设计？</h3>
-            <p><strong>问题：</strong>如何开始学习微服务架构设计？</p>
-            <p><strong>答案：</strong>建议从基础概念开始，逐步深入到实践应用。可以通过官方文档、教程和实际项目来学习微服务架构设计。</p>
-
-            <h3>常见问题 2: 微服务架构设计适合什么场景？</h3>
-            <p><strong>问题：</strong>微服务架构设计适合什么场景？</p>
-            <p><strong>答案：</strong>微服务架构设计适合多种场景，具体取决于您的需求。建议根据项目特点选择合适的技术方案。</p>
-
-            <h2>微服务架构设计实战SOP</h2>
-
-            <h3>阶段 1: Phase 0: 环境准备</h3>
-            <ol>
-                <li>准备微服务架构设计的开发环境</li>
-                <li>安装必要的依赖</li>
-                <li>配置开发工具</li>
-                <li>了解基础概念</li>
-            </ol>
-
-            <h3>阶段 2: Phase 1: 开发实践</h3>
-            <ol>
-                <li>编写微服务架构设计的代码</li>
-                <li>进行测试和调试</li>
-                <li>优化代码性能</li>
-                <li>编写文档</li>
-            </ol>
-
-            <h3>阶段 3: Phase 2: 部署上线</h3>
-            <ol>
-                <li>准备微服务架构设计的部署环境</li>
-                <li>配置生产环境</li>
-                <li>进行部署</li>
-                <li>监控和维护</li>
-            </ol>
+            <h3>Q: 微服务架构的常见反模式有哪些？</h3>
+            <p>最常见的反模式是"微服务变分布式单体"——把服务拆开了，但服务间调用仍然像单体应用一样频繁和紧耦合，导致部署独立性和扩展性优势丧失。另一个反模式是在微服务架构中使用分布式事务解决所有一致性问题，这会引入巨大的复杂性和性能开销。应该优先考虑最终一致性、事件溯源等模式。还有"过早优化"，在业务规模还没达到需要微服务的复杂度时就进行拆分。</p>
 
             <h2>总结</h2>
-
-            <p>通过本文的学习，您应该对微服务架构设计有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用微服务架构设计。</p>
-
-            <h2>参考资料</h2>
-
-            <ul>
-                <li>微服务架构设计官方文档</li>
-                <li>相关技术教程</li>
-                <li>最佳实践指南</li>
-                <li>社区资源</li>
-            </ul>
+            <p>微服务架构是应对现代互联网业务复杂性的有效解决方案，通过服务拆分、独立部署、技术多样性等特性提高开发效率和系统弹性。然而微服务也带来了分布式系统的固有复杂性，包括服务发现、链路追踪、分布式事务、服务治理等挑战。成功实施微服务需要团队具备DevOps能力，建立完善的CI/CD流水线、测试体系、可观测性基础设施。在架构选择上，应该基于业务规模、团队能力和业务特点进行权衡，避免为了微服务而微服务。对于中小规模业务，一个模块化的单体架构可能是更好的起点，随着业务复杂度的增长再逐步演进到微服务架构。</p>
         </div>
 
         <footer>
-            <p>&copy; 2026 技术文档 | GitHub Pages</p>
+            <p>© 2026 技术文档 | 每日自动更新 | 微服务架构设计 | 图片：8张高质量配图</p>
         </footer>
     </div>
 
+    <a href="#" class="back-to-top" title="返回顶部">↑</a>
+
     <script>
-        function toggleDarkMode() {{
+        function toggleDarkMode(){
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }}
-
-        if (localStorage.getItem('darkMode') === 'true') {{
+        }
+        if(localStorage.getItem('darkMode')==='true'){
             document.body.classList.add('dark-mode');
-        }}
+        }
+        document.querySelector('.back-to-top').addEventListener('click', function(e){
+            e.preventDefault();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
     </script>
 </body>
 </html>
