@@ -31,31 +31,27 @@
             padding: 20px;
             color: var(--text-color);
             transition: color 0.3s;
-            background: var(--bg-image) no-repeat center center fixed;
+            background: url('images/website-background-8k.png') no-repeat center center fixed;
             background-size: cover;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.88);
-            z-index: -1;
-        }
-        .dark-mode body::before { background: rgba(26,26,46,0.88); }
-        .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: var(--nav-bg); border-bottom: 1px solid var(--border-color); }
-        .navbar-brand { font-size: 1.5em; font-weight: bold; color: var(--nav-text); text-decoration: none; }
+        .container { max-width: 1000px; margin: 0 auto; background: rgba(255,255,255,0.12); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; border: 1px solid rgba(255,255,255,0.3); }
+        .dark-mode .container { background: rgba(26,26,46,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.25); }
+        .dark-mode .navbar { background: rgba(26,26,46,0.6); border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .navbar-brand { font-size: 1.5em; font-weight: bold; color: #333; text-decoration: none; }
+        .dark-mode .navbar-brand { color: #fff; }
         .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links a { color: var(--nav-text); text-decoration: none; transition: color 0.3s; }
+        .nav-links a { color: #333; text-decoration: none; transition: color 0.3s; }
+        .dark-mode .nav-links a { color: #e0e0e0; }
         .nav-links a:hover { color: #667eea; }
         .nav-links a.active { color: #667eea; font-weight: bold; }
         .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
         .dark-mode-toggle:hover { background: #667eea; color: white; }
-        .hero { position: relative; height: 420px; overflow: hidden; }
+        .hero { position: relative; height: 420px; overflow: hidden; background: url('images/tech_home_1_sharp.png') no-repeat center center; background-size: cover; }
         .hero video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 50px 30px 30px; background: linear-gradient(transparent, rgba(0,0,0,0.75)); color: white; z-index: 1; }
-        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; }
-        .hero-overlay .date { opacity: 0.85; font-size: 1em; }
+        .hero-overlay { position: absolute; top: 0; left: 0; padding: 80px 30px 30px; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); color: white; z-index: 2; }
+        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-overlay .date { opacity: 0.9; font-size: 1em; text-shadow: 0 1px 5px rgba(0,0,0,0.5); }
         .content { padding: 40px 30px; }
         .intro { font-size: 1.1em; line-height: 2; color: var(--text-color); margin-bottom: 35px; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 12px; border-left: 5px solid #667eea; border-right: 1px solid #e0e0e0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; }
         .dark-mode .intro { background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%); border-color: #667eea; }
@@ -120,8 +116,8 @@
             <p>微服务架构是一种将单一应用程序拆分为一组小服务的架构方法，每个服务运行在独立进程中，服务之间通过轻量级协议（如HTTP REST、gRPC）进行通信。这种架构风格的核心思想是单一职责（Single Responsibility），每个服务专注于完成一个特定的业务功能。与传统单体架构相比，微服务架构具有独立部署、技术异构、弹性扩展、团队自治等显著优势，但也带来了分布式系统的复杂性挑战。</p>
 
             <figure>
-                <img src="images/tech_home_2.png" alt="微服务架构图">
-                <figcaption>图1：微服务架构示意图，展示了多个独立服务通过API网关和消息总线进行协作</figcaption>
+                <video src="images/tech_home_video.mp4" autoplay loop muted playsinline style="width:100%;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);"></video>
+                <figcaption>视频1：微服务架构示意图，展示了多个独立服务通过API网关和消息总线进行协作</figcaption>
             </figure>
 
             <p>微服务架构的起源可以追溯到2011年威尼斯软件架构研讨会，随后Netflix、Amazon、Uber等公司在生产环境中的成功实践使其逐渐成为行业标准。Netflix从2009年开始将单体架构迁移到微服务，到2015年已拥有数百个独立服务，日均处理万亿级请求，充分证明了微服务架构的大规模处理能力。Amazon在2002年就提出了"服务化"理念，要求所有团队通过服务接口进行交互，这被视为微服务思想的早期实践。</p>
