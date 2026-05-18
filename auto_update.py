@@ -1508,9 +1508,12 @@ def main():
         logger.log(f"🖼️  图片: {'✅ 已生成' if image_file else '❌ 生成失败'}")
         logger.log("=" * 60)
         
-        # 发送飞书通知
+        # 发送飞书通知（失败不影响主流程）
         today_str = datetime.now().strftime('%Y年%m月%d日')
-        send_feishu_notification(f"格式技术文档早上7点45更新任务完成。主题：{topic}")
+        try:
+            send_feishu_notification(f"格式技术文档更新任务完成。主题：{topic}")
+        except Exception as notify_err:
+            logger.log(f"⚠️  飞书通知失败（不影响更新）: {notify_err}")
 
         return 0
 
