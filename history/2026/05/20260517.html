@@ -15,7 +15,7 @@
             --nav-bg: white;
             --nav-text: #333;
             --border-color: rgba(0,0,0,0.1);
-            --bg-image: url('images/website-background-8k.png');
+            --bg-image: url('../../../images/website-background-8k.png');
         }
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -31,7 +31,7 @@
             padding: 20px;
             color: var(--text-color);
             transition: color 0.3s;
-            background: url('images/website-background-8k.png') no-repeat center center fixed;
+            background: url('../../../images/website-background-8k.png') no-repeat center center fixed;
             background-size: cover;
         }
         .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
@@ -47,7 +47,7 @@
         .nav-links a.active { color: #667eea; font-weight: bold; }
         .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
         .dark-mode-toggle:hover { background: #667eea; color: white; }
-        .hero { position: relative; height: 420px; overflow: hidden; background: url('images/tech_home_1_sharp.png') no-repeat center center; background-size: cover; }
+        .hero { position: relative; height: 420px; overflow: hidden; background: url('../../../images/tech_home_1_sharp.png') no-repeat center center; background-size: cover; }
         .hero video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
         .hero-overlay { position: absolute; top: 0; left: 0; padding: 80px 30px 30px; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); color: white; z-index: 2; }
         .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
@@ -103,7 +103,7 @@
         </nav>
 
         <div class="hero">
-            <video src="images/tech_home_video.mp4" autoplay loop muted playsinline></video>
+            <video src="../../../images/tech_home_video.mp4" autoplay loop muted playsinline></video>
             <div class="hero-overlay">
                 <h1>微服务架构设计</h1>
                 <div class="date">2026年05月17日 · 技术文档</div>
@@ -117,7 +117,7 @@
             <p>微服务架构是一种将单一应用程序拆分为一组小服务的架构方法，每个服务运行在独立进程中，服务之间通过轻量级协议（如HTTP REST、gRPC）进行通信。这种架构风格的核心思想是单一职责（Single Responsibility），每个服务专注于完成一个特定的业务功能。与传统单体架构相比，微服务架构具有独立部署、技术异构、弹性扩展、团队自治等显著优势，但也带来了分布式系统的复杂性挑战。</p>
 
             <figure>
-                <img src="images/tech_home_2.png" alt="微服务架构图">
+                <img src="../../../images/tech_home_2.png" alt="微服务架构图">
                 <figcaption>图1：微服务架构示意图，展示了多个独立服务通过API网关和消息总线进行协作</figcaption>
             </figure>
 
@@ -131,7 +131,7 @@
             <p>服务拆分是微服务架构设计的第一步，也是最关键的决策之一。拆分粒度太粗会导致服务依然庞大难以维护，拆分太细则带来服务数量爆炸和分布式系统复杂度飙升。业界常用的拆分方法包括基于业务能力拆分（Business Capability）、基于领域驱动设计（DDD）的边界上下文（Bounded Context）、基于用户需求或团队组织结构等。正确的拆分应该让每个服务具有高内聚低耦合的特性，服务间依赖最小化。</p>
 
             <figure>
-                <img src="images/tech_home_3.png" alt="容器编排">
+                <img src="../../../images/tech_home_3.png" alt="容器编排">
                 <figcaption>图2：Kubernetes容器编排平台，支撑微服务的自动化部署、扩缩容和故障恢复</figcaption>
             </figure>
 
@@ -145,7 +145,7 @@
             <p>微服务之间需要进行数据交换和功能调用，通信方式主要分为同步通信（REST、gRPC）和异步通信（消息队列、事件驱动）两大类。同步通信适合实时性要求高的场景，客户端发起请求后需要立即获得响应；异步通信则通过消息队列解耦服务，提高系统的弹性和容错能力。技术选型时应根据业务场景的实时性要求、一致性需求和团队技术储备综合考量。</p>
 
             <figure>
-                <img src="images/tech_home_4.png" alt="API网关">
+                <img src="../../../images/tech_home_4.png" alt="API网关">
                 <figcaption>图3：API网关作为系统的统一入口，处理路由、认证、限流、监控等横切关注点</figcaption>
             </figure>
 
@@ -155,7 +155,7 @@
             <p>在微服务架构中，服务实例数量动态变化（扩缩容、故障恢复、滚动更新），客户端需要一种机制来动态发现可用的服务实例。服务发现（Service Discovery）机制解决了这个问题，核心组件包括服务注册中心（Service Registry）、服务提供者、服务消费者。常见的服务发现模式包括客户端发现（Client-Side Discovery）和服务端发现（Server-Side Discovery）。</p>
 
             <figure>
-                <img src="images/tech_home_5.png" alt="服务注册发现">
+                <img src="../../../images/tech_home_5.png" alt="服务注册发现">
                 <figcaption>图4：服务注册与发现机制，服务实例启动时向注册中心注册，消费者通过注册中心获取可用实例列表</figcaption>
             </figure>
 
@@ -169,7 +169,7 @@
             <p>API网关（API Gateway）是微服务架构中的统一入口层，所有外部请求都经过网关转发到内部服务。网关的核心职责包括路由转发、协议转换、认证授权、限流熔断、日志监控、安全防护等。使用网关可以将这些横切关注点（Cross-Cutting Concerns）从业务服务中分离出来，让服务专注于业务逻辑实现，同时提供集中化的管理能力。</p>
 
             <figure>
-                <img src="images/tech_home_6.png" alt="云原生架构">
+                <img src="../../../images/tech_home_6.png" alt="云原生架构">
                 <figcaption>图5：云原生微服务架构，展示了容器化部署、服务网格和 observability 基础设施</figcaption>
             </figure>
 
@@ -183,7 +183,7 @@
             <p>微服务架构的一个核心挑战是如何在多个服务之间维护数据一致性和完整性。在单体架构中，数据库事务可以轻松保证ACID特性，但在分布式环境中，跨服务的数据库事务难以实现。微服务通常采用领域驱动设计的思路，每个服务拥有自己的数据库（Database per Service），服务之间通过事件溯源（Event Sourcing）或最终一致性（Eventual Consistency）来实现数据同步。</p>
 
             <figure>
-                <img src="images/tech_home_7.png" alt="数据存储">
+                <img src="../../../images/tech_home_7.png" alt="数据存储">
                 <figcaption>图6：分布式数据存储架构，展示了主从复制、分片和跨区域数据同步策略</figcaption>
             </figure>
 
@@ -193,7 +193,7 @@
             <p>容器化是微服务部署的标准方式，Docker将应用及其依赖打包成镜像，确保应用在任何环境中都能一致运行。Kubernetes（K8s）已成为容器编排的行业标准，提供了自动化部署、扩缩容、负载均衡、自愈机制、滚动更新等能力。对于刚开始微服务改造的团队，可以选择Minikube或Docker Desktop内置的K8s进行本地开发测试；生产环境建议使用托管K8s服务（如Amazon EKS、Google GKE、阿里云ACK）以降低运维复杂度。</p>
 
             <figure>
-                <img src="images/tech_home_8.png" alt="数据中心">
+                <img src="../../../images/tech_home_8.png" alt="数据中心">
                 <figcaption>图7：现代化数据中心，支撑大规模微服务集群的弹性扩展和高可用部署</figcaption>
             </figure>
 
