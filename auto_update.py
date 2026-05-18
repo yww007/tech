@@ -863,13 +863,6 @@ def step_1_generate_html(topic, for_archive=True):
         year = bj_time.strftime("%Y")
         month = bj_time.strftime("%m")
 
-    try:
-        bj_time = get_beijing_time()
-        today = bj_time.strftime("%Y%m%d")
-        today_str = bj_time.strftime("%Y年%m月%d日")
-        year = bj_time.strftime("%Y")
-        month = bj_time.strftime("%m")
-
         # 获取主题内容
         content = get_topic_content(topic)
         if not content:
