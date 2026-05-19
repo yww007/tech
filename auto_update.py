@@ -1372,7 +1372,7 @@ def check_image_quality(image_path):
         return False
 
 def step_3_update_index(topic, image_file):
-    """第3步：更新首页"""
+    """第3步：更新首页（适配新版直接文章格式）"""
     logger.log(f"🔄 步骤 3/3: 更新首页")
 
     try:
@@ -1393,31 +1393,53 @@ def step_3_update_index(topic, image_file):
         with open(index_path, 'r', encoding='utf-8') as f:
             index_content = f.read()
 
-        # 提取今日推荐部分
-        image_path = f"images/{Path(image_file).name}" if image_file else "images/tech_default.png"
+        # 读取今日归档页，提取正文内容
+        archive_path = Path(BLOG_PATH) / "history" / year / month / f"{today}.html"
+        if not archive_path.exists():
+            logger.log(f"❌ 归档文件不存在: {archive_path}")
+            return False
 
-        # 生成要点列表
-        points_html = ""
-        for i, point in enumerate(content['practices']['基础技巧'][:3], 1):
-            points_html += f'                    <li>{point}</li>\n'
+        with open(archive_path, 'r', encoding='utf-8') as f:
+            archive_content = f.read()
 
-        today_section = f'''            <h2>今日推荐-{today_str}</h2>
+        # 1. 更新 <title> 标签
+        index_content = re.sub(r'<title>[^<]*\| 技术文档</title>', f'<title>{topic} - {today_str} | 技术文档</title>', index_content)
 
-            <div style="background: linear-gradient(145deg, #f6f8fa 0%, #ffffff 100%); padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #667eea;">
-                <img src="{image_path}" alt="{topic}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.5em;">{topic}</h3>
-                <p style="margin-bottom: 15px;">{content['intro']}</p>
-                <p style="margin-bottom: 15px;"><strong>主要内容：</strong></p>
-                <ul style="margin-left: 20px; margin-bottom: 15px;">
-{points_html}                </ul>
-                <a href="history/{year}/{month}/{today}.html" style="color: #667eea; font-weight: bold;">阅读完整文章 →</a>
-            </div>'''
+        # 2. 更新 hero 区域的 <h1>
+        old_h1 = index_content[index_content.find('<h1>') + 4:index_content.find('</h1>')]
+        index_content = index_content.replace(f'<h1>{old_h1}</h1>', f'<h1>{topic}</h1>', 1)
 
-        # 查找并替换今日推荐部分
-        pattern = r'<h2>今日推荐-.*?</h2>.*?<h2>历史存档</h2>'
-        replacement = today_section + '\n\n            <h2>历史存档</h2>'
+        # 3. 更新日期
+        old_date_start = index_content.find('<div class="date">') + len('<div class="date">')
+        old_date_end = index_content.find('</div>', old_date_start)
+        index_content = index_content[:old_date_start] + f'{today_str} · 技术文档' + index_content[old_date_end:]
 
-        new_content = re.sub(pattern, replacement, index_content, flags=re.DOTALL)
+        # 3. 更新 meta description
+        index_content = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{topic} - 完整的技术指南和最佳实践">', index_content)
+
+        # 4. 从归档页提取正文内容（.content div 的内部，不含外层标签）
+        # 找到 .content div 的范围：<div class="content"> 到其对应的 </div>（在 <footer> 之前的最后一个）
+        ac_start = archive_content.find('<div class="content">')
+        ac_footer = archive_content.find('<footer>')
+        ac_content_close = archive_content.rfind('</div>', ac_start, ac_footer)
+        archive_inner = archive_content[ac_start + len('<div class="content">'):ac_content_close]
+
+        # 修正归档内容中的路径（归档页在 history/2026/05/ 下，首页在根目录）
+        archive_inner = archive_inner.replace('href="../../', 'href="')
+
+        # 5. 替换首页的 content div 内容
+        # 找到 .content div 在首页中的范围
+        ic_start = index_content.find('<div class="content">')
+        ic_hero_end = ic_start + len('<div class="content">')  # 跳过 <div class="content"> 标签
+        ic_footer = index_content.find('<footer>')
+        ic_content_close = index_content.rfind('</div>', ic_start, ic_footer)
+
+        # 构建新内容：hero + 新 content div 标签 + 归档内容 + 后续所有内容
+        new_content = (
+            index_content[:ic_hero_end] +
+            '\n            ' + archive_inner.strip() + '\n        ' +
+            index_content[ic_content_close:]
+        )
 
         # 写回
         with open(index_path, 'w', encoding='utf-8') as f:
