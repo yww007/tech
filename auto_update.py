@@ -1259,120 +1259,127 @@ def step_1_generate_html(topic, for_archive=True):
         logger.log(traceback.format_exc())
         return None
 
-def step_2_generate_image(topic, seed=101, max_retries=2):
-    """第2步：生成图片（使用Pollinations API）"""
-    logger.log(f"🎨 步骤 2/3: 生成图片")
-    logger.log(f"📊 质量标准: 文件200KB-800KB, 分辨率≥1280x720, 比例16:9")
+def get_image_prompts(topic):
+    """获取8张图片的主题提示词（基于当前主题）"""
+    # 通用技术风提示词模板，融入主题关键词
+    base = f"{topic} technical concept, professional documentation illustration, dark blue futuristic neon aesthetic, digital art style, 8K"
+    return [
+        f"{topic} overview and introduction, modern tech workspace, {base}",
+        f"{topic} core concepts and fundamentals, infrastructure diagram, {base}",
+        f"{topic} practical techniques and methods, hands-on coding setup, {base}",
+        f"{topic} real-world case studies and examples, {base}",
+        f"{topic} key terminology and definitions, {base}",
+        f"{topic} tips and best practices guide, {base}",
+        f"{topic} comparison and analysis, charts and metrics, {base}",
+        f"{topic} step-by-step workflow and SOP, process automation, {base}",
+    ]
+
+
+def step_2_generate_image(topic, seed=101, max_retries=1):
+    """第2步：生成8张配图（使用智谱 CogView-3-Flash）"""
+    logger.log(f"🎨 步骤 2/3: 生成 8 张配图")
 
     try:
+        zhipu_script = Path("/home/swg/.openclaw/workspace/tech/zhipu_generate.py")
+        if not zhipu_script.exists():
+            logger.log(f"❌ zhipu_generate.py 不存在，跳过图片生成")
+            return [None] * 8
+
+        prompts = get_image_prompts(topic)
         results = []
-        genai_script = Path("/home/swg/.openclaw/workspace/tech/pollinations_generate.py")
 
-        # 生成提示词（英文，避免编码问题）
-        prompt = f"Professional technical documentation cover about {topic}, 8K resolution, photorealistic, sharp details, natural lighting, cinematic composition, modern technology style, professional photography"
+        for i, prompt in enumerate(prompts, 1):
+            image_file = IMAGES_DIR / f"tech_home_{i}.png"
+            logger.log(f"🖼️  生成图片 {i}/8: {topic[:20]}...")
 
-        # 图片文件名
-        image_file = IMAGES_DIR / f"tech_{seed}.png"
-
-        success = False
-        retry_count = 0
-
-        while not success and retry_count <= max_retries:
-            try:
-                logger.log(f"🖼️  生成图片: {topic[:30]}... (尝试 {retry_count + 1})")
-
-                result = subprocess.run(
-                    ["python3", str(genai_script), prompt,
-                     "--width", "1344",
-                     "--height", "768",
-                     "--seed", str(seed + retry_count * 100),
-                     "--output", str(image_file)],
-                    capture_output=True,
-                    text=True,
-                    timeout=240
-                )
-
-                if result.returncode == 0 and image_file.exists():
-                    # 检查图片质量
-                    quality_ok = check_image_quality(image_file)
-                    if quality_ok:
-                        logger.log(f"✅ 图片生成成功且质量合格")
-                        results.append(str(image_file))
+            success = False
+            for attempt in range(max_retries + 1):
+                try:
+                    result = subprocess.run(
+                        ["python3", str(zhipu_script), prompt,
+                         "--output", str(image_file),
+                         "--width", "800", "--height", "450"],
+                        capture_output=True, text=True, timeout=120
+                    )
+                    if result.returncode == 0 and image_file.exists():
+                        size_kb = image_file.stat().st_size / 1024
+                        logger.log(f"  ✅ tech_home_{i}.png ({size_kb:.0f}KB)")
                         success = True
+                        break
                     else:
-                        if retry_count < max_retries:
-                            logger.log(f"⚠️  图片质量不达标，重新生成...")
-                            retry_count += 1
-                            image_file.unlink()  # 删除不合格的图片
-                        else:
-                            logger.log(f"⚠️  图片质量未达标但已达到最大重试次数")
-                            results.append(str(image_file))
-                            success = True
-                else:
-                    if retry_count < max_retries:
-                        logger.log(f"⚠️  图片生成失败，重试...")
-                        retry_count += 1
-                    else:
-                        logger.log(f"❌ 图片生成失败")
-                        results.append(None)
-                        success = True
+                        logger.log(f"  ⚠️  尝试 {attempt + 1} 失败")
+                except subprocess.TimeoutExpired:
+                    logger.log(f"  ⚠️  超时")
+                except Exception as e:
+                    logger.log(f"  ⚠️  异常: {e}")
 
-                # 稍等避免API限流
                 if not success:
-                    time.sleep(3)
+                    time.sleep(1)
 
-            except subprocess.TimeoutExpired:
-                if retry_count < max_retries:
-                    logger.log(f"⚠️  图片生成超时，重试...")
-                    retry_count += 1
-                else:
-                    logger.log(f"❌ 图片生成超时")
-                    results.append(None)
-                    success = True
-            except Exception as e:
-                if retry_count < max_retries:
-                    logger.log(f"⚠️  图片生成异常: {str(e)}，重试...")
-                    retry_count += 1
-                else:
-                    logger.log(f"❌ 图片生成最终失败")
-                    results.append(None)
-                    success = True
+            if not success:
+                logger.log(f"  ❌ tech_home_{i}.png 生成失败")
+                image_file = None
 
-        return results[0] if results else None
+            results.append(image_file)
+
+        success_count = sum(1 for r in results if r is not None)
+        logger.log(f"✅ 图片生成完成: {success_count}/8 成功")
+        return results
+
     except Exception as e:
-        logger.log(f"❌ 图片生成异常: {str(e)}")
-        return None
+        logger.log(f"❌ 图片生成异常: {e}")
+        return [None] * 8
 
-def check_image_quality(image_path):
-    """检查图片质量是否达标（参考环球新闻的质量检查）"""
-    try:
-        from PIL import Image
-        with Image.open(image_path) as img:
-            width, height = img.size
-            file_size_kb = os.path.getsize(image_path) / 1024
 
-            # 质量标准
-            min_size_kb = 200
-            max_size_kb = 800
-            min_width = 1280
-            min_height = 720
-            target_ratio = 16/9
-            ratio_tolerance = 0.1
+def figure_tag(img_num, topic):
+    """生成 figure HTML 标签（无 alt 文字，简洁）"""
+    return f'''
+            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
+                <img src="images/tech_home_{img_num}.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            </figure>
+'''
 
-            ratio = width / height
-            ratio_diff = abs(ratio - target_ratio) / target_ratio
 
-            # 检查各项指标
-            size_ok = min_size_kb <= file_size_kb <= max_size_kb
-            resolution_ok = width >= min_width and height >= min_height
-            ratio_ok = ratio_diff <= ratio_tolerance
+def insert_figure_tags(content, image_files, topic):
+    """在 h2 章节后插入 figure 标签（8张配图）"""
+    h2_positions = []
+    pos = 0
+    while True:
+        idx = content.find('<h2>', pos)
+        if idx == -1:
+            break
+        h2_positions.append(idx)
+        pos = idx + 1
 
-            return size_ok and resolution_ok and ratio_ok
-    except:
-        return False
+    if len(h2_positions) < 8:
+        logger.log(f"⚠️  h2 数量不足 8 个，跳过图片插入")
+        return content
 
-def step_3_update_index(topic, image_file):
-    """第3步：更新首页（适配新版直接文章格式）"""
+    # 插入位置：在第 1,2,3,4,5,6,7,8 个 h2 之后各插一张
+    insert_after = h2_positions[:8]
+
+    # 从后往前插，避免位置偏移
+    for i in range(7, -1, -1):
+        img_file = image_files[i] if image_files and i < len(image_files) else None
+        if img_file and Path(img_file).exists():
+            fig = figure_tag(i + 1, topic)
+            # 找 h2 之后的第一个 </p> 或 </h3>，插在那之后
+            h2_start = h2_positions[i]
+            h2_end = content.find('</h2>', h2_start) + len('</h2>')
+            after_h2 = content.find('</p>', h2_end)
+            if after_h2 == -1:
+                after_h2 = content.find('</h3>', h2_end)
+            if after_h2 == -1:
+                after_h2 = h2_end
+            else:
+                after_h2 += len('</p>')
+            content = content[:after_h2] + fig + content[after_h2:]
+
+    return content
+
+
+def step_3_update_index(topic, image_files):
+    """第3步：更新首页（适配新版直接文章格式）+ 插入8张配图"""
     logger.log(f"🔄 步骤 3/3: 更新首页")
 
     try:
@@ -1418,23 +1425,23 @@ def step_3_update_index(topic, image_file):
         index_content = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{topic} - 完整的技术指南和最佳实践">', index_content)
 
         # 4. 从归档页提取正文内容（.content div 的内部，不含外层标签）
-        # 找到 .content div 的范围：<div class="content"> 到其对应的 </div>（在 <footer> 之前的最后一个）
         ac_start = archive_content.find('<div class="content">')
         ac_footer = archive_content.find('<footer>')
         ac_content_close = archive_content.rfind('</div>', ac_start, ac_footer)
         archive_inner = archive_content[ac_start + len('<div class="content">'):ac_content_close]
 
-        # 修正归档内容中的路径（归档页在 history/2026/05/ 下，首页在根目录）
+        # 修正归档内容中的路径
         archive_inner = archive_inner.replace('href="../../', 'href="')
 
-        # 5. 替换首页的 content div 内容
-        # 找到 .content div 在首页中的范围
+        # 5. 插入 figure 标签（在各 h2 章节后）
+        archive_inner = insert_figure_tags(archive_inner, image_files, topic)
+
+        # 6. 替换首页的 content div 内容
         ic_start = index_content.find('<div class="content">')
-        ic_hero_end = ic_start + len('<div class="content">')  # 跳过 <div class="content"> 标签
+        ic_hero_end = ic_start + len('<div class="content">')
         ic_footer = index_content.find('<footer>')
         ic_content_close = index_content.rfind('</div>', ic_start, ic_footer)
 
-        # 构建新内容：hero + 新 content div 标签 + 归档内容 + 后续所有内容
         new_content = (
             index_content[:ic_hero_end] +
             '\n            ' + archive_inner.strip() + '\n        ' +
@@ -1480,10 +1487,10 @@ def main():
             return 1
 
         # 第2步：生成图片
-        image_file = step_2_generate_image(topic, args.seed)
+        image_files = step_2_generate_image(topic, args.seed)
 
         # 第3步：更新首页
-        success = step_3_update_index(topic, image_file)
+        success = step_3_update_index(topic, image_files)
         if not success:
             return 1
 
@@ -1527,7 +1534,7 @@ def main():
         logger.log("✅ 技术文档自动更新完成！")
         logger.log(f"📅 日期: {datetime.now().strftime('%Y年%m月%d日')}")
         logger.log(f"🎯 主题: {topic}")
-        logger.log(f"🖼️  图片: {'✅ 已生成' if image_file else '❌ 生成失败'}")
+        logger.log(f"🖼️  图片: {'✅ 已生成 8 张' if image_files and any(image_files) else '⚠️  部分失败'}")
         logger.log("=" * 60)
         
         # 发送飞书通知（失败不影响主流程）
