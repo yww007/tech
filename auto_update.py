@@ -854,7 +854,7 @@ def step_1_generate_html(topic, for_archive=True):
     - for_archive=True: 生成为归档页（带返回链接）
     - for_archive=False: 生成为首页（不带返回链接）
     """
-    logger.log(f"📝 步骤 1/3: 生成HTML文档 ({'归档页' if for_archive else '首页'})")
+    logger.log(f"📝 步骤 1/4: 生成HTML文档 ({'归档页' if for_archive else '首页'})")
 
     try:
         bj_time = get_beijing_time()
@@ -1259,6 +1259,78 @@ def step_1_generate_html(topic, for_archive=True):
         logger.log(traceback.format_exc())
         return None
 
+def step_1_5_update_monthly_archive(html_file, topic):
+    """第1.5步：自动更新月份归档索引页（插入今日条目）"""
+    logger.log(f"📋 步骤 1.5/4: 更新月份归档索引")
+
+    try:
+        # 从归档页提取标题和章节数
+        with open(html_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # 提取 <h1> 标题
+        h1_match = re.search(r'<h1[^>]*>([^<]+)</h1>', content)
+        if not h1_match:
+            logger.log("⚠️  无法提取标题，跳过月份归档更新")
+            return True
+
+        # 统计 h2 数量作为"篇数"
+        h2_count = len(re.findall(r'<h2', content))
+
+        # 提取日期（从文件路径：history/YYYY/MM/YYYYMMDD.html）
+        date_match = re.search(r'history/(\d{4})/(\d{2})/(\d{4})(\d{2})(\d{2})\.html', html_file)
+        if not date_match:
+            logger.log("⚠️  无法解析日期，跳过月份归档更新")
+            return True
+
+        year, month, yyyy, mm, dd = date_match.groups()
+        day_str = f"{yyyy}年{mm}月{dd}日"
+        file_date = f"{yyyy}{mm}{dd}"  # 如 20260524
+        date_numeric = int(file_date)   # 用于排序比较
+
+        # 月份索引页路径
+        monthly_index = Path(BLOG_PATH) / f"history/{year}/{month}/index.html"
+        if not monthly_index.exists():
+            logger.log(f"⚠️  月份索引不存在，跳过: {monthly_index}")
+            return True
+
+        with open(monthly_index, 'r', encoding='utf-8') as f:
+            index_content = f.read()
+
+        # 构建新条目（插在 <div class="days-grid"> 之后）
+        new_entry = f'''
+        <a href="{file_date}.html" class="day-card">
+            <h3>{day_str} <span class="count">{h2_count}篇</span></h3>
+            <p>{topic}</p>
+        </a>'''
+
+        # 在 days-grid 闭合前插入新条目（按日期排序，找正确位置）
+        days_grid_close = index_content.rfind('    </div>', index_content.find('<div class="days-grid">'))
+        if days_grid_close == -1:
+            logger.log("⚠️  无法找到 days-grid 闭合位置，跳过")
+            return True
+
+        # 在现有条目中寻找插入位置（保持日期升序）
+        insert_pos = days_grid_close
+        existing_links = list(re.finditer(r'<a href="(\d+)\.html" class="day-card">', index_content))
+        for link_match in existing_links:
+            existing_date = int(link_match.group(1))
+            if existing_date > date_numeric:
+                insert_pos = link_match.start()
+                break
+
+        new_index = index_content[:insert_pos] + new_entry + '\n        ' + index_content[insert_pos:]
+
+        with open(monthly_index, 'w', encoding='utf-8') as f:
+            f.write(new_index)
+
+        logger.log(f"✅ 月份归档索引已更新: {day_str} ({h2_count}篇)")
+        return True
+
+    except Exception as e:
+        logger.log(f"⚠️  月份归档更新失败（不影响主流程）: {str(e)}")
+        return True  # 不阻塞主流程
+
 def get_image_prompts(topic):
     """获取8张图片的主题提示词（基于当前主题）"""
     # 通用技术风提示词模板，融入主题关键词
@@ -1277,7 +1349,7 @@ def get_image_prompts(topic):
 
 def step_2_generate_image(topic, seed=101, max_retries=1):
     """第2步：生成8张配图（使用智谱 CogView-3-Flash）"""
-    logger.log(f"🎨 步骤 2/3: 生成 8 张配图")
+    logger.log(f"🎨 步骤 2/4: 生成 8 张配图")
 
     try:
         zhipu_script = Path("/home/swg/.openclaw/workspace/tech/zhipu_generate.py")
@@ -1380,7 +1452,7 @@ def insert_figure_tags(content, image_files, topic):
 
 def step_3_update_index(topic, image_files):
     """第3步：更新首页（适配新版直接文章格式）+ 插入8张配图"""
-    logger.log(f"🔄 步骤 3/3: 更新首页")
+    logger.log(f"🔄 步骤 3/4: 更新首页")
 
     try:
         bj_time = get_beijing_time()
@@ -1485,6 +1557,9 @@ def main():
         html_file = step_1_generate_html(topic)
         if not html_file:
             return 1
+
+        # 第1.5步：更新月份归档索引（自动插入今日条目）
+        step_1_5_update_monthly_archive(html_file, topic)
 
         # 第2步：生成图片
         image_files = step_2_generate_image(topic, args.seed)
