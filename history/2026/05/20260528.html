@@ -7,7 +7,12 @@
     <meta name="description" content="云原生技术实践 - 完整的技术指南和最佳实践">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --container-bg: white;
@@ -17,6 +22,7 @@
             --border-color: rgba(0,0,0,0.1);
             --bg-image: url('images/website-background-8k.png');
         }
+
         .dark-mode {
             --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             --container-bg: #1a1a2e;
@@ -25,112 +31,205 @@
             --nav-text: #e0e0e0;
             --border-color: rgba(255,255,255,0.1);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             padding: 20px;
             color: var(--text-color);
-            transition: color 0.3s;
-            background: url('images/website-background-8k.png') no-repeat center center fixed;
-            background-size: cover;
+            transition: background 0.3s, color 0.3s;
         }
-        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-        .dark-mode .container { background: #1a1a2e; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: white; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .dark-mode .navbar { background: #1f1f38; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .navbar-brand { font-size: 1.5em; font-weight: bold; color: #333; text-decoration: none; }
-        .dark-mode .navbar-brand { color: #e0e0e0; }
-        .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links a { color: #333; text-decoration: none; transition: color 0.3s; }
-        .dark-mode .nav-links a { color: #e0e0e0; }
-        .nav-links a:hover { color: #667eea; }
-        .nav-links a.active { color: #667eea; font-weight: bold; }
-        .dark-mode-toggle { cursor: pointer; padding: 10px 15px; background: #e8f4f8; border: none; border-radius: 8px; color: #1976d2; font-size: 1em; transition: background 0.3s, color 0.3s; }
-        .dark-mode-toggle:hover { background: #667eea; color: white; }
-        .hero { position: relative; height: 420px; overflow: hidden; background: url('images/tech_home_1_sharp.png') no-repeat center center; background-size: cover; }
-        .hero video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .hero-overlay { position: absolute; top: 0; left: 0; padding: 80px 30px 30px; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); color: white; z-index: 2; }
-        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .hero-overlay .date { opacity: 0.9; font-size: 1em; text-shadow: 0 1px 5px rgba(0,0,0,0.5); }
-        .content { padding: 40px 30px; }
-        .intro { font-size: 1.1em; line-height: 2; color: var(--text-color); margin-bottom: 35px; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 12px; border-left: 5px solid #667eea; border-right: 1px solid #e0e0e0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; }
-        .dark-mode .intro { background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%); border-color: #667eea; }
-        .content h2 { font-size: 1.7em; color: #667eea; margin: 50px 0 20px 0; padding-bottom: 12px; border-bottom: 3px solid #667eea; }
-        .content h3 { font-size: 1.3em; color: #5a67d8; margin: 30px 0 15px 0; padding-left: 15px; border-left: 4px solid #48bb78; }
-        .content p { line-height: 2.1; margin-bottom: 22px; text-align: justify; color: var(--text-color); font-size: 1.05em; }
-        .content ul, .content ol { margin: 20px 0 25px 30px; }
-        .content li { line-height: 2; margin-bottom: 10px; color: var(--text-color); }
-        .content pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 25px 0; font-size: 0.95em; line-height: 1.6; }
-        .content code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9em; }
-        .dark-mode .content code { background: #2d2d2d; color: #e0e0e0; }
-        .content figure { margin: 20px 30px 20px 0; text-align: left; float: left; }
-        .content figure img { max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); vertical-align: top; }
-        .content figure figcaption { margin-top: 8px; color: #666; font-size: 0.9em; font-style: italic; text-align: left; }
-        .content { overflow: hidden; }
-        .highlight-box { background: linear-gradient(135deg, #fff3cd 0%, #fff 100%); border: 1px solid #ffc107; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .dark-mode .highlight-box { background: linear-gradient(135deg, #3d3d00 0%, #2d2d2d 100%); border-color: #ffc107; }
-        .danger-box { background: linear-gradient(135deg, #f8d7da 0%, #fff 100%); border: 1px solid #dc3545; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .dark-mode .danger-box { background: linear-gradient(135deg, #3d1a1d 0%, #2d2d2d 100%); border-color: #dc3545; }
-        .success-box { background: linear-gradient(135deg, #d4edda 0%, #fff 100%); border: 1px solid #28a745; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .dark-mode .success-box { background: linear-gradient(135deg, #1a3d1a 0%, #2d2d2d 100%); border-color: #28a745; }
-        .info-box { background: linear-gradient(135deg, #d1ecf1 0%, #fff 100%); border: 1px solid #17a2b8; border-radius: 10px; padding: 20px; margin: 25px 0; }
-        .dark-mode .info-box { background: linear-gradient(135deg, #1a3d42 0%, #2d2d2d 100%); border-color: #17a2b8; }
-        .table-container { overflow-x: auto; margin: 30px 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 15px; text-align: left; border: 1px solid #dee2e6; }
-        th { background: #667eea; color: white; }
-        tr:nth-child(even) { background: #f8f9fa; }
-        .dark-mode tr:nth-child(even) { background: #2d2d2d; }
-        footer { background: var(--nav-bg); padding: 25px 30px; text-align: center; color: var(--nav-text); border-top: 1px solid var(--border-color); }
-        .back-to-top { position: fixed; bottom: 30px; right: 30px; background: #667eea; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5em; box-shadow: 0 4px 15px rgba(102,126,234,0.4); transition: all 0.3s; }
-        .back-to-top:hover { background: #5a67d8; transform: translateY(-3px); }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-weight: bold; }
-        .back-link:hover { text-decoration: underline; }
-        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .hero { height: 250px; } .hero-overlay h1 { font-size: 1.8em; } .content { padding: 25px 15px; } .content h2 { font-size: 1.4em; } }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        .dark-mode body::before {
+            background: rgba(26, 26, 46, 0.85);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            color: var(--text-color);
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content li {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border: none;
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 1em;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: var(--nav-bg);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--nav-text);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <nav class="navbar">
-            <a href="index.html" class="navbar-brand">📚 技术文档</a>
+            <a href="../../../index.html" class="navbar-brand">📚 技术文档</a>
             <ul class="nav-links">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="history.html">历史</a></li>
-                <li><a href="about.html">关于</a></li>
-                <li><a href="contact.html">联系</a></li>
+                <li><a href="../../../index.html">首页</a></li>
+                <li><a href="../../../history.html">历史</a></li>
+                <li><a href="../../../about.html">关于</a></li>
+                <li><a href="../../../contact.html">联系</a></li>
             </ul>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </nav>
 
-        <div class="hero">
-            <video src="images/tech_home_video.mp4" autoplay loop muted playsinline></video>
-            <div class="hero-overlay">
-                <h1>云原生技术实践</h1>
-                <div class="date">2026年05月28日 · 技术文档</div>
-            </div>
-        </div>
-
         <div class="content">
-            <a href="index.html" class="back-link">← 返回月份列表</a>
+            <a href="../../index.html" class="back-link">← 返回月份列表</a>
 
             <h1>云原生技术实践</h1>
             <div class="date">2026年05月28日 · 技术文档</div>
 
             <h2>概述</h2>
             <p>掌握云原生技术实践对于现代开发者来说至关重要。本文将从基础概念开始，逐步深入到实践应用，为您提供全面的技术指导。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_1.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h2>第一章 认识云原生技术实践</h2>
 
             <h3>1.1 云原生技术实践的本质</h3>
             <p>云原生技术实践是现代软件开发中的重要技术，掌握它可以显著提升开发效率和应用质量。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_2.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>1.2 核心价值</h3>
             <p>云原生技术实践的核心价值在于提高开发效率、保证代码质量、简化部署流程。</p>
@@ -142,10 +241,6 @@
 
             <h3>2.1 基础概念</h3>
             <p>了解云原生技术实践的基础概念是掌握该技术的第一步。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_3.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>2.2 关键特性</h3>
             <p>云原生技术实践具有多个关键特性，这些特性使其在特定场景下具有优势。</p>
@@ -157,10 +252,6 @@
 
             <h3>3.1 基础实践</h3>
             <p>掌握云原生技术实践的基础实践技巧是应用该技术的基础。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_4.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>3.2 高级技巧</h3>
             <p>云原生技术实践的高级技巧可以帮助您解决复杂问题。</p>
@@ -172,10 +263,6 @@
 
             <h3>4.1 实战案例一</h3>
             <p>通过实际案例了解云原生技术实践的应用。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_5.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>4.2 实战案例二</h3>
             <p>更多云原生技术实践的实际应用案例。</p>
@@ -187,10 +274,6 @@
             <h2>核心概念</h2>
 
             <p>了解云原生技术实践的基本概念是掌握该技术的基础。本节将介绍核心概念和关键术语。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_6.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>核心概念</h3>
             <ul>
@@ -211,10 +294,6 @@
             <h2>实践技巧</h2>
 
             <p>掌握云原生技术实践的实践技巧可以帮助您更好地应用该技术。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_7.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>基础技巧</h3>
             <ul>
@@ -235,10 +314,6 @@
             <h2>最佳实践</h2>
 
             <p>遵循云原生技术实践的最佳实践可以确保项目的成功和可维护性。</p>
-            <figure style="margin: 20px 30px 20px 0; text-align: left; float: left;">
-                <img src="images/tech_home_8.png" alt="" style="max-width: 25%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            </figure>
-
 
             <h3>开发规范</h3>
             <ul>
@@ -361,24 +436,19 @@ if __name__ == "__main__":
         </div>
 
         <footer>
-            <p>© 2026 技术文档 | 每日自动更新 | 云原生架构实战 | 图片：8张高质量配图</p>
+            <p>&copy; 2026 技术文档 | GitHub Pages</p>
         </footer>
     </div>
 
-    <a href="#" class="back-to-top" title="返回顶部">↑</a>
-
     <script>
-        function toggleDarkMode(){
+        function toggleDarkMode() {{
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-        if(localStorage.getItem('darkMode')==='true'){
+        }}
+
+        if (localStorage.getItem('darkMode') === 'true') {{
             document.body.classList.add('dark-mode');
-        }
-        document.querySelector('.back-to-top').addEventListener('click', function(e){
-            e.preventDefault();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
+        }}
     </script>
 </body>
 </html>
