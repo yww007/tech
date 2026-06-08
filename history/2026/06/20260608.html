@@ -175,6 +175,13 @@
             font-size: 1em;
             transition: background 0.3s, color 0.3s;
         }
+        .sound-toggle {
+            position: absolute; bottom: 15px; right: 15px; z-index: 10;
+            cursor: pointer; padding: 8px 12px;
+            background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+            color: white; font-size: 1.2em; transition: background 0.3s;
+        }
+        .sound-toggle:hover { background: rgba(102,126,234,0.8); }
 
         .back-link {
             display: inline-block;
@@ -196,11 +203,17 @@
             border-top: 1px solid var(--border-color);
         }
 
+        .hero { position: relative; height: 420px; overflow: hidden; }
+        .hero video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .hero-overlay { position: absolute; top: 0; left: 0; padding: 80px 30px 30px; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); color: white; z-index: 2; }
+        .hero-overlay h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-overlay .date { opacity: 0.9; font-size: 1em; text-shadow: 0 1px 5px rgba(0,0,0,0.5); }
+        .dark-mode .hero-overlay { color: white; }
+
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-            }
+            .navbar { flex-direction: column; gap: 15px; }
+            .hero { height: 250px; }
+            .hero-overlay h1 { font-size: 1.8em; }
         }
     </style>
 </head>
@@ -216,6 +229,15 @@
             </ul>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </nav>
+
+        <div class="hero">
+            <video src="/tech/images/tech_home_video.mp4" autoplay loop playsinline></video>
+            <div class="hero-overlay">
+                <h1>DevOps自动化流程</h1>
+                <div class="date">2026年06月08日 · 技术文档</div>
+            </div>
+            <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="开启/关闭声音">🔇</button>
+        </div>
 
         <div class="content">
             <a href="../../index.html" class="back-link">← 返回月份列表</a>
@@ -441,14 +463,27 @@ if __name__ == "__main__":
     </div>
 
     <script>
-        function toggleDarkMode() {{
+function toggleDarkMode(){
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }}
+        }
 
-        if (localStorage.getItem('darkMode') === 'true') {{
+        function toggleSound(){
+            var video = document.querySelector('.hero video');
+            var btn = document.getElementById('soundToggle');
+            if(!video) return;
+            if(video.muted){
+                video.muted = false;
+                btn.textContent = '🔊';
+            } else {
+                video.muted = true;
+                btn.textContent = '🔇';
+            }
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
-        }}
+        }
     </script>
 </body>
 </html>
