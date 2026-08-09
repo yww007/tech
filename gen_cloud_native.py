@@ -8,7 +8,7 @@ import urllib.error
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-API_KEY = os.environ.get("ZHIPU_API_KEY", "6d88b2e4dcdf430eae1e629eeae4d73d.Lx7bnpYnK6bWbGj2")
+API_KEY = os.environ.get("ZHIPU_API_KEY", "5697b9462d534279be02cdc530363258.CZVNuSV8NERVbbci")
 URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 
 IMAGES = [

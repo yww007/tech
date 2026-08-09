@@ -17,7 +17,7 @@ def generate_image(prompt, output_path, width=1024, height=1024, api_key=None):
 
     if api_key is None:
         # 从配置文件读取
-        api_key = os.environ.get("ZHIPU_API_KEY", "6d88b2e4dcdf430eae1e629eeae4d73d.Lx7bnpYnK6bWbGj2")
+        api_key = os.environ.get("ZHIPU_API_KEY", "5697b9462d534279be02cdc530363258.CZVNuSV8NERVbbci")
 
     url = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 

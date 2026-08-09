@@ -11,7 +11,7 @@ import json
 import time
 import subprocess
 
-API_KEY = "6d88b2e4dcdf430eae1e629eeae4d73d.Lx7bnpYnK6bWbGj2"
+API_KEY = "5697b9462d534279be02cdc530363258.CZVNuSV8NERVbbci"
 BASE = "https://open.bigmodel.cn/api/paas"
 MODEL = "cogvideox-flash"
 
