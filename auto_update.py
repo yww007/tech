@@ -1590,18 +1590,49 @@ def main():
             if result.returncode == 0:
                 logger.log("✅ Git提交成功")
 
+                # 推送前先拉取并 rebase，避免远程有新 commit 时 push 被拒
+                # （CNAME 配置、其他协作者的提交等都可能导致这个错误）
+                logger.log("🔄 git pull --rebase origin master ...")
+                pull_result = subprocess.run(
+                    ["git", "pull", "--rebase", "--autostash", "origin", "master"],
+                    cwd=BLOG_PATH,
+                    capture_output=True,
+                    text=True
+                )
+                if pull_result.returncode != 0:
+                    logger.log(f"❌ git pull --rebase 失败:\n{pull_result.stderr}")
+                    # 如果 rebase 失败，回退到 merge 策略再试一次
+                    logger.log("🔄 退回到 git pull (merge) 重试...")
+                    pull_retry = subprocess.run(
+                        ["git", "pull", "--no-rebase", "origin", "master"],
+                        cwd=BLOG_PATH,
+                        capture_output=True,
+                        text=True
+                    )
+                    if pull_retry.returncode != 0:
+                        logger.log(f"❌ git pull 重试也失败:\n{pull_retry.stderr}")
+                        logger.log("⚠️  推送中止：请手动处理冲突")
+                        # 【关键】这里不 return，让后续的推送再试一次，
+                        # 如果失败会再次报警；但要明确记录失败
+                        # 实际上 pull 完全失败时推送必然失败，直接返回错误
+                        return 1
+
                 # 推送到GitHub
-                result = subprocess.run(
-                    ["git", "push"],
+                logger.log("📤 git push origin master ...")
+                push_result = subprocess.run(
+                    ["git", "push", "origin", "master"],
                     cwd=BLOG_PATH,
                     capture_output=True,
                     text=True
                 )
 
-                if result.returncode == 0:
+                if push_result.returncode == 0:
                     logger.log("✅ 推送到GitHub成功")
                 else:
-                    logger.log("⚠️  推送到GitHub失败")
+                    logger.log(f"❌ 推送到GitHub失败:\n{push_result.stderr}")
+                    # 【关键】推送失败必须让脚本返回非零，
+                    # 否则 cron 会误判为成功，页面就一直不更新
+                    return 1
             else:
                 logger.log("⚠️  没有新的更改需要提交")
 
