@@ -1427,25 +1427,23 @@ def insert_figure_tags(content, image_files, topic):
         logger.log(f"⚠️  h2 数量不足 8 个，跳过图片插入")
         return content
 
-    # 插入位置：在第 1,2,3,4,5,6,7,8 个 h2 之后各插一张
-    insert_after = h2_positions[:8]
-
     # 从后往前插，避免位置偏移
     for i in range(7, -1, -1):
         img_file = image_files[i] if image_files and i < len(image_files) else None
         if img_file and Path(img_file).exists():
             fig = figure_tag(i + 1, topic)
-            # 找 h2 之后的第一个 </p> 或 </h3>，插在那之后
+            # 找 h2 之后的第一个 </p> 或 </h3>，插在闭合标签之后
             h2_start = h2_positions[i]
             h2_end = content.find('</h2>', h2_start) + len('</h2>')
-            after_h2 = content.find('</p>', h2_end)
-            if after_h2 == -1:
-                after_h2 = content.find('</h3>', h2_end)
-            if after_h2 == -1:
-                after_h2 = h2_end
+            p_idx = content.find('</p>', h2_end)
+            h3_idx = content.find('</h3>', h2_end)
+            if p_idx != -1 and (h3_idx == -1 or p_idx < h3_idx):
+                insert_pos = p_idx + len('</p>')
+            elif h3_idx != -1:
+                insert_pos = h3_idx + len('</h3>')
             else:
-                after_h2 += len('</p>')
-            content = content[:after_h2] + fig + content[after_h2:]
+                insert_pos = h2_end
+            content = content[:insert_pos] + fig + content[insert_pos:]
 
     return content
 
@@ -1533,6 +1531,35 @@ def step_3_update_index(topic, image_files):
         logger.log(traceback.format_exc())
         return False
 
+def step_3_5_insert_archive_figures(image_files, topic):
+    """第3.5步：向今日归档页插入8张穿插配图（src 改写为 ../../../images/ 相对路径）"""
+    logger.log(f"🖼️ 步骤 3.5/4: 归档页插入配图")
+    try:
+        bj_time = get_beijing_time()
+        year = bj_time.strftime("%Y")
+        month = bj_time.strftime("%m")
+        today = bj_time.strftime("%Y%m%d")
+        archive_path = Path(BLOG_PATH) / "history" / year / month / f"{today}.html"
+        if not archive_path.exists():
+            logger.log(f"⚠️ 归档文件不存在，跳过归档配图: {archive_path}")
+            return
+        with open(archive_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        if '<figure' in content:
+            logger.log("📋 归档页已包含配图，跳过")
+            return
+        # 插入 figure（先按首页路径插入，再统一改写为归档相对路径）
+        content = insert_figure_tags(content, image_files, topic)
+        content = content.replace('src="images/tech_home_', 'src="../../../images/tech_home_')
+        if '<figure' not in content:
+            logger.log("⚠️ 归档配图插入失败（h2 不足或图片文件缺失），跳过")
+            return
+        with open(archive_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        logger.log(f"✅ 归档页配图已插入: {archive_path}")
+    except Exception as e:
+        logger.log(f"⚠️ 归档配图失败（不影响主流程）: {str(e)}")
+
 def main():
     """主函数"""
     import argparse
@@ -1568,6 +1595,9 @@ def main():
         success = step_3_update_index(topic, image_files)
         if not success:
             return 1
+
+        # 第3.5步：向今日归档页插入8张穿插配图
+        step_3_5_insert_archive_figures(image_files, topic)
 
         # Git提交
         if not args.no_upload:
